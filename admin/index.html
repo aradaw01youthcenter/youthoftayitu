@@ -305,10 +305,14 @@ document.querySelectorAll('.dash-nav[data-page]').forEach(el=>el.addEventListene
 showPage('overview');
 document.querySelectorAll('[data-stat]').forEach(card=>card.addEventListener('click',()=>{const status=card.dataset.stat;$('postStatusFilter').value=status;showPage('posts');renderPosts()}));
 async function invokeAdminFunction(body){
- const {data:{session},error:sessionError}=await client.auth.getSession();
- if(sessionError)return {data:null,error:sessionError};
- if(!session?.access_token)return {data:null,error:new Error('Your sign-in session has expired. Please sign out and sign in again.')};
- return client.functions.invoke('invite-admin',{body,headers:{Authorization:'Bearer '+session.access_token}});
+ // Refresh the access token before privileged admin actions. getSession() can
+ // return a locally cached JWT whose server-side Auth session has been revoked.
+ const {data,error:refreshError}=await client.auth.refreshSession();
+ if(refreshError||!data?.session?.access_token){
+  await client.auth.signOut({scope:'local'}).catch(()=>{});
+  return {data:null,error:new Error('Your admin sign-in session is no longer valid. You have been signed out locally. Sign in again, then retry this action.')};
+ }
+ return client.functions.invoke('invite-admin',{body,headers:{Authorization:'Bearer '+data.session.access_token}});
 }
 async function loadAdminUsers(){
  const {data,error}=await client.from('admin_users').select('email,role,created_at').order('created_at');
