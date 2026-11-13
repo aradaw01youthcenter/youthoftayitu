@@ -96,6 +96,24 @@ textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;pad
 @media(max-width:620px){#postGrid{grid-template-columns:1fr}.post-tools{grid-template-columns:1fr}.overview-bottom{grid-template-columns:1fr}.page-heading{align-items:flex-start;flex-direction:column}#serviceImageFields{grid-template-columns:1fr}.site-field{display:block}}
 
 .dash-stat{cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.dash-stat:hover{transform:translateY(-3px);border-color:#e4c15c;box-shadow:0 10px 24px #1b304817}.dash-stat:focus{outline:3px solid #f4c64e;outline-offset:3px}
+
+/* Responsive dashboard sizing: keep the workspace full-width and readable on
+   wide desktop-site viewports as well as phones and tablets. */
+html,body{width:100%;min-width:0}
+#app,.dashboard-layout{width:100%;max-width:none}
+.dashboard-layout{grid-template-columns:clamp(230px,16vw,280px) minmax(0,1fr)}
+.dash-topbar{height:clamp(66px,5vw,80px);min-height:66px}
+.dashboard-main{width:100%;max-width:none;min-width:0}
+.dash-brand{font-size:clamp(14px,1vw,17px)}
+.dash-nav{font-size:clamp(13px,.9vw,15px)}
+.dash-side-label,.dash-side-note{font-size:clamp(11px,.78vw,13px)}
+.dash-welcome h1{font-size:clamp(25px,2vw,34px)}
+.panel,.chart-panel,.dash-stat{min-width:0}
+@media(max-width:850px){
+  .dashboard-layout{display:block;width:100%;max-width:none}
+  .dashboard-main{width:100%;max-width:none}
+  .dash-topbar{height:66px}
+}
 </style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
 <div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="8" required><button type="submit">Sign in</button></form><button type="button" id="forgotPassword" class="secondary">Forgot password?</button><p class="muted">Sign in securely using your administrator email and password.</p></div><div id="resetPasswordPanel" class="panel hidden"><h2>Set a new password</h2><p class="muted">Choose a new password for your administrator account.</p><form id="resetPasswordForm"><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required><button type="submit">Save new password</button></form><button type="button" id="backToLogin" class="secondary">Back to sign in</button></div>
