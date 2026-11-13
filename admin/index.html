@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="am"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Posts Admin | Youth of Tayitu</title><meta name="robots" content="noindex,nofollow"><style>
 *{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#172033;font:15px/1.5 Arial,sans-serif}.wrap{max-width:940px;margin:35px auto;padding:0 18px}.panel{background:#fff;border-radius:14px;padding:24px;margin:18px 0;box-shadow:0 5px 22px #14213d0c}h1{margin:0 0 6px}h2{margin-top:0}label{display:block;font-weight:700;margin:14px 0 6px}input,textarea,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}textarea{min-height:190px;resize:vertical}button{border:0;border-radius:8px;padding:11px 17px;background:#0758a5;color:#fff;font-weight:700;cursor:pointer;margin:12px 8px 0 0}button.secondary{background:#526176}button.danger{background:#b42318}.muted{color:#667085}.post{padding:15px 0;border-top:1px solid #e6eaf0}.post strong{display:block}.status{font-size:13px;color:#667085}.hidden{display:none}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}#message{margin:12px 0;color:#0758a5;white-space:pre-wrap}.gallery{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.thumb{width:110px;height:90px;object-fit:cover;border-radius:8px;border:1px solid #ddd}.thumbwrap{position:relative}.thumbwrap button{position:absolute;top:0;right:0;margin:2px;padding:4px 8px;background:#b42318}
-</style></head><body><div class="wrap">
+ .site-field{padding:12px 0;border-top:1px solid #e6eaf0}.site-field label{margin:8px 0 5px}.site-field input,.site-field textarea{margin-bottom:4px}</style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
 <div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" required><button type="submit">Send sign-in link</button></form><p class="muted">A secure sign-in link will be sent to your email.</p></div>
 <div id="app" class="hidden"><div class="row"><span id="signedIn" class="muted"></span><button id="logout" class="secondary">Sign out</button></div>
@@ -14,13 +14,20 @@
 <div id="currentGallery" class="gallery"></div>
 <label for="status">Publication status</label><select id="status"><option value="draft">Save as draft</option><option value="published">Publish now</option></select>
 <div class="row"><button type="submit">Save post</button><button type="button" id="reset" class="secondary">Clear form</button></div></form></div>
+<div class="panel" id="siteContentPanel">
+<h2>Homepage content manager</h2>
+<p class="muted">Edit the homepage wording in Amharic and English. Leave a field blank only if you want the existing website text to remain unchanged.</p>
+<div id="siteContentFields"></div>
+<button type="button" id="saveSiteContent">Save homepage changes</button>
+<span id="siteContentStatus" class="muted" aria-live="polite"></span>
+</div>
 <div class="panel"><h2>Existing posts</h2><div id="list">Loading…</div></div></div><div id="message" role="status"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
 const $=id=>document.getElementById(id),message=t=>$('message').textContent=t;
 let currentUser=null,currentImages=[];
 const categories=["ሳይንስና ፈጠራ","በጎ ፈቃድ","የጤናና የምክር ድጋፍ","የህይወት ክህሎት","አመራርነት","ስራ ፈጠራና የቢዝነስ","ስፖርትና መዝናኛ"];
-function showApp(user){currentUser=user;$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts()}}
+function showApp(user){currentUser=user;$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent()}}
 async function refresh(){const {data}=await client.auth.getSession();showApp(data.session?.user||null)}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Sending secure sign-in link…');const email=$('email').value.trim().toLowerCase();if(email!=='aradaw01youthcenter@gmail.com'){message('This email is not authorized.');return}const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/admin/',shouldCreateUser:false}});message(error?error.message:'Check your email for the secure sign-in link.')});
 client.auth.onAuthStateChange((_event,s)=>showApp(s?.user||null));
@@ -30,6 +37,23 @@ function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;',
 function renderGallery(){const el=$('currentGallery');el.innerHTML=currentImages.map((url,i)=>'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(url)+'" alt="Post photo '+(i+1)+'"><button type="button" data-remove="'+i+'" aria-label="Remove photo">×</button></div>').join('');el.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{currentImages.splice(Number(b.dataset.remove),1);renderGallery()})}
 function clearForm(){$('postForm').reset();$('postId').value='';$('category').value=categories[0];currentImages=[];renderGallery();$('formTitle').textContent='Create a post'}
 $('reset').onclick=clearForm;
+const siteFields=[
+{key:'aboutTitle',label:'About section — heading',selector:'#about h2'},
+{key:'aboutText',label:'About section — description',selector:'#about p.sub',multi:true},
+{key:'servicesTitle',label:'Services section — heading',selector:'#services h2'},
+{key:'servicesText',label:'Services section — description',selector:'#services p.sub',multi:true},
+{key:'sportsTitle',label:'Sports section — heading',selector:'#sports h2'},
+{key:'sportsText',label:'Sports section — description',selector:'#sports p.sub',multi:true},
+{key:'joinTitle',label:'Join section — heading',selector:'#join h2'},
+{key:'joinText',label:'Join section — description',selector:'#join p.sub',multi:true},
+{key:'contactTitle',label:'Contact section — heading',selector:'#contact h2'},
+{key:'contactText',label:'Contact section — description',selector:'#contact p.sub',multi:true},
+{key:'announcementTitle',label:'Homepage announcement — heading',selector:'#homepage-announcement h2'},
+{key:'announcementText',label:'Homepage announcement — message',selector:'#homepage-announcement p',multi:true}
+];
+function renderSiteContentFields(values={}){$('siteContentFields').innerHTML=siteFields.map(f=>'<div class="site-field"><label>'+escapeHtml(f.label)+' — አማርኛ</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':'<input data-cms-am="'+f.key+'">')+'<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')+'</div>').join('');siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''})}
+async function loadSiteContent(){const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();if(error){$('siteContentStatus').textContent='Could not load homepage settings: '+error.message;return}renderSiteContentFields(data?.content||{})}
+$('saveSiteContent').onclick=async()=>{const content={};siteFields.forEach(f=>{content[f.key]={am:$('[data-cms-am="'+f.key+'"]').value.trim(),en:$('[data-cms-en="'+f.key+'"]').value.trim(),selector:f.selector}});$('siteContentStatus').textContent='Saving…';const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});$('siteContentStatus').textContent=error?'Save failed: '+error.message:'Homepage content saved. Refresh the public website to see changes.'};
 async function loadPosts(){const {data,error}=await client.from('posts').select('*').order('created_at',{ascending:false});if(error){$('list').textContent=error.message;return}if(!data.length){$('list').textContent='No posts yet.';return}$('list').innerHTML=data.map(p=>'<div class="post"><strong>'+escapeHtml(p.title)+'</strong><span class="status">'+escapeHtml(p.category||'')+' · '+p.status+' · '+new Date(p.created_at).toLocaleString()+'</span><div class="row"><button data-edit="'+p.id+'" class="secondary">Edit</button><button data-delete="'+p.id+'" class="danger">Delete</button>'+(p.status==='published'?'<a href="/posts/'+encodeURIComponent(p.slug)+'" target="_blank" rel="noopener">View</a>':'')+'</div></div>').join('');$('list').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editPost(data.find(p=>p.id===b.dataset.edit)));$('list').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deletePost(b.dataset.delete))}
 function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category').value=p.category||categories[0];$('excerpt').value=p.excerpt||'';$('content').value=p.content;$('status').value=p.status;currentImages=Array.isArray(p.images)?p.images.slice():[];if(!currentImages.length&&p.cover_image)currentImages=[p.cover_image];renderGallery();$('formTitle').textContent='Edit post';window.scrollTo({top:0,behavior:'smooth'})}
 $('postForm').addEventListener('submit',async e=>{e.preventDefault();message('Saving post…');const id=$('postId').value,title=$('title').value.trim(),status=$('status').value,files=Array.from($('image').files||[]);if(files.some(f=>!['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)||f.size>10*1024*1024)){message('Please choose JPEG, PNG, WebP or GIF photos, each no larger than 10 MB.');return}
