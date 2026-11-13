@@ -159,6 +159,37 @@ body>.wrap>h1,body>.wrap>p.muted{display:none!important}
  #app>.dashboard-layout>.dash-sidebar{position:fixed!important}
  #app>.dashboard-layout>.dashboard-main{width:100%!important;padding:20px 16px!important}
 }
+
+/* Fix: the mobile navigation backdrop is a button between the sidebar and
+   main content. It must never participate in the desktop grid layout. */
+.mobile-nav-backdrop{
+  display:none!important;
+  position:fixed!important;
+  inset:76px 0 0!important;
+  z-index:33!important;
+  width:100vw!important;
+  height:calc(100vh - 76px)!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+@media(max-width:850px){
+  .mobile-nav-backdrop{
+    display:none!important;
+    position:fixed!important;
+    inset:76px 0 0!important;
+    width:100vw!important;
+    height:calc(100vh - 76px)!important;
+    background:transparent!important;
+  }
+  .nav-open .mobile-nav-backdrop{display:block!important}
+}
+@media(max-width:560px){
+  .mobile-nav-backdrop{inset:66px 0 0!important;height:calc(100vh - 66px)!important}
+}
 </style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
 <div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="8" required><button type="submit">Sign in</button></form><button type="button" id="forgotPassword" class="secondary">Forgot password?</button><p class="muted">Sign in securely using your administrator email and password.</p></div><div id="resetPasswordPanel" class="panel hidden"><h2>Set a new password</h2><p class="muted">Choose a new password for your administrator account.</p><form id="resetPasswordForm"><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required><button type="submit">Save new password</button></form><button type="button" id="backToLogin" class="secondary">Back to sign in</button></div>
