@@ -204,6 +204,7 @@ body>.wrap>h1,body>.wrap>p.muted{display:none!important}
 <button class="dash-nav" type="button" data-page="content"><span class="nav-icon">☷</span> Homepage content</button>
 <button class="dash-nav" type="button" data-page="photos"><span class="nav-icon">▧</span> Photos & gallery</button>
 <button class="dash-nav" type="button" data-page="admins"><span class="nav-icon">♙</span> Admin access</button>
+<button class="dash-nav owner-only" type="button" data-page="activity" hidden><span class="nav-icon">◷</span> Activity log</button>
 <a class="dash-nav" href="https://youthoftayitu.vercel.app/" target="_blank" rel="noopener"><span class="nav-icon">↗</span> View live website</a>
 <div class="dash-side-note">Your workspace for publishing stories, managing programs and keeping the community informed.</div>
 </aside><button type="button" class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-label="Close navigation menu" tabindex="-1"></button>
@@ -250,21 +251,40 @@ body>.wrap>h1,body>.wrap>p.muted{display:none!important}
 <button type="submit">Create administrator account ↗</button><span id="inviteStatus" class="muted" aria-live="polite"></span>
 </form></div>
 <div class="panel"><h2>Current administrators</h2><p class="muted">Remove access to permanently delete an administrator’s Auth account and administrator role. The website owner account is protected.</p><div id="adminList">Loading administrator list…</div></div>
+</section>
+<section class="page-view owner-only" id="page-activity" hidden>
+<div class="page-heading"><div><h1>Admin activity log</h1><p>Private record of administrator actions. Only the website owner can view this page.</p></div><button type="button" class="secondary" id="refreshActivity">Refresh log</button></div>
+<div class="panel"><div id="activityStatus" class="muted">Loading recent activity…</div><div id="activityList"></div></div>
 </section><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="message" role="status"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
 const $=id=>document.getElementById(id),message=t=>$('message').textContent=t;
 let currentUser=null,currentImages=[];
+const isSuperAdmin=()=>currentUser?.email?.toLowerCase()==='aradaw01youthcenter@gmail.com';
+async function logActivity(action,targetType='website',targetLabel='',details={}){
+ if(!currentUser)return;
+ const {error}=await client.from('admin_activity_logs').insert({actor_user_id:currentUser.id,actor_email:currentUser.email||'',action,target_type:targetType,target_label:targetLabel,details});
+ if(error)console.warn('Could not record admin activity:',error.message);
+}
+async function loadActivityLogs(){
+ if(!isSuperAdmin())return;
+ $('activityStatus').textContent='Loading recent activity…';
+ const {data,error}=await client.from('admin_activity_logs').select('actor_email,action,target_type,target_label,details,created_at').order('created_at',{ascending:false}).limit(100);
+ if(error){$('activityStatus').textContent='Could not load activity: '+error.message;$('activityList').innerHTML='';return}
+ $('activityStatus').textContent=(data||[]).length?'Showing the latest '+data.length+' recorded actions.':'No activity has been recorded yet.';
+ $('activityList').innerHTML=(data||[]).map(item=>'<div class="post"><strong>'+escapeHtml(item.action)+'</strong><span class="status">'+escapeHtml(item.actor_email)+' · '+new Date(item.created_at).toLocaleString()+'</span>'+(item.target_label?'<div class="muted">'+escapeHtml(item.target_type||'')+': '+escapeHtml(item.target_label)+'</div>':'')+'</div>').join('');
+}
+$('refreshActivity')?.addEventListener('click',loadActivityLogs);
 const categories=["ሳይንስና ፈጠራ","በጎ ፈቃድ","የጤናና የምክር ድጋፍ","የህይወት ክህሎት","አመራርነት","ስራ ፈጠራና የቢዝነስ","ስፖርትና መዝናኛ"];
-function showApp(user){currentUser=user;$('resetPasswordPanel').classList.add('hidden');$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia();loadAdminUsers()}}
+function showApp(user){currentUser=user;$('resetPasswordPanel').classList.add('hidden');$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);document.querySelectorAll('.owner-only').forEach(el=>{el.hidden=!isSuperAdmin()});if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia();loadAdminUsers()}}
 function showPasswordReset(){currentUser=null;$('login').classList.add('hidden');$('app').classList.add('hidden');$('resetPasswordPanel').classList.remove('hidden');message('Password recovery verified. Set your new password below.')}
 async function refresh(){const {data}=await client.auth.getSession();if(new URLSearchParams(location.search).get('mode')==='reset'&&location.hash.includes('type=recovery')){showPasswordReset();return}showApp(data.session?.user||null)}
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Signing in…');const email=$('email').value.trim().toLowerCase(),password=$('password').value;const {data,error}=await client.auth.signInWithPassword({email,password});if(error){message(error.message==='Invalid login credentials'?'Email or password is incorrect. If this is your first password login, set a password for this user in Supabase Dashboard → Authentication → Users, then try again.':error.message);return}showApp(data.user);message('Signed in successfully.')});
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Signing in…');const email=$('email').value.trim().toLowerCase(),password=$('password').value;const {data,error}=await client.auth.signInWithPassword({email,password});if(error){message(error.message==='Invalid login credentials'?'Email or password is incorrect. If this is your first password login, set a password for this user in Supabase Dashboard → Authentication → Users, then try again.':error.message);return}showApp(data.user);await logActivity('Signed in','session',data.user.email||'');message('Signed in successfully.')});
 $('forgotPassword').addEventListener('click',async()=>{const email=$('email').value.trim().toLowerCase();if(!email){message('Enter your administrator email first.');$('email').focus();return}message('Sending password recovery email…');const redirectTo=window.location.origin+'/admin/?mode=reset';const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo});message(error?'Could not send recovery email: '+error.message:'Password recovery email sent. Open its link to set a new password.')});
 $('resetPasswordForm').addEventListener('submit',async e=>{e.preventDefault();const password=$('newPassword').value,confirm=$('confirmPassword').value;if(password.length<8){message('Password must be at least 8 characters.');return}if(password!==confirm){message('The passwords do not match.');return}message('Saving your new password…');const {error}=await client.auth.updateUser({password});if(error){message('Could not update password: '+error.message);return}await client.auth.signOut();$('resetPasswordPanel').classList.add('hidden');$('login').classList.remove('hidden');$('email').value='aradaw01youthcenter@gmail.com';$('password').value='';history.replaceState(null,'','/admin/');message('Password updated successfully. Sign in with your new password.')});
 $('backToLogin').addEventListener('click',()=>{ $('resetPasswordPanel').classList.add('hidden');$('login').classList.remove('hidden');history.replaceState(null,'','/admin/');message('')});
 client.auth.onAuthStateChange((event,s)=>{if(event==='PASSWORD_RECOVERY'){showPasswordReset();return}if(!$('resetPasswordPanel').classList.contains('hidden'))return;showApp(s?.user||null)});
-$('logout').onclick=async()=>{await client.auth.signOut();showApp(null);message('Signed out.')};
+$('logout').onclick=async()=>{await logActivity('Signed out','session',currentUser?.email||'');await client.auth.signOut();showApp(null);message('Signed out.')};
 
 let allPosts=[];
 function showPage(page){
@@ -272,6 +292,7 @@ function showPage(page){
  document.querySelectorAll('.dash-nav[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
  window.scrollTo({top:0,behavior:'smooth'});
  if(page==='posts')renderPosts();
+ if(page==='activity'&&isSuperAdmin())loadActivityLogs();
 }
 document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>showPage(el.dataset.page)));
 const menuToggle=$('mobileMenuToggle'),navBackdrop=$('mobileNavBackdrop');
@@ -410,7 +431,7 @@ $('saveVisualManager').onclick=async()=>{
  content.homepageGallery=homepageMedia.gallery;
  $('visualStatus').textContent='Saving homepage photos…';
  const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});
- $('visualStatus').textContent=error?'Save failed: '+error.message:'Homepage photos saved. Refresh the public homepage to see them.';
+ if(!error)await logActivity('Updated homepage photos and gallery','website','Homepage media');$('visualStatus').textContent=error?'Save failed: '+error.message:'Homepage photos saved. Refresh the public homepage to see them.';
 };
 async function loadPosts(){
  const {data,error}=await client.from('posts').select('*').order('created_at',{ascending:false});
@@ -447,7 +468,7 @@ function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category
 $('postForm').addEventListener('submit',async e=>{e.preventDefault();message('Saving post…');const id=$('postId').value,title=$('title').value.trim(),status=$('status').value,files=Array.from($('image').files||[]);if(files.some(f=>!['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)||f.size>10*1024*1024)){message('Please choose JPEG, PNG, WebP or GIF photos, each no larger than 10 MB.');return}
 const uploaded=[];for(const file of files){const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safe;const up=await client.storage.from('post-images').upload(path,file,{upsert:false,contentType:file.type});if(up.error){message('Photo upload failed: '+up.error.message);return}uploaded.push(client.storage.from('post-images').getPublicUrl(path).data.publicUrl)}
 const images=currentImages.concat(uploaded),payload={title,slug:id?undefined:slugify(title),category:$('category').value,excerpt:$('excerpt').value.trim(),content:$('content').value,social_platform:$('socialPlatform').value||null,social_url:$('socialUrl').value.trim()||null,images,cover_image:images[0]||null,status,updated_at:new Date().toISOString(),...(status==='published'?{published_at:new Date().toISOString()}:{})};if(id)delete payload.slug;
-const result=id?await client.from('posts').update(payload).eq('id',id):await client.from('posts').insert(payload);if(result.error){message(result.error.message);return}message('Post saved successfully.');clearForm();await loadPosts();showPage('posts')});
-async function deletePost(id){if(!confirm('Delete this post? This cannot be undone.'))return;const {error}=await client.from('posts').delete().eq('id',id);message(error?error.message:'Post deleted.');await loadPosts()}
+const result=id?await client.from('posts').update(payload).eq('id',id):await client.from('posts').insert(payload);if(result.error){message(result.error.message);return}await logActivity(id?'Updated post':'Created post','post',title,{status,category:$('category').value});message('Post saved successfully.');clearForm();await loadPosts();showPage('posts')});
+async function deletePost(id){if(!confirm('Delete this post? This cannot be undone.'))return;const {error}=await client.from('posts').delete().eq('id',id);if(!error){const deleted=allPosts.find(p=>p.id===id);await logActivity('Deleted post','post',deleted?.title||String(id))}message(error?error.message:'Post deleted.');await loadPosts()}
 refresh();
 </script></body></html>
