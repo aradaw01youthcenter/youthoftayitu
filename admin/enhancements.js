@@ -30,6 +30,7 @@
   $('activitySearch')?.addEventListener('input',renderActivity);
   $('activityActionFilter')?.addEventListener('change',renderActivity);
   $('exportActivity')?.addEventListener('click',()=>csv('youth-of-tayitu-admin-activity.csv',[
+  const oldRefresh=$('refreshActivity');if(oldRefresh){const fresh=oldRefresh.cloneNode(true);oldRefresh.replaceWith(fresh);fresh.addEventListener('click',()=>loadActivityLogs())}
     ['Time','Admin','Action','Target type','Target','Details'],
     ...activityRows.map(x=>[x.created_at,x.actor_email,x.action,x.target_type,x.target_label,JSON.stringify(x.details||{})])
   ]));
@@ -160,4 +161,6 @@
   $('reset')?.addEventListener('click',()=>{$('scheduleField').classList.add('hidden');$('scheduledAt').required=false});
   const baseEditPost=editPost;
   editPost=function(p){baseEditPost(p);$('scheduledAt').value=p?.status==='scheduled'&&p.published_at?new Date(new Date(p.published_at).getTime()-new Date(p.published_at).getTimezoneOffset()*60000).toISOString().slice(0,16):'';$('scheduleField').classList.toggle('hidden',p?.status!=='scheduled');$('scheduledAt').required=p?.status==='scheduled'};
+  // Re-run enhanced data loading after the deferred script attaches, including returning sessions.
+  if(currentUser)loadPosts();else client.auth.getSession().then(({data})=>{if(data?.session?.user){currentUser=data.session.user;loadPosts()}});
 })();
