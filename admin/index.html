@@ -304,6 +304,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobileNav()});
 document.querySelectorAll('.dash-nav[data-page]').forEach(el=>el.addEventListener('click',closeMobileNav));
 showPage('overview');
 document.querySelectorAll('[data-stat]').forEach(card=>card.addEventListener('click',()=>{const status=card.dataset.stat;$('postStatusFilter').value=status;showPage('posts');renderPosts()}));
+async function invokeAdminFunction(body){
+ const {data:{session},error:sessionError}=await client.auth.getSession();
+ if(sessionError)return {data:null,error:sessionError};
+ if(!session?.access_token)return {data:null,error:new Error('Your sign-in session has expired. Please sign out and sign in again.')};
+ return client.functions.invoke('invite-admin',{body,headers:{Authorization:'Bearer '+session.access_token}});
+}
 async function loadAdminUsers(){
  const {data,error}=await client.from('admin_users').select('email,role,created_at').order('created_at');
  if(error){$('adminList').textContent=error.message;return}
@@ -314,7 +320,7 @@ async function loadAdminUsers(){
   const email=button.dataset.removeAdmin;
   if(!confirm('Cancel this invitation or remove dashboard access for '+email+'? This cannot be undone.'))return;
   button.disabled=true;button.textContent='Removing…';
-  const {data,error}=await client.functions.invoke('invite-admin',{body:{action:'remove',email}});
+  const {data,error}=await invokeAdminFunction({action:'remove',email});
   if(error||data?.error){
    let detail=data?.error||'';
    if(error?.context&&typeof error.context.clone==='function'){
@@ -338,7 +344,7 @@ $('inviteAdminForm').addEventListener('submit',async e=>{
  if(password.length<8){$('inviteStatus').textContent='Use a password with at least 8 characters.';return}
  if(password!==confirmPassword){$('inviteStatus').textContent='The passwords do not match.';return}
  $('inviteStatus').textContent='Creating administrator account…';
- const {data,error}=await client.functions.invoke('invite-admin',{body:{action:'create',email,password}});
+ const {data,error}=await invokeAdminFunction({action:'create',email,password});
  if(error){$('inviteStatus').textContent=error.message;return}
  if(data?.error){$('inviteStatus').textContent=data.error;return}
  $('inviteStatus').textContent=data?.message||'Administrator account created.';
