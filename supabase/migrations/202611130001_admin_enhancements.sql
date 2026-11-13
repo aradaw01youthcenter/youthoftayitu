@@ -80,6 +80,19 @@ create policy "Only owner can read page analytics"
     )
   );
 
+-- Allow only authenticated site administrators to browse the existing image bucket.
+drop policy if exists "Admins can list post images" on storage.objects;
+create policy "Admins can list post images"
+  on storage.objects for select to authenticated
+  using (bucket_id='post-images' and public.is_site_admin());
+
+-- Keep anonymous analytics storage bounded to a six-month retention window.
+select cron.schedule(
+  'youth-tayitu-prune-page-views',
+  '15 3 * * *',
+  $job$ delete from public.site_page_views where created_at < now() - interval '180 days'; $job$
+);
+
 -- Publishes scheduled posts once their scheduled publication time has passed.
 select cron.schedule(
   'youth-tayitu-publish-scheduled-posts',
