@@ -243,8 +243,8 @@ body>.wrap>h1,body>.wrap>p.muted{display:none!important}
 <button type="button" id="saveVisualManager">Save homepage photos</button><span id="visualStatus" class="muted" aria-live="polite"></span>
 </div></section><section class="page-view" id="page-posts" hidden><div class="page-heading"><div><h1>Existing posts</h1><p>Search, filter, preview, edit and remove your published stories and drafts.</p></div><button type="button" data-page="create">＋ Create a post</button></div><div class="panel"><div class="post-tools"><input id="postSearch" type="search" placeholder="Search posts by title or text…"><select id="postStatusFilter"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option></select><select id="postCategoryFilter"><option value="all">All categories</option></select></div><div id="postGrid"><div class="empty-state">Loading posts…</div></div></div></section>
 <section class="page-view" id="page-admins" hidden>
-<div class="page-heading"><div><h1>Administrator access</h1><p>Invite trusted people to help manage the Youth of Tayitu website.</p></div></div>
-<div class="panel"><h2>Add an administrator</h2><p class="muted">Create an account using the administrator’s email and a password you assign. The account is activated immediately; share the login details privately and ask them to change the password after signing in.</p>
+<div class="page-heading"><div><h1>Administrator access</h1></div></div>
+<div class="panel owner-only" hidden><h2>Add an administrator</h2><p class="muted">Create an account using the administrator’s email and a password you assign. The account is activated immediately; share the login details privately and ask them to change the password after signing in.</p>
 <form id="inviteAdminForm">
 <label for="inviteEmail">Administrator email address</label><input id="inviteEmail" type="email" placeholder="name@example.com" autocomplete="off" required>
 <label for="invitePassword">Assign a temporary password</label><input id="invitePassword" type="password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters" required>
@@ -315,10 +315,10 @@ async function loadAdminUsers(){
   if(!confirm('Cancel this invitation or remove dashboard access for '+email+'? This cannot be undone.'))return;
   button.disabled=true;button.textContent='Removing…';
   const {data,error}=await client.functions.invoke('invite-admin',{body:{action:'remove',email}});
-  if(error||data?.error){alert(error?.message||data.error);button.disabled=false;button.textContent='Remove access';return}
-  message(data?.message||'Administrator access removed.');await loadAdminUsers();
+  if(error||data?.error){const detail=data?.error||error?.context?.message||error?.message||'The server could not remove this administrator.';alert('Could not remove '+email+': '+detail);button.disabled=false;button.textContent='Remove access';return}
+  message(data?.message||'Administrator account and access removed.');await loadAdminUsers();
  }));
- if(!isOwner)$('adminList').insertAdjacentHTML('beforebegin','<p class="muted">Only the website owner can invite or remove administrators.</p>');
+
 }
 $('inviteAdminForm').addEventListener('submit',async e=>{
  e.preventDefault();
