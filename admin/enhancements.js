@@ -121,25 +121,68 @@
     }catch(err){message('Upload failed: '+err.message)}
   });
 
-  // Owner-only backup/restore. This is a content backup; Storage binaries stay in the bucket.
+  // Full backup includes database content plus binary objects from the public image bucket.
+  async function listAllMedia(){
+    const files=[];
+    async function walk(prefix='',depth=0){
+      if(depth>4)return;
+      const {data,error}=await client.storage.from('post-images').list(prefix,{limit:100,sortBy:{column:'name',order:'asc'}});
+      if(error)throw error;
+      for(const item of data||[]){const path=prefix?prefix+'/'+item.name:item.name;if(item.id===null)await walk(path,depth+1);else files.push(path)}
+    }
+    await walk();return files;
+  }
+  const contentTypeFor=path=>({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',svg:'image/svg+xml'}[(path.split('.').pop()||'').toLowerCase()]||'application/octet-stream');
   $('downloadBackup')?.addEventListener('click',async()=>{
-    $('backupStatus').textContent='Preparing backup…';
+    if(!isOwner()){message('Only the super admin can create backups.');return}
+    if(!window.JSZip){$('backupStatus').textContent='Backup library did not load. Refresh the page and try again.';return}
+    $('backupStatus').textContent='Collecting website content…';
     const [posts,site]=await Promise.all([client.from('posts').select('*').order('created_at',{ascending:true}),client.from('site_content').select('*')]);
     if(posts.error||site.error){$('backupStatus').textContent='Backup failed: '+(posts.error||site.error).message;return}
-    const backup={format:'youth-of-tayitu-backup',version:1,created_at:new Date().toISOString(),posts:posts.data||[],site_content:site.data||[],note:'Image binaries remain in Supabase Storage; their public URLs are included.'};
-    download('youth-of-tayitu-backup-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(backup,null,2));
-    await saveLog('Downloaded website backup','backup','Posts and homepage settings');$('backupStatus').textContent='Backup downloaded successfully.';
+    const backup={format:'youth-of-tayitu-backup',version:2,created_at:new Date().toISOString(),posts:posts.data||[],site_content:site.data||[]};
+    const zip=new JSZip();zip.file('content.json',JSON.stringify(backup,null,2));
+    try{
+      const paths=await listAllMedia();
+      for(let i=0;i<paths.length;i++){
+        $('backupStatus').textContent='Backing up images '+(i+1)+' of '+paths.length+'…';
+        const {data,error}=await client.storage.from('post-images').download(paths[i]);
+        if(error)throw error;
+        zip.file('media/'+paths[i],data);
+      }
+      $('backupStatus').textContent='Building backup archive…';
+      const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:5}});
+      download('youth-of-tayitu-full-backup-'+new Date().toISOString().slice(0,10)+'.zip',blob,'application/zip');
+      await saveLog('Downloaded full website backup','backup','Posts, homepage settings and media',{posts:backup.posts.length,media_files:paths.length});
+      $('backupStatus').textContent='Complete backup downloaded: '+backup.posts.length+' posts and '+paths.length+' image files.';
+    }catch(err){$('backupStatus').textContent='Backup failed: '+err.message}
   });
   $('restoreBackup')?.addEventListener('click',async()=>{
-    const file=$('backupFile').files?.[0];if(!file){message('Choose a backup JSON file first.');return}
-    let backup;try{backup=JSON.parse(await file.text())}catch{message('The selected file is not valid JSON.');return}
+    if(!isOwner()){message('Only the super admin can restore backups.');return}
+    const file=$('backupFile').files?.[0];if(!file){message('Choose a ZIP or JSON backup file first.');return}
+    let backup,zip=null,mediaEntries=[];
+    try{
+      if(file.name.toLowerCase().endsWith('.zip')){
+        if(!window.JSZip)throw new Error('Backup library did not load. Refresh the page and try again.');
+        zip=await JSZip.loadAsync(file);
+        const contentFile=zip.file('content.json');if(!contentFile)throw new Error('ZIP does not contain content.json.');
+        backup=JSON.parse(await contentFile.async('string'));
+        mediaEntries=Object.entries(zip.files).filter(([name,entry])=>name.startsWith('media/')&&!entry.dir);
+      }else backup=JSON.parse(await file.text());
+    }catch(err){message('Could not read backup: '+err.message);return}
     if(backup?.format!=='youth-of-tayitu-backup'||!Array.isArray(backup.posts)||!Array.isArray(backup.site_content)){message('Unsupported backup file.');return}
-    if(!confirm('Import '+backup.posts.length+' posts and '+backup.site_content.length+' homepage records? Matching IDs/keys will be updated; other current content will not be deleted.'))return;
-    $('backupStatus').textContent='Restoring backup…';
+    if(!confirm('Restore '+backup.posts.length+' posts, '+backup.site_content.length+' homepage records and '+mediaEntries.length+' image files? Matching records/files will be updated; other current content will not be deleted.'))return;
+    $('backupStatus').textContent='Restoring content…';
     if(backup.posts.length){const {error}=await client.from('posts').upsert(backup.posts,{onConflict:'id'});if(error){$('backupStatus').textContent='Posts restore failed: '+error.message;return}}
     if(backup.site_content.length){const {error}=await client.from('site_content').upsert(backup.site_content,{onConflict:'section_key'});if(error){$('backupStatus').textContent='Homepage restore failed: '+error.message;return}}
-    await saveLog('Restored website backup','backup','Posts and homepage settings',{post_count:backup.posts.length,site_content_count:backup.site_content.length});
-    $('backupStatus').textContent='Backup restored. Refresh the public website to see the content.';await loadPosts();
+    for(let i=0;i<mediaEntries.length;i++){
+      const [entryName,entry]=mediaEntries[i],path=entryName.slice('media/'.length);
+      $('backupStatus').textContent='Restoring images '+(i+1)+' of '+mediaEntries.length+'…';
+      const blob=await entry.async('blob');
+      const {error}=await client.storage.from('post-images').upload(path,blob,{upsert:true,contentType:contentTypeFor(path)});
+      if(error){$('backupStatus').textContent='Image restore failed for '+path+': '+error.message;return}
+    }
+    await saveLog('Restored website backup','backup','Posts, homepage settings and media',{post_count:backup.posts.length,site_content_count:backup.site_content.length,media_files:mediaEntries.length});
+    $('backupStatus').textContent='Backup restored: '+backup.posts.length+' posts and '+mediaEntries.length+' image files.';await loadPosts();
   });
 
   // Privacy-friendly aggregate page-view reporting (no cookies, IP or user-agent stored).
