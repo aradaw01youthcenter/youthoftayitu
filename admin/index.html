@@ -21,13 +21,20 @@
 <button type="button" id="saveSiteContent">Save homepage changes</button>
 <span id="siteContentStatus" class="muted" aria-live="polite"></span>
 </div>
-<div class="panel"><h2>Existing posts</h2><div id="list">Loading…</div></div></div><div id="message" role="status"></div></div>
+<div class="panel" id="visualManager">
+<h2>Homepage photos & gallery</h2>
+<p class="muted">Upload images for the main banner, service cards and public photo gallery. Images are stored securely in the website's Supabase image bucket.</p>
+<label for="bannerUpload">Homepage banner image</label><input id="bannerUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><div id="bannerPreview" class="gallery"></div>
+<h3>Service card images</h3><div id="serviceImageFields"></div>
+<label for="galleryUpload">Photo gallery — add multiple photos</label><input id="galleryUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="homepageGalleryPreview" class="gallery"></div>
+<button type="button" id="saveVisualManager">Save homepage photos</button><span id="visualStatus" class="muted" aria-live="polite"></span>
+</div><div class="panel"><h2>Existing posts</h2><div id="list">Loading…</div></div></div><div id="message" role="status"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
 const $=id=>document.getElementById(id),message=t=>$('message').textContent=t;
 let currentUser=null,currentImages=[];
 const categories=["ሳይንስና ፈጠራ","በጎ ፈቃድ","የጤናና የምክር ድጋፍ","የህይወት ክህሎት","አመራርነት","ስራ ፈጠራና የቢዝነስ","ስፖርትና መዝናኛ"];
-function showApp(user){currentUser=user;$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent()}}
+function showApp(user){currentUser=user;$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia()}}
 async function refresh(){const {data}=await client.auth.getSession();showApp(data.session?.user||null)}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Sending secure sign-in link…');const email=$('email').value.trim().toLowerCase();if(email!=='aradaw01youthcenter@gmail.com'){message('This email is not authorized.');return}const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/admin/',shouldCreateUser:false}});message(error?error.message:'Check your email for the secure sign-in link.')});
 client.auth.onAuthStateChange((_event,s)=>showApp(s?.user||null));
@@ -77,6 +84,46 @@ const siteFields=[
 function renderSiteContentFields(values={}){$('siteContentFields').innerHTML=siteFields.map(f=>'<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="url" data-cms-am="'+f.key+'" placeholder="https://">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>').join('');siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''})}
 async function loadSiteContent(){const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();if(error){$('siteContentStatus').textContent='Could not load homepage settings: '+error.message;return}renderSiteContentFields(data?.content||{})}
 $('saveSiteContent').onclick=async()=>{const content={};siteFields.forEach(f=>{const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');content[f.key]={am:am?am.value.trim():'',en:en?en.value.trim():'',selector:f.selector,...(f.property?{property:f.property}:{})}});$('siteContentStatus').textContent='Saving…';const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});$('siteContentStatus').textContent=error?'Save failed: '+error.message:'Homepage content saved. Refresh the public website to see changes.'};
+let homepageMedia={bannerUrl:'',serviceImages:Array(8).fill(''),gallery:[]};
+function renderHomepageMedia(){
+ $('bannerPreview').innerHTML=homepageMedia.bannerUrl?'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(homepageMedia.bannerUrl)+'" alt="Homepage banner preview"><button type="button" id="removeBanner">×</button></div>':'<span class="muted">No custom banner uploaded yet.</span>';
+ if($('removeBanner'))$('removeBanner').onclick=()=>{homepageMedia.bannerUrl='';renderHomepageMedia()};
+ $('serviceImageFields').innerHTML=Array.from({length:8},(_,i)=>'<div class="site-field"><label>Service '+(i+1)+' image</label><input type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-service-image="'+i+'"><div class="gallery">'+(homepageMedia.serviceImages[i]?'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(homepageMedia.serviceImages[i])+'" alt="Service '+(i+1)+' preview"><button type="button" data-remove-service="'+i+'">×</button></div>':'<span class="muted">No image selected</span>')+'</div></div>').join('');
+ $('serviceImageFields').querySelectorAll('[data-remove-service]').forEach(b=>b.onclick=()=>{homepageMedia.serviceImages[Number(b.dataset.removeService)]='';renderHomepageMedia()});
+ $('homepageGalleryPreview').innerHTML=homepageMedia.gallery.map((url,i)=>'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(url)+'" alt="Gallery photo '+(i+1)+'"><button type="button" data-remove-gallery="'+i+'">×</button></div>').join('');
+ $('homepageGalleryPreview').querySelectorAll('[data-remove-gallery]').forEach(b=>b.onclick=()=>{homepageMedia.gallery.splice(Number(b.dataset.removeGallery),1);renderHomepageMedia()});
+}
+async function uploadHomepageImage(file,folder){
+ if(!file)return null;
+ if(!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)){throw new Error('Use a JPG, PNG, WebP or GIF image.')}
+ if(file.size>10*1024*1024)throw new Error('Each image must be 10 MB or smaller.');
+ const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+ const path='homepage/'+folder+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,9)+'.'+ext;
+ const {error}=await client.storage.from('post-images').upload(path,file,{upsert:false,contentType:file.type});
+ if(error)throw error;
+ return client.storage.from('post-images').getPublicUrl(path).data.publicUrl;
+}
+async function loadHomepageMedia(){
+ const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();
+ if(error){$('visualStatus').textContent='Could not load saved photos: '+error.message;return}
+ const c=data?.content||{};
+ homepageMedia={bannerUrl:c.homepageBannerUrl||'',serviceImages:Array.from({length:8},(_,i)=>c['serviceImage'+(i+1)]||''),gallery:Array.isArray(c.homepageGallery)?c.homepageGallery:[]};
+ renderHomepageMedia();
+}
+$('bannerUpload').addEventListener('change',async e=>{try{if(e.target.files[0]){ $('visualStatus').textContent='Uploading banner…';homepageMedia.bannerUrl=await uploadHomepageImage(e.target.files[0],'banner');renderHomepageMedia();$('visualStatus').textContent='Banner uploaded. Save homepage photos to publish it.'}}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
+$('serviceImageFields').addEventListener('change',async e=>{const input=e.target.closest('[data-service-image]');if(!input||!input.files[0])return;const i=Number(input.dataset.serviceImage);try{$('visualStatus').textContent='Uploading service image…';homepageMedia.serviceImages[i]=await uploadHomepageImage(input.files[0],'services');renderHomepageMedia();$('visualStatus').textContent='Service image uploaded. Save homepage photos to publish it.'}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
+$('galleryUpload').addEventListener('change',async e=>{const files=Array.from(e.target.files||[]);try{for(const file of files){$('visualStatus').textContent='Uploading gallery photos…';homepageMedia.gallery.push(await uploadHomepageImage(file,'gallery'))}renderHomepageMedia();$('visualStatus').textContent=files.length+' gallery photo(s) uploaded. Save homepage photos to publish them.';e.target.value=''}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
+$('saveVisualManager').onclick=async()=>{
+ const {data:existing,error:readError}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();
+ if(readError){$('visualStatus').textContent='Could not read homepage settings: '+readError.message;return}
+ const content=existing?.content||{};
+ content.homepageBannerUrl=homepageMedia.bannerUrl;
+ homepageMedia.serviceImages.forEach((url,i)=>content['serviceImage'+(i+1)]=url);
+ content.homepageGallery=homepageMedia.gallery;
+ $('visualStatus').textContent='Saving homepage photos…';
+ const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});
+ $('visualStatus').textContent=error?'Save failed: '+error.message:'Homepage photos saved. Refresh the public homepage to see them.';
+};
 async function loadPosts(){const {data,error}=await client.from('posts').select('*').order('created_at',{ascending:false});if(error){$('list').textContent=error.message;return}if(!data.length){$('list').textContent='No posts yet.';return}$('list').innerHTML=data.map(p=>'<div class="post"><strong>'+escapeHtml(p.title)+'</strong><span class="status">'+escapeHtml(p.category||'')+' · '+p.status+' · '+new Date(p.created_at).toLocaleString()+'</span><div class="row"><button data-edit="'+p.id+'" class="secondary">Edit</button><button data-delete="'+p.id+'" class="danger">Delete</button>'+(p.status==='published'?'<a href="/posts/'+encodeURIComponent(p.slug)+'" target="_blank" rel="noopener">View</a>':'')+'</div></div>').join('');$('list').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editPost(data.find(p=>p.id===b.dataset.edit)));$('list').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deletePost(b.dataset.delete))}
 function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category').value=p.category||categories[0];$('excerpt').value=p.excerpt||'';$('content').value=p.content;$('status').value=p.status;currentImages=Array.isArray(p.images)?p.images.slice():[];if(!currentImages.length&&p.cover_image)currentImages=[p.cover_image];renderGallery();$('formTitle').textContent='Edit post';window.scrollTo({top:0,behavior:'smooth'})}
 $('postForm').addEventListener('submit',async e=>{e.preventDefault();message('Saving post…');const id=$('postId').value,title=$('title').value.trim(),status=$('status').value,files=Array.from($('image').files||[]);if(files.some(f=>!['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)||f.size>10*1024*1024)){message('Please choose JPEG, PNG, WebP or GIF photos, each no larger than 10 MB.');return}
