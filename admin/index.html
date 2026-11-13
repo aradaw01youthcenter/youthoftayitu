@@ -1,11 +1,66 @@
 <!DOCTYPE html>
 <html lang="am"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Posts Admin | Youth of Tayitu</title><meta name="robots" content="noindex,nofollow"><style>
 *{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#172033;font:15px/1.5 Arial,sans-serif}.wrap{max-width:940px;margin:35px auto;padding:0 18px}.panel{background:#fff;border-radius:14px;padding:24px;margin:18px 0;box-shadow:0 5px 22px #14213d0c}h1{margin:0 0 6px}h2{margin-top:0}label{display:block;font-weight:700;margin:14px 0 6px}input,textarea,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}textarea{min-height:190px;resize:vertical}button{border:0;border-radius:8px;padding:11px 17px;background:#0758a5;color:#fff;font-weight:700;cursor:pointer;margin:12px 8px 0 0}button.secondary{background:#526176}button.danger{background:#b42318}.muted{color:#667085}.post{padding:15px 0;border-top:1px solid #e6eaf0}.post strong{display:block}.status{font-size:13px;color:#667085}.hidden{display:none}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}#message{margin:12px 0;color:#0758a5;white-space:pre-wrap}.gallery{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.thumb{width:110px;height:90px;object-fit:cover;border-radius:8px;border:1px solid #ddd}.thumbwrap{position:relative}.thumbwrap button{position:absolute;top:0;right:0;margin:2px;padding:4px 8px;background:#b42318}
- .site-field{padding:12px 0;border-top:1px solid #e6eaf0}.site-field label{margin:8px 0 5px}.site-field input,.site-field textarea{margin-bottom:4px}</style></head><body><div class="wrap">
+ .site-field{padding:12px 0;border-top:1px solid #e6eaf0}.site-field label{margin:8px 0 5px}.site-field input,.site-field textarea{margin-bottom:4px} 
+:root{--navy:#13243b;--navy2:#1d3553;--gold:#f4c64e;--orange:#ed6b45;--paper:#f4f6fa;--ink:#18283e;--muted:#728096;--line:#e6ebf2;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.wrap{max-width:none;margin:0;padding:0}
+#message{position:fixed;z-index:50;bottom:22px;right:24px;max-width:min(460px,calc(100vw - 32px));padding:13px 18px;background:var(--navy);color:#fff;border-radius:13px;box-shadow:0 12px 34px #0e203b35;font-weight:650}
+#login{max-width:480px;margin:9vh auto 40px;padding:38px!important;border-radius:24px!important;box-shadow:0 24px 70px #172b4517!important;border:1px solid #e9edf4}
+#login:before{content:"YOUTH OF TAYITU";display:inline-flex;align-items:center;margin-bottom:24px;padding:8px 13px;border-radius:30px;background:#fff5d8;color:#8a6511;font-size:11px;font-weight:850;letter-spacing:1.5px}
+#login h2{font-size:28px;letter-spacing:-.8px;color:var(--navy)}#login .muted{font-size:13px}
+#login button{width:100%;padding:14px;margin-top:18px}
+#app{min-height:100vh}
+.dash-topbar{height:76px;background:var(--navy);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,52px);box-shadow:0 5px 20px #13243b18}
+.dash-brand{display:flex;align-items:center;gap:12px;font-weight:850;letter-spacing:.2px}.dash-logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,var(--gold),#f18b47);display:grid;place-items:center;color:#17263c;font-size:19px;font-weight:950;box-shadow:0 5px 16px #0002}.dash-brand small{display:block;color:#b9c7d8;font-size:10px;font-weight:600;letter-spacing:1.5px}
+.dash-top-right{display:flex;align-items:center;gap:12px}.online-dot{width:8px;height:8px;background:#54d69b;border-radius:50%;display:inline-block;margin-right:7px;box-shadow:0 0 0 4px #54d69b20}
+.dashboard-layout{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1600px;margin:auto;min-height:calc(100vh - 76px)}
+.dash-sidebar{background:var(--navy);color:#dce5ef;padding:27px 17px;display:flex;flex-direction:column;gap:8px}
+.dash-side-label{padding:10px 13px 5px;color:#879ab2;font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
+.dash-nav{display:flex;align-items:center;gap:12px;padding:12px 14px;color:#dce5ef;text-decoration:none;border-radius:12px;font-weight:650;font-size:13px;transition:.2s}
+.dash-nav:hover,.dash-nav.active{background:#ffffff16;color:#fff}.dash-nav.active{box-shadow:inset 3px 0 var(--gold)}.dash-nav .nav-icon{width:22px;text-align:center;font-size:17px}
+.dash-side-note{margin-top:auto;padding:16px 14px;background:#ffffff0c;border:1px solid #ffffff13;border-radius:15px;color:#b7c6d8;font-size:12px}
+.dashboard-main{padding:clamp(18px,3vw,38px);min-width:0;max-width:1250px;width:100%;margin:0 auto}
+.dash-welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin:0 0 25px}.dash-welcome h1{font-size:clamp(25px,3vw,34px);letter-spacing:-1px;margin:0;color:var(--navy)}.dash-welcome p{margin:5px 0 0;color:var(--muted)}
+.dash-date{font-size:12px;color:#6d7c91;background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:30px}
+.dash-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:25px}
+.dash-stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px 20px;box-shadow:0 5px 18px #1a2d4508;position:relative;overflow:hidden}.dash-stat:after{content:"";position:absolute;width:75px;height:75px;border-radius:50%;right:-20px;top:-24px;background:#f7e9b7;opacity:.45}.dash-stat:nth-child(2):after{background:#dcecff}.dash-stat:nth-child(3):after{background:#d9f3e8}
+.dash-stat span{font-size:12px;color:var(--muted);font-weight:650}.dash-stat strong{display:block;font-size:28px;color:var(--navy);line-height:1.3;margin-top:7px}.dash-stat small{font-size:11px;color:#8491a3}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:clamp(18px,2.3vw,28px);margin:0 0 20px;box-shadow:0 6px 24px #1b30480a;scroll-margin-top:22px}
+.panel h2{font-size:19px;color:var(--navy);letter-spacing:-.3px;margin:0 0 7px}.panel h3{color:var(--navy);font-size:15px;margin-top:25px}
+.panel>p.muted{font-size:13px;margin:0 0 18px}
+label{display:block;font-weight:700;margin:15px 0 7px;color:#34445b;font-size:13px}
+input,textarea,select{width:100%;padding:12px 14px;border:1px solid #dce3ed;border-radius:10px;background:#fbfcfe;color:#24344a;font:inherit;outline:none;transition:border .18s,box-shadow .18s}
+input:focus,textarea:focus,select:focus{border-color:#d4a72e;box-shadow:0 0 0 3px #f4c64e2b;background:#fff}
+textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;padding:11px 17px;background:var(--navy2);color:#fff;font-weight:750;cursor:pointer;margin:12px 8px 0 0;transition:transform .18s,filter .18s,box-shadow .18s}button:hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 6px 15px #142b4520}button.secondary{background:#eaf0f7;color:#30435b}button.danger{background:#fff0ef;color:#b42318}
+.muted{color:var(--muted)}.post{padding:17px 0;border-top:1px solid var(--line)}.post strong{display:block;color:var(--navy);font-size:15px}.status{font-size:12px;color:#78879b}.hidden{display:none}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.gallery{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.thumb{width:118px;height:94px;object-fit:cover;border-radius:11px;border:1px solid var(--line)}.thumbwrap{position:relative}.thumbwrap button{position:absolute;top:0;right:0;margin:3px;padding:3px 8px;background:#b42318;border-radius:50%}
+.site-field{padding:15px 0;border-top:1px solid var(--line)}.site-field label{margin:8px 0 5px}.site-field input,.site-field textarea{margin-bottom:4px}
+#saveSiteContent,#saveVisualManager,#postForm button[type=submit]{background:linear-gradient(120deg,#193a5e,#28547a);padding:13px 21px}
+#visualManager input[type=file],#postForm input[type=file]{background:#f8fafc;border:1px dashed #c6d2e1;padding:13px}
+#list .post:first-child{border-top:0}
+.dash-footer{font-size:11px;color:#93a4b9;margin-top:15px;padding:10px 13px}
+@media(max-width:850px){.dashboard-layout{grid-template-columns:1fr}.dash-sidebar{padding:10px 14px;display:flex;flex-direction:row;overflow-x:auto;gap:5px}.dash-side-label,.dash-side-note{display:none}.dash-nav{white-space:nowrap;padding:10px 12px}.dash-nav .nav-icon{display:none}.dashboard-main{padding:20px 15px}}
+@media(max-width:560px){.dash-topbar{height:66px;padding:0 15px}.dash-brand{font-size:13px}.dash-logo{width:36px;height:36px}.dash-top-right #logout{padding:9px 11px;font-size:12px}.dash-top-right #signedIn{display:none}.dash-stats{grid-template-columns:1fr 1fr}.dash-stat:last-child{grid-column:span 2}.dash-welcome{align-items:flex-start;flex-direction:column}.dash-date{display:none}.panel{border-radius:15px}.wrap{padding:0}}
+</style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
 <div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" required><button type="submit">Send sign-in link</button></form><p class="muted">A secure sign-in link will be sent to your email.</p></div>
-<div id="app" class="hidden"><div class="row"><span id="signedIn" class="muted"></span><button id="logout" class="secondary">Sign out</button></div>
-<div class="panel"><h2 id="formTitle">Create a post</h2><form id="postForm"><input id="postId" type="hidden">
+<div id="app" class="hidden">
+<header class="dash-topbar"><div class="dash-brand"><div class="dash-logo">YT</div><div>YOUTH OF TAYITU<small>WEBSITE CONTROL CENTER</small></div></div><div class="dash-top-right"><span id="signedIn" class="muted" style="color:#d7e2ef;font-size:12px"></span><button id="logout" class="secondary" style="margin:0;background:#ffffff18;color:#fff">Sign out ↗</button></div></header>
+<div class="dashboard-layout">
+<aside class="dash-sidebar"><div class="dash-side-label">Workspace</div>
+<a class="dash-nav active" href="#overview"><span class="nav-icon">⌂</span> Overview</a>
+<a class="dash-nav" href="#post-editor"><span class="nav-icon">✎</span> Create a post</a>
+<a class="dash-nav" href="#existing-posts"><span class="nav-icon">▤</span> All posts</a>
+<div class="dash-side-label">Website</div><a class="dash-nav" href="#siteContentPanel"><span class="nav-icon">☷</span> Homepage content</a>
+<a class="dash-nav" href="#visualManager"><span class="nav-icon">▧</span> Photos & gallery</a>
+<a class="dash-nav" href="https://youthoftayitu.vercel.app/" target="_blank" rel="noopener"><span class="nav-icon">↗</span> View live website</a>
+<div class="dash-side-note">Keep your community informed with stories, activities and opportunities from Youth of Tayitu.</div>
+</aside>
+<main class="dashboard-main">
+<section id="overview" class="dash-welcome"><div><h1>Good to see you 👋</h1><p>Here's what's happening on your website today.</p></div><div class="dash-date">✦ &nbsp; Youth of Tayitu dashboard</div></section>
+<div class="dash-stats"><div class="dash-stat"><span>Total posts</span><strong id="statTotal">—</strong><small>All posts in your dashboard</small></div><div class="dash-stat"><span>Published</span><strong id="statPublished">—</strong><small>Visible to website visitors</small></div><div class="dash-stat"><span>Drafts</span><strong id="statDrafts">—</strong><small>Not yet published</small></div></div>
+<section class="panel" id="post-editor"><h2 id="formTitle">Create a post</h2><form id="postForm"><input id="postId" type="hidden">
 <label for="title">Post title</label><input id="title" maxlength="180" required>
 <label for="category">Post category</label><select id="category" required><option value="ሳይንስና ፈጠራ">ሳይንስና ፈጠራ</option><option value="በጎ ፈቃድ">በጎ ፈቃድ</option><option value="የጤናና የምክር ድጋፍ">የጤናና የምክር ድጋፍ</option><option value="የህይወት ክህሎት">የህይወት ክህሎት</option><option value="አመራርነት">አመራርነት</option><option value="ስራ ፈጠራና የቢዝነስ">ስራ ፈጠራና የቢዝነስ</option><option value="ስፖርትና መዝናኛ">ስፖርትና መዝናኛ</option></select>
 <label for="excerpt">Short summary</label><textarea id="excerpt" style="min-height:80px" maxlength="400"></textarea>
@@ -28,7 +83,7 @@
 <h3>Service card images</h3><div id="serviceImageFields"></div>
 <label for="galleryUpload">Photo gallery — add multiple photos</label><input id="galleryUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="homepageGalleryPreview" class="gallery"></div>
 <button type="button" id="saveVisualManager">Save homepage photos</button><span id="visualStatus" class="muted" aria-live="polite"></span>
-</div><div class="panel"><h2>Existing posts</h2><div id="list">Loading…</div></div></div><div id="message" role="status"></div></div>
+</div><div class="panel" id="existing-posts"><h2>Existing posts</h2><div id="list">Loading…</div></div><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="message" role="status"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
 const $=id=>document.getElementById(id),message=t=>$('message').textContent=t;
@@ -124,8 +179,8 @@ $('saveVisualManager').onclick=async()=>{
  const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});
  $('visualStatus').textContent=error?'Save failed: '+error.message:'Homepage photos saved. Refresh the public homepage to see them.';
 };
-async function loadPosts(){const {data,error}=await client.from('posts').select('*').order('created_at',{ascending:false});if(error){$('list').textContent=error.message;return}if(!data.length){$('list').textContent='No posts yet.';return}$('list').innerHTML=data.map(p=>'<div class="post"><strong>'+escapeHtml(p.title)+'</strong><span class="status">'+escapeHtml(p.category||'')+' · '+p.status+' · '+new Date(p.created_at).toLocaleString()+'</span><div class="row"><button data-edit="'+p.id+'" class="secondary">Edit</button><button data-delete="'+p.id+'" class="danger">Delete</button>'+(p.status==='published'?'<a href="/posts/'+encodeURIComponent(p.slug)+'" target="_blank" rel="noopener">View</a>':'')+'</div></div>').join('');$('list').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editPost(data.find(p=>p.id===b.dataset.edit)));$('list').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deletePost(b.dataset.delete))}
-function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category').value=p.category||categories[0];$('excerpt').value=p.excerpt||'';$('content').value=p.content;$('status').value=p.status;currentImages=Array.isArray(p.images)?p.images.slice():[];if(!currentImages.length&&p.cover_image)currentImages=[p.cover_image];renderGallery();$('formTitle').textContent='Edit post';window.scrollTo({top:0,behavior:'smooth'})}
+async function loadPosts(){const {data,error}=await client.from('posts').select('*').order('created_at',{ascending:false});if(error){$('list').textContent=error.message;return}$('statTotal').textContent=data.length;$('statPublished').textContent=data.filter(p=>p.status==='published').length;$('statDrafts').textContent=data.filter(p=>p.status==='draft').length;if(!data.length){$('list').textContent='No posts yet.';return}$('list').innerHTML=data.map(p=>'<div class="post"><strong>'+escapeHtml(p.title)+'</strong><span class="status">'+escapeHtml(p.category||'')+' · '+p.status+' · '+new Date(p.created_at).toLocaleString()+'</span><div class="row"><button data-edit="'+p.id+'" class="secondary">Edit</button><button data-delete="'+p.id+'" class="danger">Delete</button>'+(p.status==='published'?'<a href="/posts/'+encodeURIComponent(p.slug)+'" target="_blank" rel="noopener">View</a>':'')+'</div></div>').join('');$('list').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editPost(data.find(p=>p.id===b.dataset.edit)));$('list').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deletePost(b.dataset.delete))}
+function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category').value=p.category||categories[0];$('excerpt').value=p.excerpt||'';$('content').value=p.content;$('status').value=p.status;currentImages=Array.isArray(p.images)?p.images.slice():[];if(!currentImages.length&&p.cover_image)currentImages=[p.cover_image];renderGallery();$('formTitle').textContent='Edit post';document.getElementById('post-editor').scrollIntoView({behavior:'smooth',block:'start'})}
 $('postForm').addEventListener('submit',async e=>{e.preventDefault();message('Saving post…');const id=$('postId').value,title=$('title').value.trim(),status=$('status').value,files=Array.from($('image').files||[]);if(files.some(f=>!['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)||f.size>10*1024*1024)){message('Please choose JPEG, PNG, WebP or GIF photos, each no larger than 10 MB.');return}
 const uploaded=[];for(const file of files){const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safe;const up=await client.storage.from('post-images').upload(path,file,{upsert:false,contentType:file.type});if(up.error){message('Photo upload failed: '+up.error.message);return}uploaded.push(client.storage.from('post-images').getPublicUrl(path).data.publicUrl)}
 const images=currentImages.concat(uploaded),payload={title,slug:id?undefined:slugify(title),category:$('category').value,excerpt:$('excerpt').value.trim(),content:$('content').value,images,cover_image:images[0]||null,status,updated_at:new Date().toISOString(),...(status==='published'?{published_at:new Date().toISOString()}:{})};if(id)delete payload.slug;
