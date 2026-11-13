@@ -188,12 +188,14 @@
   // Privacy-friendly aggregate page-view reporting (no cookies, IP or user-agent stored).
   async function loadVisitors(){
     if(!isOwner())return;
-    const {data,error}=await client.from('site_page_views').select('page_path,created_at').gte('created_at',new Date(Date.now()-30*86400000).toISOString()).limit(5000);
+    const {data,error}=await client.from('site_page_views').select('page_path,referrer_host,created_at').gte('created_at',new Date(Date.now()-30*86400000).toISOString()).limit(5000);
     if(error){$('visitorAnalytics').textContent='Analytics unavailable: '+error.message;return}
-    const rows=data||[],counts={};rows.forEach(x=>counts[x.page_path]=(counts[x.page_path]||0)+1);
+    const rows=data||[],counts={},sources={};rows.forEach(x=>{counts[x.page_path]=(counts[x.page_path]||0)+1;const source=x.referrer_host||'Direct / unknown';sources[source]=(sources[source]||0)+1});
     $('visitorAnalytics').innerHTML='<div class="analytics-kpi"><strong>'+rows.length+'</strong><span>Page views · last 30 days</span></div><div class="analytics-kpi"><strong>'+new Set(rows.map(x=>x.page_path)).size+'</strong><span>Pages visited</span></div>';
     const max=Math.max(1,...Object.values(counts));
     $('topPages').innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([path,n])=>'<div class="category-row"><span>'+h(path)+'</span><strong>'+n+'</strong><div class="category-track"><div class="category-fill" style="width:'+n/max*100+'%"></div></div></div>').join('')||'<span class="muted">No visitor data recorded yet.</span>';
+    const sourceMax=Math.max(1,...Object.values(sources));
+    $('topReferrers').innerHTML=Object.entries(sources).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([source,n])=>'<div class="category-row"><span>'+h(source)+'</span><strong>'+n+'</strong><div class="category-track"><div class="category-fill" style="width:'+n/sourceMax*100+'%"></div></div></div>').join('')||'<span class="muted">No referral data yet.</span>';
   }
   const baseLoadPosts=loadPosts;
   loadPosts=async function(){await baseLoadPosts();if(isOwner())await loadVisitors()};
