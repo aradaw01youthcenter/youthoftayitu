@@ -23,7 +23,7 @@ create policy "Admins can view post revisions"
 drop policy if exists "Admins can record post revisions" on public.post_revisions;
 create policy "Admins can record post revisions"
   on public.post_revisions for insert to authenticated
-  with check (public.is_site_admin() and actor_user_id = auth.uid());
+  with check (public.is_site_admin() and actor_user_id = (select auth.uid()));
 
 create or replace function public.capture_post_revision()
 returns trigger
@@ -76,7 +76,7 @@ create policy "Only owner can read page analytics"
   using (
     exists (
       select 1 from public.admin_users au
-      where au.user_id=auth.uid() and au.role='owner'
+      where au.user_id=(select auth.uid()) and au.role='owner'
     )
   );
 
