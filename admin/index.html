@@ -49,8 +49,31 @@ const siteFields=[
 {key:'contactTitle',label:'Contact section — heading',selector:'#contact h2'},
 {key:'contactText',label:'Contact section — description',selector:'#contact p.sub',multi:true},
 {key:'announcementTitle',label:'Homepage announcement — heading',selector:'#homepage-announcement h2'},
-{key:'announcementText',label:'Homepage announcement — message',selector:'#homepage-announcement p',multi:true}
-];
+{key:'announcementText',label:'Homepage announcement — message',selector:'#homepage-announcement p',multi:true},
+
+{key:'contactAddress',label:'Contact address',selector:'#contactAddress'},
+{key:'contactPhone',label:'Contact phone',selector:'#contactPhone'},
+{key:'contactEmail',label:'Contact email',selector:'#contactEmail'},
+{key:'facebookUrl',label:'Facebook Page link',selector:'#contactFacebook',property:'href'},
+{key:'instagramUrl',label:'Instagram link',selector:'#contactInstagram',property:'href'},
+{key:'tiktokUrl',label:'TikTok link',selector:'#contactTiktok',property:'href'},
+{key:'service1Title',label:'Service 1 — Education & training heading',selector:'#services .grid .card:nth-child(1) h3'},
+{key:'service1Text',label:'Service 1 — description',selector:'#services .grid .card:nth-child(1) p',multi:true},
+{key:'service2Title',label:'Service 2 — Health & counseling heading',selector:'#services .grid .card:nth-child(2) h3'},
+{key:'service2Text',label:'Service 2 — description',selector:'#services .grid .card:nth-child(2) p',multi:true},
+{key:'service3Title',label:'Service 3 — ICT & library heading',selector:'#services .grid .card:nth-child(3) h3'},
+{key:'service3Text',label:'Service 3 — description',selector:'#services .grid .card:nth-child(3) p',multi:true},
+{key:'service4Title',label:'Service 4 — Science & innovation heading',selector:'#services .grid .card:nth-child(4) h3'},
+{key:'service4Text',label:'Service 4 — description',selector:'#services .grid .card:nth-child(4) p',multi:true},
+{key:'service5Title',label:'Service 5 — Clubs & volunteering heading',selector:'#services .grid .card:nth-child(5) h3'},
+{key:'service5Text',label:'Service 5 — description',selector:'#services .grid .card:nth-child(5) p',multi:true},
+{key:'service6Title',label:'Service 6 — Awareness & advocacy heading',selector:'#services .grid .card:nth-child(6) h3'},
+{key:'service6Text',label:'Service 6 — description',selector:'#services .grid .card:nth-child(6) p',multi:true},
+{key:'service7Title',label:'Service 7 — Sports & recreation heading',selector:'#services .grid .card:nth-child(7) h3'},
+{key:'service7Text',label:'Service 7 — description',selector:'#services .grid .card:nth-child(7) p',multi:true},
+{key:'service8Title',label:'Service 8 — Information service heading',selector:'#services .grid .card:nth-child(8) h3'},
+{key:'service8Text',label:'Service 8 — description',selector:'#services .grid .card:nth-child(8) p',multi:true}
+]];
 function renderSiteContentFields(values={}){$('siteContentFields').innerHTML=siteFields.map(f=>'<div class="site-field"><label>'+escapeHtml(f.label)+' — አማርኛ</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':'<input data-cms-am="'+f.key+'">')+'<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')+'</div>').join('');siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''})}
 async function loadSiteContent(){const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();if(error){$('siteContentStatus').textContent='Could not load homepage settings: '+error.message;return}renderSiteContentFields(data?.content||{})}
 $('saveSiteContent').onclick=async()=>{const content={};siteFields.forEach(f=>{content[f.key]={am:$('[data-cms-am="'+f.key+'"]').value.trim(),en:$('[data-cms-en="'+f.key+'"]').value.trim(),selector:f.selector}});$('siteContentStatus').textContent='Saving…';const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});$('siteContentStatus').textContent=error?'Save failed: '+error.message:'Homepage content saved. Refresh the public website to see changes.'};
