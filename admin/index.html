@@ -152,6 +152,16 @@ async function refresh(){const {data}=await client.auth.getSession();showApp(dat
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Sending secure sign-in link…');const email=$('email').value.trim().toLowerCase();if(email!=='aradaw01youthcenter@gmail.com'){message('This email is not authorized.');return}const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/admin/',shouldCreateUser:false}});message(error?error.message:'Check your email for the secure sign-in link.')});
 client.auth.onAuthStateChange((_event,s)=>showApp(s?.user||null));
 $('logout').onclick=async()=>{await client.auth.signOut();showApp(null);message('Signed out.')};
+
+let allPosts=[];
+function showPage(page){
+ document.querySelectorAll('.page-view').forEach(el=>el.hidden=el.id!=='page-'+page);
+ document.querySelectorAll('.dash-nav[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
+ window.scrollTo({top:0,behavior:'smooth'});
+ if(page==='posts')renderPosts();
+}
+document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>showPage(el.dataset.page)));
+showPage('overview');
 function slugify(s){const base=s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70);return (base||'post')+'-'+Date.now().toString(36)}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderGallery(){const el=$('currentGallery');el.innerHTML=currentImages.map((url,i)=>'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(url)+'" alt="Post photo '+(i+1)+'"><button type="button" data-remove="'+i+'" aria-label="Remove photo">×</button></div>').join('');el.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{currentImages.splice(Number(b.dataset.remove),1);renderGallery()})}
@@ -194,7 +204,20 @@ const siteFields=[
 {key:'service8Title',label:'Service 8 — Information service heading',selector:'#services .grid .card:nth-child(8) h3'},
 {key:'service8Text',label:'Service 8 — description',selector:'#services .grid .card:nth-child(8) p',multi:true}
 ];
-function renderSiteContentFields(values={}){$('siteContentFields').innerHTML=siteFields.map(f=>'<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="url" data-cms-am="'+f.key+'" placeholder="https://">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>').join('');siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''})}
+const siteGroups=[
+{title:'About the youth center',icon:'✦',hint:'Your identity, mission and introduction',keys:['aboutTitle','aboutText']},
+{title:'Services & programs',icon:'▦',hint:'The eight service cards shown on the homepage',keys:['servicesTitle','servicesText','service1Title','service1Text','service2Title','service2Text','service3Title','service3Text','service4Title','service4Text','service5Title','service5Text','service6Title','service6Text','service7Title','service7Text','service8Title','service8Text']},
+{title:'Sports & recreation',icon:'⚽',hint:'Sports activities and recreation information',keys:['sportsTitle','sportsText']},
+{title:'Join the center',icon:'＋',hint:'Invitation and participation information',keys:['joinTitle','joinText']},
+{title:'Announcements',icon:'▤',hint:'Important messages displayed on the homepage',keys:['announcementTitle','announcementText']},
+{title:'Contact information',icon:'⌖',hint:'Address, phone number and email',keys:['contactTitle','contactText','contactAddress','contactPhone','contactEmail']},
+{title:'Social media links',icon:'◎',hint:'Links to your official social accounts',keys:['facebookUrl','instagramUrl','tiktokUrl']}
+];
+function renderSiteContentFields(values={}){
+ const fieldsByKey=Object.fromEntries(siteFields.map(f=>[f.key,f]));
+ $('siteContentFields').innerHTML=siteGroups.map((group,index)=>'<section class="content-group"><div class="content-group-head"><div class="content-group-icon">'+group.icon+'</div><div><h3>'+group.title+'</h3><p>'+group.hint+'</p></div></div>'+group.keys.map(key=>{const f=fieldsByKey[key];if(!f)return '';const v=values[key]||{};return '<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="url" data-cms-am="'+f.key+'" placeholder="https://">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>'}).join('')+'</section>').join('');
+ siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''});
+}
 async function loadSiteContent(){const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();if(error){$('siteContentStatus').textContent='Could not load homepage settings: '+error.message;return}renderSiteContentFields(data?.content||{})}
 $('saveSiteContent').onclick=async()=>{const content={};siteFields.forEach(f=>{const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');content[f.key]={am:am?am.value.trim():'',en:en?en.value.trim():'',selector:f.selector,...(f.property?{property:f.property}:{})}});$('siteContentStatus').textContent='Saving…';const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});$('siteContentStatus').textContent=error?'Save failed: '+error.message:'Homepage content saved. Refresh the public website to see changes.'};
 let homepageMedia={bannerUrl:'',serviceImages:Array(8).fill(''),gallery:[]};
@@ -237,12 +260,42 @@ $('saveVisualManager').onclick=async()=>{
  const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});
  $('visualStatus').textContent=error?'Save failed: '+error.message:'Homepage photos saved. Refresh the public homepage to see them.';
 };
-async function loadPosts(){const {data,error}=await client.from('posts').select('*').order('created_at',{ascending:false});if(error){$('list').textContent=error.message;return}$('statTotal').textContent=data.length;$('statPublished').textContent=data.filter(p=>p.status==='published').length;$('statDrafts').textContent=data.filter(p=>p.status==='draft').length;if(!data.length){$('list').textContent='No posts yet.';return}$('list').innerHTML=data.map(p=>'<div class="post"><strong>'+escapeHtml(p.title)+'</strong><span class="status">'+escapeHtml(p.category||'')+' · '+p.status+' · '+new Date(p.created_at).toLocaleString()+'</span><div class="row"><button data-edit="'+p.id+'" class="secondary">Edit</button><button data-delete="'+p.id+'" class="danger">Delete</button>'+(p.status==='published'?'<a href="/posts/'+encodeURIComponent(p.slug)+'" target="_blank" rel="noopener">View</a>':'')+'</div></div>').join('');$('list').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editPost(data.find(p=>p.id===b.dataset.edit)));$('list').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deletePost(b.dataset.delete))}
-function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category').value=p.category||categories[0];$('excerpt').value=p.excerpt||'';$('content').value=p.content;$('status').value=p.status;currentImages=Array.isArray(p.images)?p.images.slice():[];if(!currentImages.length&&p.cover_image)currentImages=[p.cover_image];renderGallery();$('formTitle').textContent='Edit post';document.getElementById('post-editor').scrollIntoView({behavior:'smooth',block:'start'})}
+async function loadPosts(){
+ const {data,error}=await client.from('posts').select('*').order('created_at',{ascending:false});
+ if(error){$('postGrid').innerHTML='<div class="empty-state">'+escapeHtml(error.message)+'</div>';return}
+ allPosts=data||[];
+ $('statTotal').textContent=allPosts.length;
+ $('statPublished').textContent=allPosts.filter(p=>p.status==='published').length;
+ $('statDrafts').textContent=allPosts.filter(p=>p.status==='draft').length;
+ const categorySelect=$('postCategoryFilter');
+ if(categorySelect)categorySelect.innerHTML='<option value="all">All categories</option>'+categories.map(c=>'<option value="'+escapeHtml(c)+'">'+escapeHtml(c)+'</option>').join('');
+ renderPosts();renderDashboardCharts();
+}
+function renderPosts(){
+ const q=($('postSearch')?.value||'').trim().toLowerCase(),status=$('postStatusFilter')?.value||'all',cat=$('postCategoryFilter')?.value||'all';
+ const data=allPosts.filter(p=>(status==='all'||p.status===status)&&(cat==='all'||p.category===cat)&&(!q||[p.title,p.excerpt,p.content,p.category].some(v=>String(v||'').toLowerCase().includes(q))));
+ if(!data.length){$('postGrid').innerHTML='<div class="empty-state"><div style="font-size:32px;margin-bottom:8px">▤</div><strong>No matching posts</strong><p>Try another search or create a new post.</p><button type="button" data-page="create">＋ Create a post</button></div>';$('postGrid').querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>showPage('create'));return}
+ $('postGrid').innerHTML=data.map(p=>{const images=Array.isArray(p.images)?p.images:[];const cover=p.cover_image||images[0]||'';const excerpt=p.excerpt||String(p.content||'').replace(/<[^>]*>/g,' ').slice(0,180);return '<article class="post-card"><div class="post-card-cover">'+(cover?'<img src="'+escapeHtml(cover)+'" alt="'+escapeHtml(p.title)+'" loading="lazy">':'<div class="no-photo">▧</div>')+'</div><div class="post-card-body"><div class="post-card-meta"><span class="post-chip">'+escapeHtml(p.category||'Uncategorized')+'</span><span>'+escapeHtml(p.status)+'</span></div><h3>'+escapeHtml(p.title)+'</h3><p>'+escapeHtml(excerpt)+'</p><div class="post-card-meta"><span>'+new Date(p.published_at||p.created_at).toLocaleDateString()+'</span><span>'+images.length+' photo(s)</span></div><div class="post-card-actions">'+(p.status==='published'?'<a class="read-more" href="/posts/'+encodeURIComponent(p.slug)+'" target="_blank" rel="noopener">Read more ↗</a>':'<a href="#" data-preview="'+p.id+'">Preview</a>')+'<button type="button" class="secondary" data-edit="'+p.id+'">Edit</button><button type="button" class="danger" data-delete="'+p.id+'">Delete</button></div></div></article>'}).join('');
+ $('postGrid').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editPost(allPosts.find(p=>p.id===b.dataset.edit)));
+ $('postGrid').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deletePost(b.dataset.delete));
+ $('postGrid').querySelectorAll('[data-preview]').forEach(b=>b.onclick=e=>{e.preventDefault();const p=allPosts.find(x=>x.id===b.dataset.preview);alert(p.title+'\n\n'+(p.content||''))});
+}
+function renderDashboardCharts(){
+ const now=new Date(),months=[];
+ for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({key:d.getFullYear()+'-'+d.getMonth(),label:d.toLocaleDateString(undefined,{month:'short'}),count:allPosts.filter(p=>{const x=new Date(p.created_at);return x.getFullYear()===d.getFullYear()&&x.getMonth()===d.getMonth()}).length})}
+ const max=Math.max(1,...months.map(m=>m.count));
+ $('monthlyChart').innerHTML=months.map(m=>'<div class="month-column"><strong>'+m.count+'</strong><div class="month-bar-track"><div class="month-bar" style="height:'+Math.max(3,m.count/max*100)+'%"></div></div><small>'+m.label+'</small></div>').join('');
+ const counts=categories.map(c=>({name:c,count:allPosts.filter(p=>p.category===c).length})),top=Math.max(1,...counts.map(x=>x.count));
+ $('categoryChart').innerHTML=counts.map(x=>'<div class="category-row"><span>'+escapeHtml(x.name)+'</span><strong>'+x.count+'</strong><div class="category-track"><div class="category-fill" style="width:'+(x.count/top*100)+'%"></div></div></div>').join('');
+}
+$('postSearch').addEventListener('input',renderPosts);
+$('postStatusFilter').addEventListener('change',renderPosts);
+$('postCategoryFilter').addEventListener('change',renderPosts);
+function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category').value=p.category||categories[0];$('excerpt').value=p.excerpt||'';$('content').value=p.content;$('status').value=p.status;currentImages=Array.isArray(p.images)?p.images.slice():[];if(!currentImages.length&&p.cover_image)currentImages=[p.cover_image];renderGallery();$('formTitle').textContent='Edit post';showPage('create')}
 $('postForm').addEventListener('submit',async e=>{e.preventDefault();message('Saving post…');const id=$('postId').value,title=$('title').value.trim(),status=$('status').value,files=Array.from($('image').files||[]);if(files.some(f=>!['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)||f.size>10*1024*1024)){message('Please choose JPEG, PNG, WebP or GIF photos, each no larger than 10 MB.');return}
 const uploaded=[];for(const file of files){const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safe;const up=await client.storage.from('post-images').upload(path,file,{upsert:false,contentType:file.type});if(up.error){message('Photo upload failed: '+up.error.message);return}uploaded.push(client.storage.from('post-images').getPublicUrl(path).data.publicUrl)}
 const images=currentImages.concat(uploaded),payload={title,slug:id?undefined:slugify(title),category:$('category').value,excerpt:$('excerpt').value.trim(),content:$('content').value,images,cover_image:images[0]||null,status,updated_at:new Date().toISOString(),...(status==='published'?{published_at:new Date().toISOString()}:{})};if(id)delete payload.slug;
-const result=id?await client.from('posts').update(payload).eq('id',id):await client.from('posts').insert(payload);if(result.error){message(result.error.message);return}message('Post saved successfully.');clearForm();loadPosts()});
-async function deletePost(id){if(!confirm('Delete this post? This cannot be undone.'))return;const {error}=await client.from('posts').delete().eq('id',id);message(error?error.message:'Post deleted.');loadPosts()}
+const result=id?await client.from('posts').update(payload).eq('id',id):await client.from('posts').insert(payload);if(result.error){message(result.error.message);return}message('Post saved successfully.');clearForm();await loadPosts();showPage('posts')});
+async function deletePost(id){if(!confirm('Delete this post? This cannot be undone.'))return;const {error}=await client.from('posts').delete().eq('id',id);message(error?error.message:'Post deleted.');await loadPosts()}
 refresh();
 </script></body></html>
