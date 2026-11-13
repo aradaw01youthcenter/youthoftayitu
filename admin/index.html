@@ -94,6 +94,8 @@ textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;pad
 #serviceImageFields{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
 @media(max-width:950px){#postGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.chart-grid{grid-template-columns:1fr}}
 @media(max-width:620px){#postGrid{grid-template-columns:1fr}.post-tools{grid-template-columns:1fr}.overview-bottom{grid-template-columns:1fr}.page-heading{align-items:flex-start;flex-direction:column}#serviceImageFields{grid-template-columns:1fr}.site-field{display:block}}
+
+.dash-stat{cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.dash-stat:hover{transform:translateY(-3px);border-color:#e4c15c;box-shadow:0 10px 24px #1b304817}.dash-stat:focus{outline:3px solid #f4c64e;outline-offset:3px}
 </style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
 <div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" required><button type="submit">Send sign-in link</button></form><p class="muted">A secure sign-in link will be sent to your email.</p></div>
@@ -106,14 +108,14 @@ textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;pad
 <button class="dash-nav" type="button" data-page="posts"><span class="nav-icon">▤</span> Existing posts</button>
 <div class="dash-side-label">Website management</div>
 <button class="dash-nav" type="button" data-page="content"><span class="nav-icon">☷</span> Homepage content</button>
-<button class="dash-nav" type="button" data-page="photos"><span class="nav-icon">▧</span> Photos & gallery</button>
+<button class="dash-nav" type="button" data-page="photos"><span class="nav-icon">▧</span> Photos & gallery</button>\n<button class="dash-nav" type="button" data-page="admins"><span class="nav-icon">♙</span> Admin access</button>
 <a class="dash-nav" href="https://youthoftayitu.vercel.app/" target="_blank" rel="noopener"><span class="nav-icon">↗</span> View live website</a>
 <div class="dash-side-note">Your workspace for publishing stories, managing programs and keeping the community informed.</div>
 </aside>
 <main class="dashboard-main">
 <section class="page-view" id="page-overview">
 <div class="dash-welcome"><div><h1>Good to see you 👋</h1><p>Here's what's happening on your website today.</p></div><div class="dash-date">✦ &nbsp; Youth of Tayitu dashboard</div></div>
-<div class="dash-stats"><div class="dash-stat"><span>Total posts</span><strong id="statTotal">—</strong><small>All posts in your dashboard</small></div><div class="dash-stat"><span>Published</span><strong id="statPublished">—</strong><small>Visible to website visitors</small></div><div class="dash-stat"><span>Drafts</span><strong id="statDrafts">—</strong><small>Not yet published</small></div></div>
+<div class="dash-stats"><button type="button" class="dash-stat" data-stat="all" aria-label="View all posts"><span>Total posts</span><strong id="statTotal">—</strong><small>Click to view all posts ↗</small></button><button type="button" class="dash-stat" data-stat="published" aria-label="View published posts"><span>Published</span><strong id="statPublished">—</strong><small>Click to view published posts ↗</small></button><button type="button" class="dash-stat" data-stat="draft" aria-label="View draft posts"><span>Drafts</span><strong id="statDrafts">—</strong><small>Click to view drafts ↗</small></button></div>
 <div class="chart-grid"><div class="chart-panel"><h3>Publishing activity</h3><div class="chart-sub">Posts created over the last six months</div><div id="monthlyChart" class="month-chart"></div></div><div class="chart-panel"><h3>Posts by category</h3><div class="chart-sub">How your stories are distributed</div><div id="categoryChart" class="category-chart"></div></div></div>
 <div class="overview-bottom"><div class="quick-action"><div><strong>Manage your stories</strong><p>Review published posts and drafts, search by category, edit stories or remove outdated content.</p></div><button type="button" data-page="posts">Manage posts ↗</button></div><div class="quick-action"><div><strong>Update your homepage</strong><p>Refresh your About, Services, Sports and Contact information.</p></div><button type="button" data-page="content">Edit homepage ↗</button></div></div>
 </section>
@@ -141,15 +143,21 @@ textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;pad
 <section class="content-group"><div class="content-group-head"><div class="content-group-icon">▦</div><div><h3>Service card photos</h3><p>Upload a unique image for each of the eight services.</p></div></div><div id="serviceImageFields"></div></section>
 <section class="content-group"><div class="content-group-head"><div class="content-group-icon">▧</div><div><h3>Homepage photo gallery</h3><p>Select multiple photos to build a gallery on the public homepage.</p></div></div><label for="galleryUpload">Choose multiple photos</label><input id="galleryUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="homepageGalleryPreview" class="gallery"></div></section>
 <button type="button" id="saveVisualManager">Save homepage photos</button><span id="visualStatus" class="muted" aria-live="polite"></span>
-</div></section><section class="page-view" id="page-posts" hidden><div class="page-heading"><div><h1>Existing posts</h1><p>Search, filter, preview, edit and remove your published stories and drafts.</p></div><button type="button" data-page="create">＋ Create a post</button></div><div class="panel"><div class="post-tools"><input id="postSearch" type="search" placeholder="Search posts by title or text…"><select id="postStatusFilter"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option></select><select id="postCategoryFilter"><option value="all">All categories</option></select></div><div id="postGrid"><div class="empty-state">Loading posts…</div></div></div></section><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="message" role="status"></div></div>
+</div></section><section class="page-view" id="page-posts" hidden><div class="page-heading"><div><h1>Existing posts</h1><p>Search, filter, preview, edit and remove your published stories and drafts.</p></div><button type="button" data-page="create">＋ Create a post</button></div><div class="panel"><div class="post-tools"><input id="postSearch" type="search" placeholder="Search posts by title or text…"><select id="postStatusFilter"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option></select><select id="postCategoryFilter"><option value="all">All categories</option></select></div><div id="postGrid"><div class="empty-state">Loading posts…</div></div></div></section>
+<section class="page-view" id="page-admins" hidden>
+<div class="page-heading"><div><h1>Administrator access</h1><p>Invite trusted people to help manage the Youth of Tayitu website.</p></div></div>
+<div class="panel"><h2>Invite an administrator</h2><p class="muted">Only the website owner can invite additional administrators. They will receive an email invitation and use their own email to sign in.</p>
+<form id="inviteAdminForm"><label for="inviteEmail">Administrator email address</label><input id="inviteEmail" type="email" placeholder="name@example.com" required><button type="submit">Send invitation ↗</button><span id="inviteStatus" class="muted" aria-live="polite"></span></form></div>
+<div class="panel"><h2>Current administrators</h2><p class="muted">People with access to the website dashboard.</p><div id="adminList">Loading administrator list…</div></div>
+</section><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="message" role="status"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
 const $=id=>document.getElementById(id),message=t=>$('message').textContent=t;
 let currentUser=null,currentImages=[];
 const categories=["ሳይንስና ፈጠራ","በጎ ፈቃድ","የጤናና የምክር ድጋፍ","የህይወት ክህሎት","አመራርነት","ስራ ፈጠራና የቢዝነስ","ስፖርትና መዝናኛ"];
-function showApp(user){currentUser=user;$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia()}}
+function showApp(user){currentUser=user;$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia();loadAdminUsers()}}
 async function refresh(){const {data}=await client.auth.getSession();showApp(data.session?.user||null)}
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Sending secure sign-in link…');const email=$('email').value.trim().toLowerCase();if(email!=='aradaw01youthcenter@gmail.com'){message('This email is not authorized.');return}const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/admin/',shouldCreateUser:false}});message(error?error.message:'Check your email for the secure sign-in link.')});
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Sending secure sign-in link…');const email=$('email').value.trim().toLowerCase();const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/admin/',shouldCreateUser:false}});message(error?error.message:'Check your email for the secure sign-in link.')});
 client.auth.onAuthStateChange((_event,s)=>showApp(s?.user||null));
 $('logout').onclick=async()=>{await client.auth.signOut();showApp(null);message('Signed out.')};
 
@@ -162,6 +170,23 @@ function showPage(page){
 }
 document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>showPage(el.dataset.page)));
 showPage('overview');
+document.querySelectorAll('[data-stat]').forEach(card=>card.addEventListener('click',()=>{const status=card.dataset.stat;$('postStatusFilter').value=status;showPage('posts');renderPosts()}));
+async function loadAdminUsers(){
+ const {data,error}=await client.from('admin_users').select('email,role,created_at').order('created_at');
+ if(error){$('adminList').textContent=error.message;return}
+ $('adminList').innerHTML=(data||[]).map(a=>'<div class="post"><strong>'+escapeHtml(a.email)+'</strong><span class="status">'+escapeHtml(a.role==='owner'?'Website owner':'Administrator')+' · Added '+new Date(a.created_at).toLocaleDateString()+'</span></div>').join('')||'No administrators found.';
+ const isOwner=currentUser?.email?.toLowerCase()==='aradaw01youthcenter@gmail.com';
+ $('inviteAdminForm').classList.toggle('hidden',!isOwner);
+ if(!isOwner)$('adminList').insertAdjacentHTML('beforebegin','<p class="muted">Only the website owner can invite new administrators.</p>');
+}
+$('inviteAdminForm').addEventListener('submit',async e=>{
+ e.preventDefault();const email=$('inviteEmail').value.trim().toLowerCase();$('inviteStatus').textContent='Sending invitation…';
+ const {data,error}=await client.functions.invoke('invite-admin',{body:{email}});
+ if(error){$('inviteStatus').textContent=error.message;return}
+ if(data?.error){$('inviteStatus').textContent=data.error;return}
+ $('inviteStatus').textContent=data?.message||'Invitation sent.';$('inviteEmail').value='';loadAdminUsers();
+});
+
 function slugify(s){const base=s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70);return (base||'post')+'-'+Date.now().toString(36)}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderGallery(){const el=$('currentGallery');el.innerHTML=currentImages.map((url,i)=>'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(url)+'" alt="Post photo '+(i+1)+'"><button type="button" data-remove="'+i+'" aria-label="Remove photo">×</button></div>').join('');el.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{currentImages.splice(Number(b.dataset.remove),1);renderGallery()})}
