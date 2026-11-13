@@ -42,6 +42,58 @@ textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;pad
 .dash-footer{font-size:11px;color:#93a4b9;margin-top:15px;padding:10px 13px}
 @media(max-width:850px){.dashboard-layout{grid-template-columns:1fr}.dash-sidebar{padding:10px 14px;display:flex;flex-direction:row;overflow-x:auto;gap:5px}.dash-side-label,.dash-side-note{display:none}.dash-nav{white-space:nowrap;padding:10px 12px}.dash-nav .nav-icon{display:none}.dashboard-main{padding:20px 15px}}
 @media(max-width:560px){.dash-topbar{height:66px;padding:0 15px}.dash-brand{font-size:13px}.dash-logo{width:36px;height:36px}.dash-top-right #logout{padding:9px 11px;font-size:12px}.dash-top-right #signedIn{display:none}.dash-stats{grid-template-columns:1fr 1fr}.dash-stat:last-child{grid-column:span 2}.dash-welcome{align-items:flex-start;flex-direction:column}.dash-date{display:none}.panel{border-radius:15px}.wrap{padding:0}}
+
+/* Dashboard workspace pages */
+.page-view[hidden]{display:none!important}.dashboard-main{max-width:1380px}
+.dash-nav{cursor:pointer;background:transparent;border:0;text-align:left;width:100%;margin:0}
+.page-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:0 0 20px}.page-heading h1{font-size:27px;color:var(--navy);margin:0}.page-heading p{color:var(--muted);margin:5px 0 0;font-size:13px}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap}
+#postGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.post-card{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 6px 22px #1b30480a;display:flex;flex-direction:column;min-width:0}
+.post-card-cover{height:175px;background:linear-gradient(135deg,#e9eef5,#dce5ef);position:relative;overflow:hidden}
+.post-card-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.post-card-cover .no-photo{height:100%;display:grid;place-items:center;color:#8090a4;font-size:38px}
+.post-card-body{padding:16px;display:flex;flex-direction:column;flex:1}
+.post-card-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-bottom:9px}
+.post-chip{display:inline-flex;padding:4px 9px;border-radius:20px;background:#fdf4d8;color:#795c17;font-weight:750}
+.post-card h3{font-size:16px;line-height:1.4;margin:0 0 8px;color:var(--navy)}
+.post-card p{font-size:13px;line-height:1.55;color:#66758a;margin:0 0 15px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.post-card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}
+.post-card-actions button,.post-card-actions a{font-size:12px;padding:8px 11px;border-radius:8px;text-decoration:none;margin:0}
+.post-card-actions a{background:#edf3fa;color:#284768;font-weight:750}
+.post-card-actions .read-more{background:#142f4d;color:#fff}
+.post-tools{display:grid;grid-template-columns:minmax(180px,1fr) 220px 180px;gap:10px;margin:0 0 17px}
+.post-tools input,.post-tools select{margin:0}
+.empty-state{padding:42px 20px;text-align:center;color:var(--muted);background:#fff;border:1px dashed #d4dce7;border-radius:15px;grid-column:1/-1}
+.content-group{border:1px solid var(--line);border-radius:15px;padding:17px;margin:15px 0;background:#fbfcfe}
+.content-group-head{display:flex;align-items:center;gap:11px;margin-bottom:8px}
+.content-group-icon{width:38px;height:38px;border-radius:12px;background:#fff2d1;color:#8c6712;display:grid;place-items:center;font-size:18px}
+.content-group-head h3{margin:0;font-size:16px}.content-group-head p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.content-group .site-field:first-of-type{border-top:0}
+.site-field{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.site-field label{grid-column:span 2}.site-field input,.site-field textarea{grid-column:span 2}
+#siteContentFields .content-group .site-field{display:block}
+#siteContentFields .content-group .site-field label{display:block}
+#siteContentFields .content-group .site-field input,#siteContentFields .content-group .site-field textarea{display:block}
+.chart-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-bottom:20px}
+.chart-panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:20px;min-width:0}
+.chart-panel h3{margin:0 0 5px;color:var(--navy);font-size:15px}.chart-sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+.month-chart{height:190px;display:flex;align-items:flex-end;gap:clamp(7px,2vw,18px);padding:12px 4px 0;border-bottom:1px solid var(--line)}
+.month-column{height:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;min-width:0}
+.month-bar-track{height:145px;width:min(34px,70%);display:flex;align-items:flex-end;background:#f0f3f7;border-radius:8px 8px 3px 3px;overflow:hidden}
+.month-bar{width:100%;background:linear-gradient(180deg,#f4c64e,#e97848);border-radius:8px 8px 0 0;min-height:3px}
+.month-column strong{font-size:11px;color:#526176}.month-column small{font-size:10px;color:var(--muted)}
+.category-chart{display:flex;flex-direction:column;gap:12px}
+.category-row{display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:6px;align-items:center;font-size:12px;color:#526176}
+.category-row strong{text-align:right;color:var(--navy)}
+.category-track{grid-column:1/-1;height:7px;background:#eff2f6;border-radius:20px;overflow:hidden}
+.category-fill{height:100%;background:linear-gradient(90deg,#1e4569,#f0bc42);border-radius:20px}
+.overview-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.quick-action{background:linear-gradient(135deg,#172d49,#294e70);color:#fff;border-radius:17px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;min-height:150px}
+.quick-action p{color:#c7d6e5;font-size:13px;margin:6px 0 12px}.quick-action button{align-self:flex-start;background:var(--gold);color:#172b45}
+#serviceImageFields{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+@media(max-width:950px){#postGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.chart-grid{grid-template-columns:1fr}}
+@media(max-width:620px){#postGrid{grid-template-columns:1fr}.post-tools{grid-template-columns:1fr}.overview-bottom{grid-template-columns:1fr}.page-heading{align-items:flex-start;flex-direction:column}#serviceImageFields{grid-template-columns:1fr}.site-field{display:block}}
 </style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
 <div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" required><button type="submit">Send sign-in link</button></form><p class="muted">A secure sign-in link will be sent to your email.</p></div>
@@ -49,17 +101,23 @@ textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;pad
 <header class="dash-topbar"><div class="dash-brand"><div class="dash-logo">YT</div><div>YOUTH OF TAYITU<small>WEBSITE CONTROL CENTER</small></div></div><div class="dash-top-right"><span id="signedIn" class="muted" style="color:#d7e2ef;font-size:12px"></span><button id="logout" class="secondary" style="margin:0;background:#ffffff18;color:#fff">Sign out ↗</button></div></header>
 <div class="dashboard-layout">
 <aside class="dash-sidebar"><div class="dash-side-label">Workspace</div>
-<a class="dash-nav active" href="#overview"><span class="nav-icon">⌂</span> Overview</a>
-<a class="dash-nav" href="#post-editor"><span class="nav-icon">✎</span> Create a post</a>
-<a class="dash-nav" href="#existing-posts"><span class="nav-icon">▤</span> All posts</a>
-<div class="dash-side-label">Website</div><a class="dash-nav" href="#siteContentPanel"><span class="nav-icon">☷</span> Homepage content</a>
-<a class="dash-nav" href="#visualManager"><span class="nav-icon">▧</span> Photos & gallery</a>
+<button class="dash-nav active" type="button" data-page="overview"><span class="nav-icon">⌂</span> Overview</button>
+<button class="dash-nav" type="button" data-page="create"><span class="nav-icon">✎</span> Create a post</button>
+<button class="dash-nav" type="button" data-page="posts"><span class="nav-icon">▤</span> Existing posts</button>
+<div class="dash-side-label">Website management</div>
+<button class="dash-nav" type="button" data-page="content"><span class="nav-icon">☷</span> Homepage content</button>
+<button class="dash-nav" type="button" data-page="photos"><span class="nav-icon">▧</span> Photos & gallery</button>
 <a class="dash-nav" href="https://youthoftayitu.vercel.app/" target="_blank" rel="noopener"><span class="nav-icon">↗</span> View live website</a>
-<div class="dash-side-note">Keep your community informed with stories, activities and opportunities from Youth of Tayitu.</div>
+<div class="dash-side-note">Your workspace for publishing stories, managing programs and keeping the community informed.</div>
 </aside>
 <main class="dashboard-main">
-<section id="overview" class="dash-welcome"><div><h1>Good to see you 👋</h1><p>Here's what's happening on your website today.</p></div><div class="dash-date">✦ &nbsp; Youth of Tayitu dashboard</div></section>
+<section class="page-view" id="page-overview">
+<div class="dash-welcome"><div><h1>Good to see you 👋</h1><p>Here's what's happening on your website today.</p></div><div class="dash-date">✦ &nbsp; Youth of Tayitu dashboard</div></div>
 <div class="dash-stats"><div class="dash-stat"><span>Total posts</span><strong id="statTotal">—</strong><small>All posts in your dashboard</small></div><div class="dash-stat"><span>Published</span><strong id="statPublished">—</strong><small>Visible to website visitors</small></div><div class="dash-stat"><span>Drafts</span><strong id="statDrafts">—</strong><small>Not yet published</small></div></div>
+<div class="chart-grid"><div class="chart-panel"><h3>Publishing activity</h3><div class="chart-sub">Posts created over the last six months</div><div id="monthlyChart" class="month-chart"></div></div><div class="chart-panel"><h3>Posts by category</h3><div class="chart-sub">How your stories are distributed</div><div id="categoryChart" class="category-chart"></div></div></div>
+<div class="overview-bottom"><div class="quick-action"><div><strong>Share a new story</strong><p>Publish an activity, announcement or youth success story.</p></div><button type="button" data-page="create">＋ Create a post</button></div><div class="quick-action"><div><strong>Update your homepage</strong><p>Refresh your About, Services, Sports and Contact information.</p></div><button type="button" data-page="content">Edit homepage</button></div></div>
+</section>
+<section class="page-view" id="page-create" hidden><div class="page-heading"><div><h1 id="formTitle">Create a post</h1><p>Write a story, choose its category and upload multiple photos.</p></div><button type="button" class="secondary" data-page="posts">← Back to existing posts</button></div>
 <div class="panel" id="post-editor"><h2 id="formTitle">Create a post</h2><form id="postForm"><input id="postId" type="hidden">
 <label for="title">Post title</label><input id="title" maxlength="180" required>
 <label for="category">Post category</label><select id="category" required><option value="ሳይንስና ፈጠራ">ሳይንስና ፈጠራ</option><option value="በጎ ፈቃድ">በጎ ፈቃድ</option><option value="የጤናና የምክር ድጋፍ">የጤናና የምክር ድጋፍ</option><option value="የህይወት ክህሎት">የህይወት ክህሎት</option><option value="አመራርነት">አመራርነት</option><option value="ስራ ፈጠራና የቢዝነስ">ስራ ፈጠራና የቢዝነስ</option><option value="ስፖርትና መዝናኛ">ስፖርትና መዝናኛ</option></select>
@@ -69,21 +127,21 @@ textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;pad
 <div id="currentGallery" class="gallery"></div>
 <label for="status">Publication status</label><select id="status"><option value="draft">Save as draft</option><option value="published">Publish now</option></select>
 <div class="row"><button type="submit">Save post</button><button type="button" id="reset" class="secondary">Clear form</button></div></form></div>
-<div class="panel" id="siteContentPanel">
+</section><section class="page-view" id="page-content" hidden><div class="page-heading"><div><h1>Homepage content</h1><p>Manage each part of your homepage in clearly grouped sections.</p></div></div><div class="panel" id="siteContentPanel">
 <h2>Homepage content manager</h2>
 <p class="muted">Edit the homepage wording in Amharic and English. Leave a field blank only if you want the existing website text to remain unchanged.</p>
 <div id="siteContentFields"></div>
 <button type="button" id="saveSiteContent">Save homepage changes</button>
 <span id="siteContentStatus" class="muted" aria-live="polite"></span>
 </div>
-<div class="panel" id="visualManager">
+</section><section class="page-view" id="page-photos" hidden><div class="page-heading"><div><h1>Homepage photos & gallery</h1><p>Manage the hero banner, eight service images and your photo gallery.</p></div></div><div class="panel" id="visualManager">
 <h2>Homepage photos & gallery</h2>
 <p class="muted">Upload images for the main banner, service cards and public photo gallery. Images are stored securely in the website's Supabase image bucket.</p>
 <label for="bannerUpload">Homepage banner image</label><input id="bannerUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><div id="bannerPreview" class="gallery"></div>
 <h3>Service card images</h3><div id="serviceImageFields"></div>
 <label for="galleryUpload">Photo gallery — add multiple photos</label><input id="galleryUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="homepageGalleryPreview" class="gallery"></div>
 <button type="button" id="saveVisualManager">Save homepage photos</button><span id="visualStatus" class="muted" aria-live="polite"></span>
-</div><div class="panel" id="existing-posts"><h2>Existing posts</h2><div id="list">Loading…</div></div><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="message" role="status"></div></div>
+</div></section><section class="page-view" id="page-posts" hidden><div class="page-heading"><div><h1>Existing posts</h1><p>Search, filter, preview, edit and remove your published stories and drafts.</p></div><button type="button" data-page="create">＋ Create a post</button></div><div class="panel"><div class="post-tools"><input id="postSearch" type="search" placeholder="Search posts by title or text…"><select id="postStatusFilter"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option></select><select id="postCategoryFilter"><option value="all">All categories</option></select></div><div id="postGrid"><div class="empty-state">Loading posts…</div></div></div></section><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="message" role="status"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
 const $=id=>document.getElementById(id),message=t=>$('message').textContent=t;
