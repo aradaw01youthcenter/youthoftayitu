@@ -98,7 +98,7 @@ textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;pad
 .dash-stat{cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.dash-stat:hover{transform:translateY(-3px);border-color:#e4c15c;box-shadow:0 10px 24px #1b304817}.dash-stat:focus{outline:3px solid #f4c64e;outline-offset:3px}
 </style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
-<div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" required><button type="submit">Send sign-in link</button></form><p class="muted">A secure sign-in link will be sent to your email.</p></div>
+<div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="8" required><button type="submit">Sign in</button></form><p class="muted">Sign in securely using your administrator email and password.</p></div>
 <div id="app" class="hidden">
 <header class="dash-topbar"><button type="button" id="mobileMenuToggle" class="dash-menu-toggle" aria-label="Open navigation menu" aria-expanded="false" style="display:none">☰</button><div class="dash-brand"><div class="dash-logo">YT</div><div>YOUTH OF TAYITU<small>WEBSITE CONTROL CENTER</small></div></div><div class="dash-top-right"><span id="signedIn" class="muted" style="color:#d7e2ef;font-size:12px"></span><button id="logout" class="secondary" style="margin:0;background:#ffffff18;color:#fff">Sign out ↗</button></div></header>
 <div class="dashboard-layout">
@@ -158,7 +158,7 @@ let currentUser=null,currentImages=[];
 const categories=["ሳይንስና ፈጠራ","በጎ ፈቃድ","የጤናና የምክር ድጋፍ","የህይወት ክህሎት","አመራርነት","ስራ ፈጠራና የቢዝነስ","ስፖርትና መዝናኛ"];
 function showApp(user){currentUser=user;$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia();loadAdminUsers()}}
 async function refresh(){const {data}=await client.auth.getSession();showApp(data.session?.user||null)}
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Sending secure sign-in link…');const email=$('email').value.trim().toLowerCase();const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/admin/',shouldCreateUser:false}});message(error?error.message:'Check your email for the secure sign-in link.')});
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Signing in…');const email=$('email').value.trim().toLowerCase(),password=$('password').value;const {data,error}=await client.auth.signInWithPassword({email,password});if(error){message(error.message==='Invalid login credentials'?'Email or password is incorrect. If this is your first password login, set a password for this user in Supabase Dashboard → Authentication → Users, then try again.':error.message);return}showApp(data.user);message('Signed in successfully.')});
 client.auth.onAuthStateChange((_event,s)=>showApp(s?.user||null));
 $('logout').onclick=async()=>{await client.auth.signOut();showApp(null);message('Signed out.')};
 
