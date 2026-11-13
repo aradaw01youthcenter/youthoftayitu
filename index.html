@@ -259,8 +259,8 @@ h2::after{content:"";display:block;width:70px;height:6px;border-radius:6px;margi
 <section id="contact" class="alt"><div class="wrap two">
 <div><h2 data-en="Contact us">ያግኙን</h2>
 <p class="sub" data-en="We would love to hear from you.">ከእርስዎ መስማት እንፈልጋለን።</p>
-<p>📍 <span data-en="Tewodros Square, Arada Sub-city, Woreda 1, Addis Ababa">ቴዎድሮስ አደባባይ፣ አራዳ ክፍለ ከተማ፣ ወረዳ 1፣ አዲስ አበባ</span><br>📞 +251 11 000 0000<br>✉️ aradaw01youthcenter@gmail.com</p>
-<div class="soc"><a href="https://www.facebook.com/share/1EM3CZWXX6/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-8h2.7l.4-3.2h-3.1V7.9c0-.9.3-1.5 1.6-1.5h1.7V3.5c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v2.3H7.7V13h2.7v8z"/></svg></a><a href="https://www.instagram.com/youthoftayitu?psln=enZkZXE4eHpteGgz" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor"/></svg></a><a href="https://vm.tiktok.com/ZS9fHsKhmn1vQ-FWOgp/" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M16.5 3c.3 2.4 1.7 3.9 4 4.1v3c-1.5 0-2.9-.5-4-1.3v6.2a5.5 5.5 0 1 1-5.5-5.5c.3 0 .6 0 .9.1v3.1a2.5 2.5 0 1 0 1.6 2.3V3z"/></svg></a></div></div>
+<p>📍 <span id="contactAddress" data-en="Tewodros Square, Arada Sub-city, Woreda 1, Addis Ababa">ቴዎድሮስ አደባባይ፣ አራዳ ክፍለ ከተማ፣ ወረዳ 1፣ አዲስ አበባ</span><br>📞 <span id="contactPhone">+251 11 000 0000</span><br>✉️ <span id="contactEmail">aradaw01youthcenter@gmail.com</span></p>
+<div class="soc"><a id="contactFacebook" href="https://www.facebook.com/share/1EM3CZWXX6/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-8h2.7l.4-3.2h-3.1V7.9c0-.9.3-1.5 1.6-1.5h1.7V3.5c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v2.3H7.7V13h2.7v8z"/></svg></a><a id="contactInstagram" href="https://www.instagram.com/youthoftayitu?psln=enZkZXE4eHpteGgz" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor"/></svg></a><a id="contactTiktok" href="https://vm.tiktok.com/ZS9fHsKhmn1vQ-FWOgp/" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M16.5 3c.3 2.4 1.7 3.9 4 4.1v3c-1.5 0-2.9-.5-4-1.3v6.2a5.5 5.5 0 1 1-5.5-5.5c.3 0 .6 0 .9.1v3.1a2.5 2.5 0 1 0 1.6 2.3V3z"/></svg></a></div></div>
 <div class="card"><form id="msg">
 <input name="ስም" placeholder="ስምዎ / Your name" required>
 <textarea name="መልእክት" rows="4" placeholder="መልእክትዎ / Your message" required></textarea>
@@ -327,8 +327,7 @@ fetch(url+'/rest/v1/site_content?section_key=eq.homepage&select=content',{header
 .then(r=>{if(!r.ok)throw new Error('Unable to load homepage settings');return r.json()})
 .then(rows=>{const content=rows[0]&&rows[0].content;if(!content)return;
 Object.keys(content).forEach(k=>{const f=content[k];if(!f||!f.selector)return;const el=document.querySelector(f.selector);if(!el)return;
-if(f.am){el.textContent=f.am;el.setAttribute('data-am',f.am)}
-if(f.en){el.setAttribute('data-en',f.en)}
+if(f.property==='href'){if(f.am)el.setAttribute('href',f.am)}else{if(f.am){el.textContent=f.am;el.setAttribute('data-am',f.am)}if(f.en){el.setAttribute('data-en',f.en)}}
 if((k==='announcementTitle'||k==='announcementText')&&f.am)document.getElementById('homepage-announcement').hidden=false;
 });
 }).catch(err=>console.warn('Homepage content settings:',err.message));
