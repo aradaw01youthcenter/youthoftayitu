@@ -315,7 +315,17 @@ async function loadAdminUsers(){
   if(!confirm('Cancel this invitation or remove dashboard access for '+email+'? This cannot be undone.'))return;
   button.disabled=true;button.textContent='Removing…';
   const {data,error}=await client.functions.invoke('invite-admin',{body:{action:'remove',email}});
-  if(error||data?.error){const detail=data?.error||error?.context?.message||error?.message||'The server could not remove this administrator.';alert('Could not remove '+email+': '+detail);button.disabled=false;button.textContent='Remove access';return}
+  if(error||data?.error){
+   let detail=data?.error||'';
+   if(error?.context&&typeof error.context.clone==='function'){
+    const responseBody=await error.context.clone().json().catch(()=>null);
+    if(responseBody?.error)detail=responseBody.error;
+    else if(responseBody?.message)detail=responseBody.message;
+   }
+   if(!detail)detail=error?.message||'The server could not remove this administrator.';
+   alert('Could not remove '+email+': '+detail);
+   button.disabled=false;button.textContent='Remove access';return
+  }
   message(data?.message||'Administrator account and access removed.');await loadAdminUsers();
  }));
 
