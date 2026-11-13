@@ -242,9 +242,14 @@ body>.wrap>h1,body>.wrap>p.muted{display:none!important}
 </div></section><section class="page-view" id="page-posts" hidden><div class="page-heading"><div><h1>Existing posts</h1><p>Search, filter, preview, edit and remove your published stories and drafts.</p></div><button type="button" data-page="create">＋ Create a post</button></div><div class="panel"><div class="post-tools"><input id="postSearch" type="search" placeholder="Search posts by title or text…"><select id="postStatusFilter"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option></select><select id="postCategoryFilter"><option value="all">All categories</option></select></div><div id="postGrid"><div class="empty-state">Loading posts…</div></div></div></section>
 <section class="page-view" id="page-admins" hidden>
 <div class="page-heading"><div><h1>Administrator access</h1><p>Invite trusted people to help manage the Youth of Tayitu website.</p></div></div>
-<div class="panel"><h2>Invite an administrator</h2><p class="muted">Only the website owner can invite additional administrators. They will receive an email invitation and use their own email to sign in.</p>
-<form id="inviteAdminForm"><label for="inviteEmail">Administrator email address</label><input id="inviteEmail" type="email" placeholder="name@example.com" required><button type="submit">Send invitation ↗</button><span id="inviteStatus" class="muted" aria-live="polite"></span></form></div>
-<div class="panel"><h2>Current administrators</h2><p class="muted">The website owner can cancel a pending invitation or remove an administrator’s access. This also deletes the invited account.</p><div id="adminList">Loading administrator list…</div></div>
+<div class="panel"><h2>Add an administrator</h2><p class="muted">Create an account using the administrator’s email and a password you assign. The account is activated immediately; share the login details privately and ask them to change the password after signing in.</p>
+<form id="inviteAdminForm">
+<label for="inviteEmail">Administrator email address</label><input id="inviteEmail" type="email" placeholder="name@example.com" autocomplete="off" required>
+<label for="invitePassword">Assign a temporary password</label><input id="invitePassword" type="password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters" required>
+<label for="invitePasswordConfirm">Confirm password</label><input id="invitePasswordConfirm" type="password" minlength="8" autocomplete="new-password" placeholder="Enter the same password again" required>
+<button type="submit">Create administrator account ↗</button><span id="inviteStatus" class="muted" aria-live="polite"></span>
+</form></div>
+<div class="panel"><h2>Current administrators</h2><p class="muted">Remove access to permanently delete an administrator’s Auth account and administrator role. The website owner account is protected.</p><div id="adminList">Loading administrator list…</div></div>
 </section><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="message" role="status"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
@@ -288,17 +293,25 @@ async function loadAdminUsers(){
   if(!confirm('Cancel this invitation or remove dashboard access for '+email+'? This cannot be undone.'))return;
   button.disabled=true;button.textContent='Removing…';
   const {data,error}=await client.functions.invoke('invite-admin',{body:{action:'remove',email}});
-  if(error||data?.error){alert(error?.message||data.error);button.disabled=false;button.textContent='Cancel invitation / Remove admin';return}
+  if(error||data?.error){alert(error?.message||data.error);button.disabled=false;button.textContent='Remove access';return}
   message(data?.message||'Administrator access removed.');await loadAdminUsers();
  }));
  if(!isOwner)$('adminList').insertAdjacentHTML('beforebegin','<p class="muted">Only the website owner can invite or remove administrators.</p>');
 }
 $('inviteAdminForm').addEventListener('submit',async e=>{
- e.preventDefault();const email=$('inviteEmail').value.trim().toLowerCase();$('inviteStatus').textContent='Sending invitation…';
- const {data,error}=await client.functions.invoke('invite-admin',{body:{email}});
+ e.preventDefault();
+ const email=$('inviteEmail').value.trim().toLowerCase();
+ const password=$('invitePassword').value;
+ const confirmPassword=$('invitePasswordConfirm').value;
+ if(password.length<8){$('inviteStatus').textContent='Use a password with at least 8 characters.';return}
+ if(password!==confirmPassword){$('inviteStatus').textContent='The passwords do not match.';return}
+ $('inviteStatus').textContent='Creating administrator account…';
+ const {data,error}=await client.functions.invoke('invite-admin',{body:{action:'create',email,password}});
  if(error){$('inviteStatus').textContent=error.message;return}
  if(data?.error){$('inviteStatus').textContent=data.error;return}
- $('inviteStatus').textContent=data?.message||'Invitation sent.';$('inviteEmail').value='';loadAdminUsers();
+ $('inviteStatus').textContent=data?.message||'Administrator account created.';
+ $('inviteEmail').value='';$('invitePassword').value='';$('invitePasswordConfirm').value='';
+ await loadAdminUsers();
 });
 
 function slugify(s){const base=s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70);return (base||'post')+'-'+Date.now().toString(36)}
