@@ -114,6 +114,38 @@ html,body{width:100%;min-width:0}
   .dashboard-main{width:100%;max-width:none}
   .dash-topbar{height:66px}
 }
+
+/* Hard reset the signed-in admin shell to the full browser viewport.
+   The login wrapper must not constrain the dashboard after authentication. */
+html,body{margin:0!important;padding:0!important;width:100%!important;max-width:none!important;min-height:100%!important}
+body>.wrap{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+body>.wrap>h1,body>.wrap>p.muted{display:none!important}
+#app{display:block;width:100%!important;max-width:none!important;min-height:100vh}
+#app.hidden{display:none!important}
+#app>.dash-topbar{width:100%!important;max-width:none!important}
+#app>.dashboard-layout{
+  display:grid!important;
+  grid-template-columns:250px minmax(0,1fr)!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:calc(100vh - 76px);
+  margin:0!important;
+}
+#app .dash-sidebar{width:auto;min-width:0}
+#app .dashboard-main{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:clamp(20px,3vw,42px)!important;
+}
+#app .page-view{width:100%;max-width:none}
+#app .chart-grid,#app .overview-bottom{width:100%}
+@media(max-width:850px){
+  #app>.dashboard-layout{display:block!important;width:100%!important;max-width:none!important}
+  #app .dashboard-main{padding:20px 16px!important}
+}
 </style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
 <div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="8" required><button type="submit">Sign in</button></form><button type="button" id="forgotPassword" class="secondary">Forgot password?</button><p class="muted">Sign in securely using your administrator email and password.</p></div><div id="resetPasswordPanel" class="panel hidden"><h2>Set a new password</h2><p class="muted">Choose a new password for your administrator account.</p><form id="resetPasswordForm"><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required><button type="submit">Save new password</button></form><button type="button" id="backToLogin" class="secondary">Back to sign in</button></div>
