@@ -155,7 +155,7 @@
   const baseLoadPosts=loadPosts;
   loadPosts=async function(){await baseLoadPosts();if(isOwner())await loadVisitors()};
   const baseShowPage=showPage;
-  showPage=function(page){baseShowPage(page);if(page==='media')loadMedia();if(page==='backups'&&isOwner())$('backupStatus').textContent=''};
+  showPage=function(page){if((page==='activity'||page==='backups')&&!isOwner()){message('This section is available only to the super admin.');return}baseShowPage(page);if(page==='media')loadMedia();if(page==='backups'&&isOwner())$('backupStatus').textContent=''};
   // Attach scheduling field behavior; save handler is extended by the inline form patch.
   $('status')?.addEventListener('change',()=>{const scheduled=$('status').value==='scheduled';$('scheduleField').classList.toggle('hidden',!scheduled);$('scheduledAt').required=scheduled});
   $('reset')?.addEventListener('click',()=>{$('scheduleField').classList.add('hidden');$('scheduledAt').required=false});
