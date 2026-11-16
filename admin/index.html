@@ -252,6 +252,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <button class="dash-nav" type="button" data-page="photos"><span class="nav-icon">▧</span> Photos & gallery</button><button class="dash-nav" type="button" data-page="media"><span class="nav-icon">▣</span> Media library</button><button class="dash-nav owner-only" type="button" data-page="backups" hidden><span class="nav-icon">⬇</span> Backups & restore</button>
 <button class="dash-nav" type="button" data-page="admins"><span class="nav-icon">♙</span> Admin access</button>
 <button class="dash-nav owner-only" type="button" data-page="activity" hidden><span class="nav-icon">◷</span> Activity log</button>
+<button class="dash-nav owner-only" type="button" data-page="facebook" hidden><span class="nav-icon">f</span> Facebook connection</button>
 <a class="dash-nav" href="https://youthoftayitu.vercel.app/" target="_blank" rel="noopener"><span class="nav-icon">↗</span> View live website</a>
 <div class="dash-side-note">Your workspace for publishing stories, managing programs and keeping the community informed.</div>
 </aside><button type="button" class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-label="Close navigation menu" tabindex="-1"></button>
@@ -302,6 +303,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </form></div>
 <div class="panel"><h2>Current administrators</h2><p class="muted">Remove access to permanently delete an administrator’s Auth account and administrator role. The website owner account is protected.</p><div id="adminList">Loading administrator list…</div></div>
 </section>
+<section class="page-view owner-only" id="page-facebook" hidden>
+<div class="page-heading"><div><h1>Facebook connection</h1><p>Connect the official Youth of Tayitu Facebook Page to this dashboard.</p></div></div>
+<div class="panel">
+<h2>Connect your Facebook Page</h2>
+<p class="muted">Sign in to Facebook, review the requested Page permissions, then choose the Youth of Tayitu Page you manage. Your Page access token is stored encrypted on the server and is not displayed in this dashboard.</p>
+<div class="row"><button type="button" id="connectFacebook">Connect Facebook ↗</button><span id="facebookConnectionStatus" class="muted" role="status" aria-live="polite">Not connected from this dashboard yet.</span></div>
+<p class="muted" style="font-size:12px;margin-top:16px">Only the website owner can use this connection. If Facebook does not list your Page, confirm that the Facebook account you sign in with has access to manage it.</p>
+</div>
+</section>
 <section class="page-view owner-only" id="page-activity" hidden>
 <div class="page-heading"><div><h1>Admin activity log</h1><p>Private record of administrator actions. Only the website owner can view this page.</p></div><div><button type="button" class="secondary" id="exportActivity">Export CSV</button><button type="button" class="secondary" id="refreshActivity">Refresh log</button></div></div><div class="panel"><div class="activity-filters"><input id="activitySearch" type="search" placeholder="Filter by admin, action or item…"><select id="activityActionFilter"><option value="all">All actions</option></select></div><div id="activityStatus" class="muted">Loading recent activity…</div><div id="activityList"></div></div>
 </section><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="revisionModal" role="dialog" aria-modal="true" aria-labelledby="revisionTitle"><div class="modal-card"><div class="modal-head"><div><h2 id="revisionTitle">Post revision history</h2><p class="muted">Review earlier versions and restore one.</p></div><button type="button" class="secondary" id="closeRevision">Close</button></div><div id="revisionList"></div></div></div><div id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="modal-card"><div class="modal-head"><h2 id="previewTitle">Post preview</h2><button type="button" class="secondary" id="closePreview">Close</button></div><div id="previewContent"></div></div></div><div id="message" role="status"></div></div>
@@ -326,6 +336,29 @@ async function loadActivityLogs(){
 $('refreshActivity')?.addEventListener('click',loadActivityLogs);
 const categories=["ሳይንስና ፈጠራ","በጎ ፈቃድ","የጤናና የምክር ድጋፍ","የህይወት ክህሎት","አመራርነት","ስራ ፈጠራና የቢዝነስ","ስፖርትና መዝናኛ"];
 function showApp(user){currentUser=user;$('resetPasswordPanel').classList.add('hidden');$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);document.querySelectorAll('.owner-only').forEach(el=>{el.hidden=!isSuperAdmin()||(el.classList.contains('page-view')&&el.id!=='page-overview')});if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia();loadAdminUsers()}}
+$('connectFacebook')?.addEventListener('click',async()=>{
+ if(!isSuperAdmin()){message('Only the website owner can connect Facebook.');return}
+ const button=$('connectFacebook'),status=$('facebookConnectionStatus');
+ button.disabled=true;button.textContent='Preparing secure connection…';status.textContent='Checking your admin session…';
+ try{
+  const {data,error:refreshError}=await client.auth.refreshSession();
+  if(refreshError||!data?.session?.access_token)throw new Error('Your admin session could not be refreshed. Sign out and sign in again.');
+  status.textContent='Opening Facebook…';
+  const response=await fetch('https://vroxuvzbnzfelyndchyl.supabase.co/functions/v1/facebook-oauth',{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Authorization':'Bearer '+data.session.access_token,'apikey':'sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH'},
+   body:JSON.stringify({action:'start'})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||!result.url)throw new Error(result.error||'Facebook connection could not be started. Please try again.');
+  await logActivity('Started Facebook Page connection','social','Facebook');
+  window.location.assign(result.url);
+ }catch(error){
+  status.textContent=error.message||'Could not start Facebook connection.';
+  message(status.textContent);
+  button.disabled=false;button.textContent='Connect Facebook ↗';
+ }
+});
 function showPasswordReset(){currentUser=null;$('login').classList.add('hidden');$('app').classList.add('hidden');$('resetPasswordPanel').classList.remove('hidden');message('Password recovery verified. Set your new password below.')}
 async function refresh(){const {data}=await client.auth.getSession();if(new URLSearchParams(location.search).get('mode')==='reset'&&location.hash.includes('type=recovery')){showPasswordReset();return}showApp(data.session?.user||null)}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Signing in…');const email=$('email').value.trim().toLowerCase(),password=$('password').value;const {data,error}=await client.auth.signInWithPassword({email,password});if(error){message(error.message==='Invalid login credentials'?'Email or password is incorrect. If this is your first password login, set a password for this user in Supabase Dashboard → Authentication → Users, then try again.':error.message);return}showApp(data.user);await logActivity('Signed in','session',data.user.email||'');message('Signed in successfully.')});
