@@ -52,6 +52,7 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
 .hero:after{content:'↗';position:absolute;right:7%;bottom:-64px;font-size:230px;line-height:1;color:#ffffff12;font-weight:900;pointer-events:none}
 @media(max-width:900px){.link-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.directory-tools{align-items:stretch;flex-direction:column}.search-wrap{max-width:none}.site-preview{height:190px;padding:16px}.site-card-body{padding:18px}}
+.portal-preview-link{display:grid;color:inherit;text-decoration:none;cursor:pointer}.portal-preview-link:focus-visible{outline:4px solid #f4c64e;outline-offset:-4px}.portal-preview-link:hover .preview-label{background:#1769bd}
 </style>
 </head>
 <body>
@@ -98,11 +99,12 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
  let domain='';try{domain=new URL(url).hostname.replace(/^www\./,'')}catch{}
  const image=validUrl(item.preview_image||'');
  const preview=image?'<img class="preview-image" loading="lazy" src="'+esc(image)+'" alt="Website preview" onerror="this.style.display=&quot;none&quot;;this.nextElementSibling.hidden=false"><div class="fallback" hidden>↗</div>':'<div class="fallback">↗</div>';
- return '<article class="site-card"><div class="site-preview"><span class="preview-label">WEBSITE PREVIEW</span>'+preview+'<span class="domain">'+esc(domain)+'</span></div><div class="site-card-body">'+(item.organization?'<div class="org">'+esc(item.organization)+'</div>':'')+'<div class="resource-meta"><span>'+esc(categoryName(item.category||'other'))+'</span><span>External resource</span></div><p>'+esc(item.description||'Explore this website for useful information and opportunities.')+'</p><div class="card-actions"><button type="button" class="preview-btn" data-preview="'+esc(item.id)+'">Quick preview <span>↗</span></button><a class="visit-btn" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Visit website <span>↗</span></a></div></div></article>'
+ return '<article class="site-card"><a class="site-preview portal-preview-link" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" data-track-portal="'+esc(item.id)+'" aria-label="Open '+esc(item.organization||domain)+' website"><span class="preview-label">WEBSITE PREVIEW · OPEN ↗</span>'+preview+'<span class="domain">'+esc(domain)+'</span></a><div class="site-card-body">'+(item.organization?'<div class="org">'+esc(item.organization)+'</div>':'')+'<div class="resource-meta"><span>'+esc(categoryName(item.category||'other'))+'</span><span>External resource</span></div><p>'+esc(item.description||'Explore this website for useful information and opportunities.')+'</p><div class="card-actions"><button type="button" class="preview-btn" data-preview="'+esc(item.id)+'">Quick preview <span>↗</span></button><a class="visit-btn" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Visit website <span>↗</span></a></div></div></article>'
  }).join('');
  grid.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>{const item=items.find(x=>x.id===button.dataset.preview);if(item)preview(item.url,'Website preview')}));
  }
- document.getElementById('year').textContent=new Date().getFullYear();load();
+ grid.addEventListener('click',event=>{const link=event.target.closest('[data-track-portal]');if(!link)return;client.from('youth_portal_click_events').insert({link_id:link.dataset.trackPortal,source:'public'}).then(({error})=>{if(error)console.warn('Portal click could not be recorded:',error.message)})});
+  document.getElementById('year').textContent=new Date().getFullYear();load();
 })();
 </script>
 </body></html>
