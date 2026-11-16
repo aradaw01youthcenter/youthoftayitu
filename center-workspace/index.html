@@ -316,7 +316,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div class="panel"><div class="page-heading" style="margin-bottom:10px"><div><h2>Saved website links</h2><p class="muted">These links are shown on the public page when active. You can edit or delete any entry.</p></div><button type="button" class="secondary" id="refreshYouthLinks">↻ Check all saved links</button></div><div id="youthLinksStatus" class="muted">Loading website links…</div><div id="youthLinksList"></div></div>
 </section>
 <section class="page-view" id="page-portal-discovery" hidden>
-<div class="page-heading"><div><h1>Portal Discovery</h1><p>Review useful Ethiopian portals, check whether links are responding, and approve trusted resources for the public directory.</p></div><button type="button" class="secondary" id="refreshPortalSuggestions">↻ Check pending portals</button></div>
+<div class="page-heading"><div><h1>Portal Discovery</h1><p>Find useful Ethiopian portals that are not already in your For the Youth link pool. Existing domains are automatically hidden; approve only new, trusted resources.</p></div><button type="button" class="secondary" id="refreshPortalSuggestions">↻ Check pending portals</button></div>
 <div class="panel"><h2>Discover useful portals</h2><p class="muted">These are researched candidates, not public listings. Review the source and website before approving.</p>
 <div class="row" style="gap:8px;flex-wrap:wrap"><a class="button secondary" href="https://www.google.com/search?q=Ethiopia+official+youth+job+portals" target="_blank" rel="noopener">Find job portals ↗</a><a class="button secondary" href="https://www.google.com/search?q=Ethiopia+official+education+training+portals" target="_blank" rel="noopener">Education & training ↗</a><a class="button secondary" href="https://www.google.com/search?q=Ethiopia+youth+volunteering+programs+official" target="_blank" rel="noopener">Volunteering ↗</a><a class="button secondary" href="https://www.google.com/search?q=Ethiopia+youth+entrepreneurship+business+support+portal" target="_blank" rel="noopener">Business & innovation ↗</a></div>
 <div id="portalSuggestionsStatus" class="muted" style="margin-top:14px">Loading researched portal candidates…</div><div id="portalSuggestionsList"></div></div>
@@ -449,17 +449,28 @@ async function refreshYouthLinks(){
 }
 $('refreshYouthLinks')?.addEventListener('click',refreshYouthLinks);
 let portalSuggestionsCache=[];
+function portalHostKey(value){
+ try{return new URL(value).hostname.toLowerCase().replace(/^www\./,'').replace(/\.$/,'')}catch{return String(value||'').trim().toLowerCase().replace(/^https?:\/\//,'').split(/[/?#]/)[0].replace(/^www\./,'')}
+}
 async function loadPortalSuggestions(){
  const status=$('portalSuggestionsStatus'),list=$('portalSuggestionsList');if(!status||!list)return;
- status.textContent='Loading researched portal candidates…';
- const {data,error}=await client.from('youth_portal_suggestions').select('*').order('status').order('created_at');
- if(error){status.textContent='Could not load portal candidates: '+error.message;return}
- portalSuggestionsCache=data||[];
- status.textContent=portalSuggestionsCache.length+' researched candidate(s) · '+portalSuggestionsCache.filter(x=>x.status==='pending').length+' awaiting review.';
+ status.textContent='Loading new portal candidates and comparing them with your link pool…';
+ const [suggestions,pool]=await Promise.all([
+  client.from('youth_portal_suggestions').select('*').order('status').order('created_at'),
+  client.from('youth_links').select('url')
+ ]);
+ if(suggestions.error){status.textContent='Could not load portal candidates: '+suggestions.error.message;return}
+ if(pool.error){status.textContent='Could not compare candidates with your link pool: '+pool.error.message;return}
+ const existingHosts=new Set((pool.data||[]).map(x=>portalHostKey(x.url)).filter(Boolean));
+ const allSuggestions=suggestions.data||[];
+ const alreadyListed=allSuggestions.filter(x=>existingHosts.has(portalHostKey(x.url)));
+ portalSuggestionsCache=allSuggestions.filter(x=>!existingHosts.has(portalHostKey(x.url)));
+ const pendingCount=portalSuggestionsCache.filter(x=>x.status==='pending').length;
+ status.textContent=pendingCount+' new portal candidate(s) awaiting review · '+alreadyListed.length+' duplicate suggestion(s) hidden because they are already in your link pool.';
  list.innerHTML=portalSuggestionsCache.map(x=>{
-  const thumb=x.preview_image?'style="background-image:url(\''+escapeHtml(x.preview_image)+'\')"':'';
+  const thumb=x.preview_image?'style="background-image:url(\\''+escapeHtml(x.preview_image)+'\\')"':'';
   return '<div class="youth-link-admin-card"><div class="youth-link-admin-thumb" '+thumb+'>'+(x.preview_image?'':'↗')+'</div><div class="youth-link-admin-info"><strong>'+escapeHtml(x.title)+'</strong><span class="status">'+escapeHtml(x.category)+' · '+escapeHtml(x.status)+' · '+(x.last_http_status?'HTTP '+x.last_http_status:'Not checked')+'</span><div class="muted">'+escapeHtml(x.organization||'')+'</div><div class="muted">'+escapeHtml(x.url)+'</div><p class="muted">'+escapeHtml(x.description||'')+'</p><a href="'+escapeHtml(x.source_url||x.url)+'" target="_blank" rel="noopener">View source ↗</a></div><div class="youth-link-admin-actions">'+(x.status==='pending'?'<button type="button" data-approve-portal="'+x.id+'">Approve & add</button><button type="button" class="danger" data-reject-portal="'+x.id+'">Reject</button>':'<span class="status">'+escapeHtml(x.status)+'</span>')+'</div></div>';
- }).join('')||'<p class="muted">No portal candidates yet.</p>';
+ }).join('')||'<p class="muted">No new portal candidates right now. Search for additional youth-focused portals and add only websites not already listed in For the Youth.</p>';
  list.querySelectorAll('[data-approve-portal]').forEach(button=>button.addEventListener('click',()=>approvePortalSuggestion(button.dataset.approvePortal,button)));
  list.querySelectorAll('[data-reject-portal]').forEach(button=>button.addEventListener('click',()=>rejectPortalSuggestion(button.dataset.rejectPortal,button)));
 }
@@ -469,9 +480,9 @@ async function approvePortalSuggestion(id,button){
  try{
   let image=item.preview_image||null,httpStatus=null;
   try{const meta=await portalTool('preview',item.url);image=image||meta.preview_image;httpStatus=meta.http_status}catch(err){console.warn('Preview lookup failed during approval:',err)}
-  const existing=await client.from('youth_links').select('id').eq('url',item.url).maybeSingle();
+  const existing=await client.from('youth_links').select('id,url');
   if(existing.error)throw existing.error;
-  if(existing.data)throw new Error('This website is already in the public directory.');
+  if((existing.data||[]).some(link=>portalHostKey(link.url)===portalHostKey(item.url)))throw new Error('This portal or its domain is already in your link pool.');
   const inserted=await client.from('youth_links').insert({title:item.title,organization:item.organization,category:item.category,url:item.url,description:item.description,preview_image:image,is_active:true,sort_order:0,created_by:currentUser.id,last_checked_at:new Date().toISOString(),last_http_status:httpStatus});
   if(inserted.error)throw inserted.error;
   const updated=await client.from('youth_portal_suggestions').update({status:'approved',preview_image:image,last_checked_at:new Date().toISOString(),last_http_status:httpStatus,updated_at:new Date().toISOString()}).eq('id',id);
