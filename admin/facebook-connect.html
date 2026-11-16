@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect Facebook Page · Youth of Tayitu</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:24px;font-family:Arial,sans-serif;background:#f3f6fa;color:#172334}.card{max-width:640px;margin:7vh auto;background:#fff;border:1px solid #e5eaf0;border-radius:18px;padding:28px;box-shadow:0 12px 38px #13243a12}h1{font-size:24px;margin:0 0 10px}p{line-height:1.55;color:#566477}.page{display:block;border:1px solid #dce4ed;border-radius:12px;padding:16px;margin:12px 0;cursor:pointer}.page:has(input:checked){border-color:#1877f2;background:#f2f7ff}.page strong{display:block;margin-bottom:5px}button{border:0;border-radius:9px;background:#1877f2;color:#fff;font-weight:700;padding:13px 20px;font-size:15px;cursor:pointer}button:disabled{opacity:.55;cursor:wait}#status{margin:18px 0 8px;color:#46566a}.muted{font-size:13px;color:#748195}
+</style>
+</head>
+<body><main class="card">
+<h1>Choose your Facebook Page</h1>
+<p>Select the Facebook Page you want to connect to the Youth of Tayitu admin dashboard.</p>
+<div id="status">Checking your secure admin session…</div>
+<form id="pageForm" hidden><div id="pages"></div><button id="connect" type="submit">Connect selected Page</button></form>
+<p class="muted">Your Facebook access token is kept on the secure server. This selection expires after a short time.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://vroxuvzbnzfelyndchyl.supabase.co";
+const PUBLIC_KEY="sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH";
+const FUNCTION_URL=SUPABASE_URL+"/functions/v1/facebook-oauth";
+const client=supabase.createClient(SUPABASE_URL,PUBLIC_KEY);
+const status=document.getElementById("status");
+const state=new URLSearchParams(location.search).get("state")||"";
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function request(body,token){
+ const response=await fetch(FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,"apikey":PUBLIC_KEY},body:JSON.stringify(body)});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(data.error||"The secure Facebook request failed.");
+ return data;
+}
+(async()=>{
+ try{
+  if(!state)throw new Error("The Facebook selection link is missing. Return to the admin dashboard and start again.");
+  const {data,error}=await client.auth.getSession();
+  if(error||!data.session?.access_token)throw new Error("Your admin sign-in session was not found. Sign in to the dashboard and start again.");
+  const result=await request({action:"pages",state},data.session.access_token);
+  if(!result.pages?.length)throw new Error("No Facebook Pages were returned for this account.");
+  document.getElementById("pages").innerHTML=result.pages.map((p,i)=>'<label class="page"><input type="radio" name="page_id" value="'+esc(p.id)+'" '+(i===0?"checked":"")+' required> <strong>'+esc(p.name)+'</strong><span class="muted">Page ID: '+esc(p.id)+'</span></label>').join("");
+  document.getElementById("pageForm").hidden=false;status.textContent="Choose the correct Page, then select Connect.";
+  document.getElementById("pageForm").addEventListener("submit",async e=>{
+   e.preventDefault();const button=document.getElementById("connect");const pageId=new FormData(e.currentTarget).get("page_id");
+   button.disabled=true;button.textContent="Connecting…";status.textContent="Saving the secure Page connection…";
+   try{await request({action:"connect",state,page_id:pageId},data.session.access_token);location.href="/admin/?facebook_connected=1"}
+   catch(err){status.textContent=err.message;button.disabled=false;button.textContent="Connect selected Page"}
+  });
+ }catch(err){status.textContent=err.message}
+})();
+</script></body></html>
