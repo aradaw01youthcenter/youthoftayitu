@@ -935,7 +935,7 @@ async function loadPortalAnalytics(){
  const events=eventsResult.data||[],links=linksResult.data||[],byId=new Map(links.map(x=>[x.id,x]));
  const publicClicks=events.filter(x=>x.source==='public').length,adminClicks=events.filter(x=>x.source==='admin').length,unique=new Set(events.map(x=>x.link_id)).size;
  kpis.innerHTML='<div class="analytics-kpi"><strong>'+publicClicks+'</strong><span>Public clicks</span></div><div class="analytics-kpi"><strong>'+adminClicks+'</strong><span>Admin preview clicks</span></div><div class="analytics-kpi"><strong>'+unique+'</strong><span>Portals clicked</span></div>';
- const days=[];for(let i=13;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);const key=d.toISOString().slice(0,10);days.push({key,label:d.toLocaleDateString(undefined,{day:'numeric',month:'short'}),count:events.filter(e=>e.source==='public'&&e.clicked_at.slice(0,10)===key).length})}
+ const days=[];for(let i=13;i>=0;i--){const d=new Date();d.setUTCHours(0,0,0,0);d.setUTCDate(d.getUTCDate()-i);const key=d.toISOString().slice(0,10);days.push({key,label:d.toLocaleDateString(undefined,{day:'numeric',month:'short'}),count:events.filter(e=>e.source==='public'&&e.clicked_at.slice(0,10)===key).length})}
  const max=Math.max(1,...days.map(x=>x.count));
  daily.innerHTML=days.map(d=>'<div class="portal-click-day" title="'+d.label+': '+d.count+' clicks"><strong>'+d.count+'</strong><span style="height:'+Math.max(3,d.count/max*78)+'px"></span><small>'+d.label.split(' ')[0]+'</small></div>').join('');
  const counts=new Map();events.filter(e=>e.source==='public').forEach(e=>counts.set(e.link_id,(counts.get(e.link_id)||0)+1));
