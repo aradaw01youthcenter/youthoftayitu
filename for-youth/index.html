@@ -19,7 +19,7 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
 @media(max-width:900px){.link-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.bar{align-items:flex-start;flex-direction:column;gap:10px}.bar nav{gap:14px}.link-grid{grid-template-columns:1fr}.site-preview{height:180px}.section-head{align-items:flex-start;flex-direction:column}main{padding:24px 14px 50px}}
 
 /* Refined resource directory */
-.directory-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:26px 0 18px}
+.category-nav{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0 14px}.category-nav button{border:1px solid #dce6f1;background:#fff;color:#37516e;border-radius:999px;padding:9px 15px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}.category-nav button.active,.category-nav button:hover{background:#1769bd;border-color:#1769bd;color:#fff;box-shadow:0 6px 16px #1769bd25}.directory-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0 18px}
 .directory-count{font-size:13px;color:var(--muted);font-weight:750}
 .search-wrap{position:relative;flex:1;max-width:390px}
 .search-wrap input{width:100%;border:1px solid #d9e2ed;border-radius:14px;background:#fff;padding:13px 16px 13px 42px;font:inherit;outline:none;box-shadow:0 5px 18px #122b4708}
@@ -61,7 +61,7 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
 </div></header>
 <main>
 <section class="hero"><div class="eyebrow">YOUTH RESOURCES & OPPORTUNITIES</div><h1>ለወጣቱ</h1><p>ለወጣቶች ጠቃሚ የትምህርት፣ የስራ፣ የስልጠና፣ የፈጠራና የእድል መረጃዎችን በአንድ ቦታ ያግኙ። የሚፈልጉትን ድረ-ገጽ በቀጥታ ይመልከቱ።</p></section>
-<div class="section-head"><div><h2>ጠቃሚ ድረ-ገጾች</h2><p>የተመረጡ የወጣቶች መረጃና እድል ምንጮች</p></div></div>
+<div class="section-head"><div><h2>የወጣቶች ፖርታሎች</h2><p>በዘርፍ የተደራጁ የስራ፣ የትምህርት፣ የስፖርትና ሌሎች ጠቃሚ ምንጮች</p></div></div><div class="category-nav" id="youthCategoryNav" aria-label="Resource categories"></div>
 <div class="directory-tools"><div class="directory-count" id="directoryCount">የወጣቶች የመረጃ ምንጮች</div><label class="search-wrap"><span>⌕</span><input id="resourceSearch" type="search" placeholder="ድረ-ገጽ ወይም ድርጅት ይፈልጉ…" aria-label="Search youth resources"></label></div>
 <div id="linkStatus" role="status">ድረ-ገጾችን በመጫን ላይ…</div><div id="youthLinkGrid" class="link-grid"></div>
 </main>
@@ -71,33 +71,36 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
 <script>
 (function(){
  const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
- const grid=document.getElementById('youthLinkGrid'),status=document.getElementById('linkStatus'),modal=document.getElementById('previewModal'),frame=document.getElementById('previewFrame'),search=document.getElementById('resourceSearch'),count=document.getElementById('directoryCount');let allLinks=[];
+ const grid=document.getElementById('youthLinkGrid'),status=document.getElementById('linkStatus'),modal=document.getElementById('previewModal'),frame=document.getElementById('previewFrame'),search=document.getElementById('resourceSearch'),count=document.getElementById('directoryCount'),categoryNav=document.getElementById('youthCategoryNav');let allLinks=[],activeCategory='all';
+ const categories=[['all','ሁሉም'],['jobs','የስራ ፖርታል'],['advocacy','ጥብቅናና የዜጎች ድጋፍ'],['sport','ስፖርት'],['education','ትምህርት'],['training','ስልጠናና ዲጂታል ክህሎት'],['business','ስራ ፈጠራና ቢዝነስ'],['health','ጤና'],['volunteering','በጎ ፈቃድ'],['other','ሌሎች']];
+ const categoryName=key=>(categories.find(c=>c[0]===key)||categories[categories.length-1])[1];
+ function drawCategories(){categoryNav.innerHTML=categories.map(c=>'<button type="button" data-category="'+c[0]+'" class="'+(activeCategory===c[0]?'active':'')+'">'+c[1]+'</button>').join('');categoryNav.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{activeCategory=b.dataset.category;drawCategories();applyFilters()}));}
+ function applyFilters(){const q=search.value.trim().toLowerCase();render(allLinks.filter(x=>(activeCategory==='all'||(x.category||'other')===activeCategory)&&[x.organization,x.description,x.url,categoryName(x.category||'other')].join(' ').toLowerCase().includes(q)));}
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const validUrl=s=>{try{const u=new URL(s);return ['http:','https:'].includes(u.protocol)?u.href:null}catch{return null}};
- function preview(url,title){const safe=validUrl(url);if(!safe)return;document.getElementById('previewTitle').textContent=title;frame.src=safe;modal.classList.add('open');document.body.style.overflow='hidden'}
+ function preview(url,title){const safe=validUrl(url);if(!safe)return;document.getElementById('previewTitle').textContent='Website preview';frame.src=safe;modal.classList.add('open');document.body.style.overflow='hidden'}
  function close(){modal.classList.remove('open');frame.src='about:blank';document.body.style.overflow=''}
  document.getElementById('closePreview').addEventListener('click',close);modal.addEventListener('click',e=>{if(e.target===modal)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
- async function load(){const {data,error}=await client.from('youth_links').select('id,title,organization,url,description,preview_image').eq('is_active',true).order('sort_order').order('created_at',{ascending:false});
+ async function load(){const {data,error}=await client.from('youth_links').select('id,title,organization,url,description,preview_image,category').eq('is_active',true).order('sort_order').order('created_at',{ascending:false});
  if(error){status.textContent='ድረ-ገጾቹን መጫን አልተቻለም። እባክዎ ቆይተው ይሞክሩ።';return}
  if(!data?.length){status.textContent='ጠቃሚ ድረ-ገጾች በቅርቡ ይጨመራሉ።';grid.innerHTML='<div class="empty"><strong>በቅርቡ ይመጣል</strong><p>አዲስ የወጣቶች መረጃ ምንጮች ሲጨመሩ እዚህ ይታያሉ።</p></div>';return}
  
  allLinks=data;
- render(allLinks);
- search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();render(allLinks.filter(x=>[x.title,x.organization,x.description,x.url].join(' ').toLowerCase().includes(q)))});
+ drawCategories();applyFilters();
+ search.addEventListener('input',applyFilters);
  }
  function render(items){
  count.textContent=items.length+' የመረጃ ምንጮች';
- if(!items.length){grid.innerHTML='<div class="empty"><strong>ምንም ውጤት አልተገኘም</strong><p>ሌላ ቃል በመጠቀም ይፈልጉ።</p></div>';return}
+ if(!items.length){grid.innerHTML='<div class="empty"><strong>ምንም ውጤት አልተገኘም</strong><p>ሌላ ምድብ ወይም ቃል በመጠቀም ይፈልጉ።</p></div>';return}
  status.textContent=allLinks.length+' ጠቃሚ ድረ-ገጽ(ጾች) ተገኝተዋል።';
  grid.innerHTML=items.map(item=>{
  const url=validUrl(item.url);if(!url)return '';
- let domain='';try{domain=new URL(url).hostname.replace(/^www\\./,'')}catch{}
+ let domain='';try{domain=new URL(url).hostname.replace(/^www\./,'')}catch{}
  const image=validUrl(item.preview_image||'');
- const preview=image?'<img class="preview-image" loading="lazy" src="'+esc(image)+'" alt="'+esc(item.title)+' preview" onerror="this.style.display=&quot;none&quot;;this.nextElementSibling.hidden=false"><div class="fallback" hidden>↗</div>':'<div class="fallback">↗</div>';
- return '<article class="site-card"><div class="site-preview"><span class="preview-label">WEBSITE PREVIEW</span>'+preview+'<span class="domain">'+esc(domain)+'</span></div><div class="site-card-body">'+(item.organization?'<div class="org">'+esc(item.organization)+'</div>':'')+'<h3>'+esc(item.title)+'</h3><p>'+esc(item.description||'Explore this website for useful information and opportunities.')+'</p><div class="resource-meta"><span>Official website</span><span>External resource</span></div><div class="card-actions"><button type="button" class="preview-btn" data-preview="'+esc(item.id)+'">Quick preview <span>↗</span></button><a class="visit-btn" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Visit website <span>↗</span></a></div></div></article>'
+ const preview=image?'<img class="preview-image" loading="lazy" src="'+esc(image)+'" alt="Website preview" onerror="this.style.display=&quot;none&quot;;this.nextElementSibling.hidden=false"><div class="fallback" hidden>↗</div>':'<div class="fallback">↗</div>';
+ return '<article class="site-card"><div class="site-preview"><span class="preview-label">WEBSITE PREVIEW</span>'+preview+'<span class="domain">'+esc(domain)+'</span></div><div class="site-card-body">'+(item.organization?'<div class="org">'+esc(item.organization)+'</div>':'')+'<div class="resource-meta"><span>'+esc(categoryName(item.category||'other'))+'</span><span>External resource</span></div><p>'+esc(item.description||'Explore this website for useful information and opportunities.')+'</p><div class="card-actions"><button type="button" class="preview-btn" data-preview="'+esc(item.id)+'">Quick preview <span>↗</span></button><a class="visit-btn" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Visit website <span>↗</span></a></div></div></article>'
  }).join('');
- grid.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>{const item=items.find(x=>x.id===button.dataset.preview);if(item)preview(item.url,item.title)}));
-
+ grid.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>{const item=items.find(x=>x.id===button.dataset.preview);if(item)preview(item.url,'Website preview')}));
  }
  document.getElementById('year').textContent=new Date().getFullYear();load();
 })();
