@@ -398,7 +398,7 @@ function showPage(page){
  if(page==='posts')renderPosts();
  if(page==='activity'&&isSuperAdmin())loadActivityLogs();
 }
-document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>showPage(el.dataset.page)));
+document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>{showPage(el.dataset.page);if(el.dataset.page==='facebook')loadFacebookConnectionStatus()}));
 const menuToggle=$('mobileMenuToggle'),navBackdrop=$('mobileNavBackdrop');
 function closeMobileNav(){document.body.classList.remove('nav-open');menuToggle?.setAttribute('aria-expanded','false');menuToggle?.setAttribute('aria-label','Open navigation menu');if(menuToggle)menuToggle.textContent='☰'}
 menuToggle?.addEventListener('click',()=>{const open=!document.body.classList.contains('nav-open');document.body.classList.toggle('nav-open',open);menuToggle.setAttribute('aria-expanded',String(open));menuToggle.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');menuToggle.textContent=open?'×':'☰'});
