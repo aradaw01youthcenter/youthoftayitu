@@ -592,13 +592,31 @@ function renderHomepageMedia(){
  $('homepageGalleryPreview').innerHTML=homepageMedia.gallery.map((url,i)=>'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(url)+'" alt="Gallery photo '+(i+1)+'"><button type="button" data-remove-gallery="'+i+'">×</button></div>').join('');
  $('homepageGalleryPreview').querySelectorAll('[data-remove-gallery]').forEach(b=>b.onclick=()=>{homepageMedia.gallery.splice(Number(b.dataset.removeGallery),1);renderHomepageMedia()});
 }
+async function optimizeImageFile(file,maxDimension=1920,quality=0.82){
+ if(!file||file.type==='image/gif'||!['image/jpeg','image/png','image/webp'].includes(file.type)||typeof createImageBitmap!=='function')return file;
+ let bitmap;
+ try{
+  bitmap=await createImageBitmap(file);
+  const scale=Math.min(1,maxDimension/Math.max(bitmap.width,bitmap.height));
+  const width=Math.max(1,Math.round(bitmap.width*scale)),height=Math.max(1,Math.round(bitmap.height*scale));
+  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+  const context=canvas.getContext('2d');if(!context)return file;
+  context.drawImage(bitmap,0,0,width,height);
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',quality));
+  if(!blob||blob.type!=='image/webp'||blob.size>=file.size)return file;
+  const base=file.name.replace(/\.[^.]+$/,'')||'image';
+  return new File([blob],base+'.webp',{type:'image/webp',lastModified:Date.now()});
+ }catch(error){console.warn('Image optimization skipped; original file will be uploaded.',error);return file}
+ finally{if(bitmap&&typeof bitmap.close==='function')bitmap.close()}
+}
 async function uploadHomepageImage(file,folder){
  if(!file)return null;
  if(!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)){throw new Error('Use a JPG, PNG, WebP or GIF image.')}
  if(file.size>10*1024*1024)throw new Error('Each image must be 10 MB or smaller.');
- const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+ const optimized=await optimizeImageFile(file,folder==='banner'?2200:1800,0.82);
+ const ext=optimized.type==='image/webp'?'webp':(optimized.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
  const path='homepage/'+folder+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,9)+'.'+ext;
- const {error}=await client.storage.from('post-images').upload(path,file,{upsert:false,contentType:file.type});
+ const {error}=await client.storage.from('post-images').upload(path,optimized,{upsert:false,contentType:optimized.type,cacheControl:'31536000'});
  if(error)throw error;
  return client.storage.from('post-images').getPublicUrl(path).data.publicUrl;
 }
@@ -656,7 +674,7 @@ $('postStatusFilter').addEventListener('change',renderPosts);
 $('postCategoryFilter').addEventListener('change',renderPosts);
 function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category').value=p.category||categories[0];$('excerpt').value=p.excerpt||'';$('content').value=p.content;$('socialPlatform').value=p.social_platform||'';$('socialUrl').value=p.social_url||'';$('status').value=p.status;currentImages=Array.isArray(p.images)?p.images.slice():[];if(!currentImages.length&&p.cover_image)currentImages=[p.cover_image];renderGallery();$('formTitle').textContent='Edit post';showPage('create')}
 $('postForm').addEventListener('submit',async e=>{e.preventDefault();message('Saving post…');const id=$('postId').value,title=$('title').value.trim(),status=$('status').value,files=Array.from($('image').files||[]);if(files.some(f=>!['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)||f.size>10*1024*1024)){message('Please choose JPEG, PNG, WebP or GIF photos, each no larger than 10 MB.');return}
-const uploaded=[];for(const file of files){const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safe;const up=await client.storage.from('post-images').upload(path,file,{upsert:false,contentType:file.type});if(up.error){message('Photo upload failed: '+up.error.message);return}uploaded.push(client.storage.from('post-images').getPublicUrl(path).data.publicUrl)}
+const uploaded=[];for(const file of files){const optimized=await optimizeImageFile(file,1800,0.82);const safe=optimized.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safe;const up=await client.storage.from('post-images').upload(path,optimized,{upsert:false,contentType:optimized.type,cacheControl:'31536000'});if(up.error){message('Photo upload failed: '+up.error.message);return}uploaded.push(client.storage.from('post-images').getPublicUrl(path).data.publicUrl)}
 const images=currentImages.concat(uploaded),payload={title,slug:id?undefined:slugify(title),category:$('category').value,excerpt:$('excerpt').value.trim(),content:$('content').value,social_platform:$('socialPlatform').value||null,social_url:$('socialUrl').value.trim()||null,images,cover_image:images[0]||null,status,updated_at:new Date().toISOString(),...(status==='published'?{published_at:new Date().toISOString()}:{})};if(id)delete payload.slug;
 if(status==='scheduled'){const v=$('scheduledAt').value;if(!v||new Date(v)<=new Date()){message('Choose a future date and time for the scheduled post.');return}payload.published_at=new Date(v).toISOString()}else if(status==='draft'){payload.published_at=null}else{payload.published_at=new Date().toISOString()}if(status==='scheduled'){const v=$('scheduledAt').value;if(!v||new Date(v)<=new Date()){message('Choose a future date and time for the scheduled post.');return}payload.published_at=new Date(v).toISOString()}else if(status==='draft'){payload.published_at=null}else{payload.published_at=new Date().toISOString()}const result=id?await client.from('posts').update(payload).eq('id',id):await client.from('posts').insert(payload);if(result.error){message(result.error.message);return}await logActivity(id?'Updated post':'Created post','post',title,{status,category:$('category').value});message('Post saved successfully.');clearForm();await loadPosts();showPage('posts')});
 async function deletePost(id){if(!confirm('Delete this post? This cannot be undone.'))return;const {error}=await client.from('posts').delete().eq('id',id);if(!error){const deleted=allPosts.find(p=>p.id===id);await logActivity('Deleted post','post',deleted?.title||String(id))}message(error?error.message:'Post deleted.');await loadPosts()}
