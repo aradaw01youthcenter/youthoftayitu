@@ -93,7 +93,7 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
  const url=validUrl(item.url);if(!url)return '';
  let domain='';try{domain=new URL(url).hostname.replace(/^www\\./,'')}catch{}
  const image=validUrl(item.preview_image||'');
- const preview=image?'<img class="preview-image" loading="lazy" src="'+esc(image)+'" alt="'+esc(item.title)+' preview" onerror="this.style.display=\\'none\\';this.nextElementSibling.hidden=false"><div class="fallback" hidden>↗</div>':'<div class="fallback">↗</div>';
+ const preview=image?'<img class="preview-image" loading="lazy" src="'+esc(image)+'" alt="'+esc(item.title)+' preview" onerror="this.style.display=&quot;none&quot;;this.nextElementSibling.hidden=false"><div class="fallback" hidden>↗</div>':'<div class="fallback">↗</div>';
  return '<article class="site-card"><div class="site-preview"><span class="preview-label">WEBSITE PREVIEW</span>'+preview+'<span class="domain">'+esc(domain)+'</span></div><div class="site-card-body">'+(item.organization?'<div class="org">'+esc(item.organization)+'</div>':'')+'<h3>'+esc(item.title)+'</h3><p>'+esc(item.description||'Explore this website for useful information and opportunities.')+'</p><div class="resource-meta"><span>Official website</span><span>External resource</span></div><div class="card-actions"><button type="button" class="preview-btn" data-preview="'+esc(item.id)+'">Quick preview <span>↗</span></button><a class="visit-btn" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Visit website <span>↗</span></a></div></div></article>'
  }).join('');
  grid.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>{const item=items.find(x=>x.id===button.dataset.preview);if(item)preview(item.url,item.title)}));
