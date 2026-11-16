@@ -396,12 +396,124 @@ async function loadYouthLinks(){
  list.querySelectorAll('[data-edit-youth-link]').forEach(b=>b.addEventListener('click',()=>{const x=youthLinksCache.find(v=>v.id===b.dataset.editYouthLink);if(!x)return;$('youthLinkId').value=x.id;$('youthLinkTitle').value=x.title||'';$('youthLinkOrganization').value=x.organization||'';$('youthLinkCategory').value=x.category||'other';$('youthLinkUrl').value=x.url||'';$('youthLinkDescription').value=x.description||'';$('youthLinkImage').value=x.preview_image||'';$('youthLinkOrder').value=x.sort_order||0;$('saveYouthLink').textContent='Save changes';updateYouthLivePreview();$('youthLinkFormStatus').textContent='Editing '+x.title;showPage('youth-links');$('youthLinkTitle').focus()}));
  list.querySelectorAll('[data-delete-youth-link]').forEach(b=>b.addEventListener('click',async()=>{const x=youthLinksCache.find(v=>v.id===b.dataset.deleteYouthLink);if(!x||!confirm('Delete the website link "'+x.title+'"?'))return;b.disabled=true;b.textContent='Deleting…';const {error}=await client.from('youth_links').delete().eq('id',x.id);if(error){message('Could not delete link: '+error.message);b.disabled=false;b.textContent='Delete';return}await logActivity('Deleted For the Youth website link','youth-link',x.title);await loadYouthLinks()}));
 }
+
+async function portalTool(action,url){
+ const {data:sessionData,error:sessionError}=await client.auth.getSession();
+ if(sessionError||!sessionData.session?.access_token)throw new Error('Please sign in again to use portal tools.');
+ const response=await fetch('https://vroxuvzbnzfelyndchyl.supabase.co/functions/v1/portal-tools',{
+  method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+sessionData.session.access_token,'apikey':'sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH'},
+  body:JSON.stringify({action,url})
+ });
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(result.error||'The portal request could not be completed.');
+ return result;
+}
+async function fetchYouthPreview(){
+ const url=$('youthLinkUrl').value.trim(),status=$('youthPreviewStatus'),button=$('fetchYouthPreview');
+ if(!url){status.textContent='Enter a website URL first.';return null}
+ button.disabled=true;status.textContent='Finding the website image…';
+ try{
+  const result=await portalTool('preview',url);
+  if(result.preview_image){$('youthLinkImage').value=result.preview_image;updateYouthLivePreview();status.textContent='Preview image found using '+result.image_source+'.'}
+  else status.textContent=result.note||'No preview image found. You can upload or enter one manually.';
+  if(result.title&&!$('youthLinkTitle').value.trim())$('youthLinkTitle').value=result.title;
+  return result;
+ }catch(error){status.textContent=error.message||'Could not retrieve website preview.';return null}
+ finally{button.disabled=false}
+}
+$('fetchYouthPreview')?.addEventListener('click',fetchYouthPreview);
+$('youthLinkUrl')?.addEventListener('blur',()=>{if(!$('youthLinkImage').value.trim()&&$('youthLinkUrl').value.trim())fetchYouthPreview()});
+async function refreshYouthLinks(){
+ const button=$('refreshYouthLinks'),status=$('youthLinksStatus');
+ if(!button)return;
+ button.disabled=true;status.textContent='Checking saved websites and refreshing missing preview images…';
+ let checked=0,reachable=0,images=0,failed=0;
+ try{
+  for(let i=0;i<youthLinksCache.length;i+=3){
+   await Promise.all(youthLinksCache.slice(i,i+3).map(async link=>{
+    try{
+     const result=await portalTool('check',link.url),stamp=new Date().toISOString();
+     const update={last_checked_at:stamp,last_http_status:result.http_status};
+     if(!link.preview_image&&result.preview_image){update.preview_image=result.preview_image;images++}
+     const saved=await client.from('youth_links').update(update).eq('id',link.id);
+     if(saved.error)throw saved.error;
+     checked++;if(result.http_status>=200&&result.http_status<400)reachable++;
+    }catch(error){failed++;console.warn('Portal check failed for',link.url,error)}
+   }));
+   status.textContent='Checked '+checked+' of '+youthLinksCache.length+' links…';
+  }
+  await logActivity('Checked For the Youth portal links','youth-links',checked+' checked',{reachable,images_added:images,failed});
+  await loadYouthLinks();
+  status.textContent='Finished: '+checked+' checked, '+reachable+' responding, '+images+' missing preview images added, '+failed+' checks failed.';
+ }finally{button.disabled=false}
+}
+$('refreshYouthLinks')?.addEventListener('click',refreshYouthLinks);
+let portalSuggestionsCache=[];
+async function loadPortalSuggestions(){
+ const status=$('portalSuggestionsStatus'),list=$('portalSuggestionsList');if(!status||!list)return;
+ status.textContent='Loading researched portal candidates…';
+ const {data,error}=await client.from('youth_portal_suggestions').select('*').order('status').order('created_at');
+ if(error){status.textContent='Could not load portal candidates: '+error.message;return}
+ portalSuggestionsCache=data||[];
+ status.textContent=portalSuggestionsCache.length+' researched candidate(s) · '+portalSuggestionsCache.filter(x=>x.status==='pending').length+' awaiting review.';
+ list.innerHTML=portalSuggestionsCache.map(x=>{
+  const thumb=x.preview_image?'style="background-image:url(\''+escapeHtml(x.preview_image)+'\')"':'';
+  return '<div class="youth-link-admin-card"><div class="youth-link-admin-thumb" '+thumb+'>'+(x.preview_image?'':'↗')+'</div><div class="youth-link-admin-info"><strong>'+escapeHtml(x.title)+'</strong><span class="status">'+escapeHtml(x.category)+' · '+escapeHtml(x.status)+' · '+(x.last_http_status?'HTTP '+x.last_http_status:'Not checked')+'</span><div class="muted">'+escapeHtml(x.organization||'')+'</div><div class="muted">'+escapeHtml(x.url)+'</div><p class="muted">'+escapeHtml(x.description||'')+'</p><a href="'+escapeHtml(x.source_url||x.url)+'" target="_blank" rel="noopener">View source ↗</a></div><div class="youth-link-admin-actions">'+(x.status==='pending'?'<button type="button" data-approve-portal="'+x.id+'">Approve & add</button><button type="button" class="danger" data-reject-portal="'+x.id+'">Reject</button>':'<span class="status">'+escapeHtml(x.status)+'</span>')+'</div></div>';
+ }).join('')||'<p class="muted">No portal candidates yet.</p>';
+ list.querySelectorAll('[data-approve-portal]').forEach(button=>button.addEventListener('click',()=>approvePortalSuggestion(button.dataset.approvePortal,button)));
+ list.querySelectorAll('[data-reject-portal]').forEach(button=>button.addEventListener('click',()=>rejectPortalSuggestion(button.dataset.rejectPortal,button)));
+}
+async function approvePortalSuggestion(id,button){
+ const item=portalSuggestionsCache.find(x=>x.id===id);if(!item)return;
+ button.disabled=true;button.textContent='Checking & adding…';
+ try{
+  let image=item.preview_image||null,httpStatus=null;
+  try{const meta=await portalTool('preview',item.url);image=image||meta.preview_image;httpStatus=meta.http_status}catch(err){console.warn('Preview lookup failed during approval:',err)}
+  const existing=await client.from('youth_links').select('id').eq('url',item.url).maybeSingle();
+  if(existing.error)throw existing.error;
+  if(existing.data)throw new Error('This website is already in the public directory.');
+  const inserted=await client.from('youth_links').insert({title:item.title,organization:item.organization,category:item.category,url:item.url,description:item.description,preview_image:image,is_active:true,sort_order:0,created_by:currentUser.id,last_checked_at:new Date().toISOString(),last_http_status:httpStatus});
+  if(inserted.error)throw inserted.error;
+  const updated=await client.from('youth_portal_suggestions').update({status:'approved',preview_image:image,last_checked_at:new Date().toISOString(),last_http_status:httpStatus,updated_at:new Date().toISOString()}).eq('id',id);
+  if(updated.error)throw updated.error;
+  await logActivity('Approved discovered portal','youth-portal',item.title,{url:item.url,category:item.category});
+  message('Portal approved and added to the public directory.');await loadPortalSuggestions();await loadYouthLinks();
+ }catch(error){alert(error.message||'Could not approve this portal.');button.disabled=false;button.textContent='Approve & add'}
+}
+async function rejectPortalSuggestion(id,button){
+ const item=portalSuggestionsCache.find(x=>x.id===id);if(!item)return;
+ button.disabled=true;
+ const {error}=await client.from('youth_portal_suggestions').update({status:'rejected',updated_at:new Date().toISOString()}).eq('id',id);
+ if(error){alert('Could not reject candidate: '+error.message);button.disabled=false;return}
+ await logActivity('Rejected discovered portal','youth-portal',item.title,{url:item.url});
+ await loadPortalSuggestions();
+}
+async function refreshPortalSuggestions(){
+ const button=$('refreshPortalSuggestions'),status=$('portalSuggestionsStatus');if(!button)return;
+ const pending=portalSuggestionsCache.filter(x=>x.status==='pending');button.disabled=true;
+ let checked=0,failed=0;
+ try{
+  for(let i=0;i<pending.length;i+=3){
+   await Promise.all(pending.slice(i,i+3).map(async item=>{
+    try{
+     const result=await portalTool('check',item.url);
+     const {error}=await client.from('youth_portal_suggestions').update({last_checked_at:new Date().toISOString(),last_http_status:result.http_status,preview_image:item.preview_image||result.preview_image,updated_at:new Date().toISOString()}).eq('id',item.id);
+     if(error)throw error;checked++;
+    }catch(e){failed++;console.warn('Suggestion check failed',item.url,e)}
+   }));
+  }
+  await loadPortalSuggestions();status.textContent='Checked '+checked+' pending portals; '+failed+' checks failed.';
+ }finally{button.disabled=false}
+}
+$('refreshPortalSuggestions')?.addEventListener('click',refreshPortalSuggestions);
+
 function updateYouthLivePreview(){const org=$('youthLinkOrganization')?.value.trim()||'Organization name',desc=$('youthLinkDescription')?.value.trim()||'A short description will appear here.',url=$('youthLinkUrl')?.value.trim()||'https://example.org',img=$('youthLinkImage')?.value.trim(),cat=$('youthLinkCategory')?.selectedOptions?.[0]?.textContent||'Other';$('youthLivePreviewOrg').textContent=org;$('youthLivePreviewDescription').textContent=desc;$('youthLivePreviewCategory').textContent=cat;let domain='example.org';try{domain=new URL(url).hostname.replace('www.','')}catch{}$('youthLivePreviewDomain').textContent=domain;$('youthLivePreviewImage').style.backgroundImage=img&&(img.startsWith('https://')||img.startsWith('http://'))?'url("'+img.replaceAll('"','')+'")':'';$('youthLivePreviewImage').textContent=img?'':'↗'}
 ['youthLinkOrganization','youthLinkUrl','youthLinkDescription','youthLinkImage','youthLinkCategory'].forEach(id=>$(id)?.addEventListener('input',updateYouthLivePreview));
 $('youthLinkForm')?.addEventListener('submit',async e=>{
- e.preventDefault();const id=$('youthLinkId').value,url=$('youthLinkUrl').value.trim(),preview=$('youthLinkImage').value.trim();let title=$('youthLinkTitle').value.trim();if(!title){try{title=new URL(url).hostname.replace(/^www\\./,'')}catch{title='Website resource'}}
+ e.preventDefault();const id=$('youthLinkId').value,url=$('youthLinkUrl').value.trim();let preview=$('youthLinkImage').value.trim();let title=$('youthLinkTitle').value.trim();if(!title){try{title=new URL(url).hostname.replace(/^www\\./,'')}catch{title='Website resource'}}
  if(!/^https?:\/\//i.test(url)||(preview&&!/^https?:\/\//i.test(preview))){$('youthLinkFormStatus').textContent='Use a valid http:// or https:// website and preview-image URL.';return}
  const button=$('saveYouthLink');button.disabled=true;$('youthLinkFormStatus').textContent='Saving…';
+ if(!preview){try{const meta=await portalTool('preview',url);if(meta.preview_image){preview=meta.preview_image;$('youthLinkImage').value=preview;updateYouthLivePreview()}}catch(err){console.warn('Automatic website image lookup failed:',err)}}
  const payload={title,organization:$('youthLinkOrganization').value.trim()||null,category:$('youthLinkCategory').value||'other',url,description:$('youthLinkDescription').value.trim()||null,preview_image:preview||null,sort_order:Math.max(0,Number($('youthLinkOrder').value)||0),updated_at:new Date().toISOString(),...(id?{}:{created_by:currentUser.id})};
  const result=id?await client.from('youth_links').update(payload).eq('id',id):await client.from('youth_links').insert(payload);
  button.disabled=false;if(result.error){$('youthLinkFormStatus').textContent='Save failed: '+result.error.message;return}
@@ -549,6 +661,7 @@ function showPage(page){
  if(page==='activity'&&isSuperAdmin())loadActivityLogs();
   if(page==='profile')loadAdminProfile();
   if(page==='youth-links')loadYouthLinks();
+  if(page==='portal-discovery')loadPortalSuggestions();
 }
 document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>{showPage(el.dataset.page);if(el.dataset.page==='facebook'){loadFacebookConnectionStatus();loadFacebookFeed()}}));
 const menuToggle=$('mobileMenuToggle'),navBackdrop=$('mobileNavBackdrop');
