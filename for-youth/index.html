@@ -17,6 +17,41 @@ main{max-width:1200px;margin:auto;padding:42px 22px 70px}.hero{border-radius:28p
 footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
 .modal{position:fixed;inset:0;background:#071629d9;z-index:30;display:none;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.modal-card{width:min(1180px,100%);height:min(88vh,850px);background:#fff;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 18px;border-bottom:1px solid var(--line)}.modal-head strong{color:var(--navy)}.modal-head button{border:0;background:#edf2f8;padding:9px 13px;border-radius:9px;cursor:pointer;font-weight:750}.modal-card iframe{width:100%;height:100%;border:0;background:#fff}.embed-note{font-size:12px;color:var(--muted);padding:8px 16px;background:#f7f9fc}
 @media(max-width:900px){.link-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.bar{align-items:flex-start;flex-direction:column;gap:10px}.bar nav{gap:14px}.link-grid{grid-template-columns:1fr}.site-preview{height:180px}.section-head{align-items:flex-start;flex-direction:column}main{padding:24px 14px 50px}}
+
+/* Refined resource directory */
+.directory-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:26px 0 18px}
+.directory-count{font-size:13px;color:var(--muted);font-weight:750}
+.search-wrap{position:relative;flex:1;max-width:390px}
+.search-wrap input{width:100%;border:1px solid #d9e2ed;border-radius:14px;background:#fff;padding:13px 16px 13px 42px;font:inherit;outline:none;box-shadow:0 5px 18px #122b4708}
+.search-wrap input:focus{border-color:#4c91d0;box-shadow:0 0 0 4px #1769bd18}
+.search-wrap span{position:absolute;left:15px;top:9px;font-size:21px;color:#6b829d}
+.link-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.site-card{background:#fff;border:1px solid #e2eaf3;border-radius:24px;overflow:hidden;box-shadow:0 12px 32px #142a4510;display:flex;flex-direction:column;min-width:0;transition:transform .22s,box-shadow .22s,border-color .22s}
+.site-card:hover{transform:translateY(-5px);box-shadow:0 22px 48px #142a4520;border-color:#c8d9ec}
+.site-preview{height:230px;background:radial-gradient(circle at 80% 20%,#ffffff38,transparent 30%),linear-gradient(135deg,#102b49,#1769bd 62%,#55a6c5);position:relative;overflow:hidden;display:grid;place-items:center;padding:22px}
+.site-preview:after{content:'';position:absolute;inset:auto -8% -58% 34%;height:95%;border:1px solid #ffffff38;border-radius:50%;box-shadow:0 0 0 22px #ffffff0b,0 0 0 44px #ffffff0b}
+.site-preview img.preview-image{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;border-radius:13px;box-shadow:0 14px 32px #061a3280;border:1px solid #ffffff80}
+.site-preview .fallback{position:relative;z-index:1;width:86px;height:86px;border-radius:25px;background:#ffffff20;border:1px solid #ffffff66;display:grid;place-items:center;font-size:43px;color:#fff;font-weight:900;backdrop-filter:blur(8px)}
+.preview-label{position:absolute;z-index:2;top:14px;left:16px;padding:6px 11px;border:1px solid #ffffff48;border-radius:30px;background:#10243c9c;color:#fff;font-size:10px;font-weight:850;letter-spacing:.13em}
+.site-preview .domain{position:absolute;z-index:2;right:14px;bottom:14px;padding:7px 12px;border-radius:30px;background:#10243cdb;color:#fff;font-size:11px;font-weight:700;max-width:85%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-card-body{padding:22px;display:flex;flex-direction:column;gap:10px;flex:1}
+.site-card h3{margin:0;color:var(--navy);font-size:21px;line-height:1.35;letter-spacing:-.02em}
+.org{color:#1769bd;font-size:12px;font-weight:850;letter-spacing:.035em;text-transform:uppercase}
+.site-card p{margin:0;color:#66768b;flex:1;line-height:1.75}
+.resource-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.resource-meta span{background:#f0f5fb;color:#48617d;border:1px solid #e2eaf3;border-radius:9px;padding:5px 9px;font-size:11px;font-weight:750}
+.card-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.card-actions button,.card-actions a{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:12px;padding:11px 16px;font:inherit;font-size:13px;font-weight:800;text-decoration:none;cursor:pointer;transition:background .2s,transform .2s}
+.card-actions button:hover,.card-actions a:hover{transform:translateY(-1px)}
+.preview-btn{background:#edf5ff;color:#145a9d;border-color:#dbeafe!important}
+.visit-btn{background:linear-gradient(120deg,#1769bd,#0f559c);color:#fff;box-shadow:0 7px 16px #1769bd30}
+.empty{padding:42px 24px;text-align:center;background:#fff;border:1px dashed #cbd6e4;border-radius:20px;color:var(--muted);grid-column:1/-1}
+.empty strong{display:block;color:var(--navy);font-size:19px}
+.empty p{margin:5px 0 0}
+.hero{position:relative;overflow:hidden}
+.hero:after{content:'↗';position:absolute;right:7%;bottom:-64px;font-size:230px;line-height:1;color:#ffffff12;font-weight:900;pointer-events:none}
+@media(max-width:900px){.link-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.directory-tools{align-items:stretch;flex-direction:column}.search-wrap{max-width:none}.site-preview{height:190px;padding:16px}.site-card-body{padding:18px}}
 </style>
 </head>
 <body>
@@ -27,6 +62,7 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
 <main>
 <section class="hero"><div class="eyebrow">YOUTH RESOURCES & OPPORTUNITIES</div><h1>ለወጣቱ</h1><p>ለወጣቶች ጠቃሚ የትምህርት፣ የስራ፣ የስልጠና፣ የፈጠራና የእድል መረጃዎችን በአንድ ቦታ ያግኙ። የሚፈልጉትን ድረ-ገጽ በቀጥታ ይመልከቱ።</p></section>
 <div class="section-head"><div><h2>ጠቃሚ ድረ-ገጾች</h2><p>የተመረጡ የወጣቶች መረጃና እድል ምንጮች</p></div></div>
+<div class="directory-tools"><div class="directory-count" id="directoryCount">የወጣቶች የመረጃ ምንጮች</div><label class="search-wrap"><span>⌕</span><input id="resourceSearch" type="search" placeholder="ድረ-ገጽ ወይም ድርጅት ይፈልጉ…" aria-label="Search youth resources"></label></div>
 <div id="linkStatus" role="status">ድረ-ገጾችን በመጫን ላይ…</div><div id="youthLinkGrid" class="link-grid"></div>
 </main>
 <footer>© <span id="year"></span> Youth of Tayitu · ለወጣቱ</footer>
@@ -35,7 +71,7 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
 <script>
 (function(){
  const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
- const grid=document.getElementById('youthLinkGrid'),status=document.getElementById('linkStatus'),modal=document.getElementById('previewModal'),frame=document.getElementById('previewFrame');
+ const grid=document.getElementById('youthLinkGrid'),status=document.getElementById('linkStatus'),modal=document.getElementById('previewModal'),frame=document.getElementById('previewFrame'),search=document.getElementById('resourceSearch'),count=document.getElementById('directoryCount');let allLinks=[];
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const validUrl=s=>{try{const u=new URL(s);return ['http:','https:'].includes(u.protocol)?u.href:null}catch{return null}};
  function preview(url,title){const safe=validUrl(url);if(!safe)return;document.getElementById('previewTitle').textContent=title;frame.src=safe;modal.classList.add('open');document.body.style.overflow='hidden'}
@@ -44,9 +80,24 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
  async function load(){const {data,error}=await client.from('youth_links').select('id,title,organization,url,description,preview_image').eq('is_active',true).order('sort_order').order('created_at',{ascending:false});
  if(error){status.textContent='ድረ-ገጾቹን መጫን አልተቻለም። እባክዎ ቆይተው ይሞክሩ።';return}
  if(!data?.length){status.textContent='ጠቃሚ ድረ-ገጾች በቅርቡ ይጨመራሉ።';grid.innerHTML='<div class="empty"><strong>በቅርቡ ይመጣል</strong><p>አዲስ የወጣቶች መረጃ ምንጮች ሲጨመሩ እዚህ ይታያሉ።</p></div>';return}
- status.textContent=data.length+' ጠቃሚ ድረ-ገጽ(ጾች) ተገኝተዋል።';
- grid.innerHTML=data.map(item=>{const url=validUrl(item.url);if(!url)return '';let domain='';try{domain=new URL(url).hostname.replace(/^www\./,'')}catch{}const image=validUrl(item.preview_image||'');return '<article class="site-card"><div class="site-preview">'+(image?'<img class="preview-image" loading="lazy" src="'+esc(image)+'" alt="'+esc(item.title)+' preview">':'<div class="fallback">↗</div>')+'<span class="domain">'+esc(domain)+'</span></div><div class="site-card-body">'+(item.organization?'<div class="org">'+esc(item.organization)+'</div>':'')+'<h3>'+esc(item.title)+'</h3><p>'+esc(item.description||'')+'</p><div class="card-actions"><button type="button" class="preview-btn" data-preview="'+esc(item.id)+'">በዚህ ገጽ ይመልከቱ</button><a class="visit-btn" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">ድረ-ገጹን ይክፈቱ ↗</a></div></div></article>'}).join('');
- grid.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>{const item=data.find(x=>x.id===button.dataset.preview);if(item)preview(item.url,item.title)}));
+ 
+ allLinks=data;
+ render(allLinks);
+ search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();render(allLinks.filter(x=>[x.title,x.organization,x.description,x.url].join(' ').toLowerCase().includes(q)))});
+ }
+ function render(items){
+ count.textContent=items.length+' የመረጃ ምንጮች';
+ if(!items.length){grid.innerHTML='<div class="empty"><strong>ምንም ውጤት አልተገኘም</strong><p>ሌላ ቃል በመጠቀም ይፈልጉ።</p></div>';return}
+ status.textContent=allLinks.length+' ጠቃሚ ድረ-ገጽ(ጾች) ተገኝተዋል።';
+ grid.innerHTML=items.map(item=>{
+ const url=validUrl(item.url);if(!url)return '';
+ let domain='';try{domain=new URL(url).hostname.replace(/^www\\./,'')}catch{}
+ const image=validUrl(item.preview_image||'');
+ const preview=image?'<img class="preview-image" loading="lazy" src="'+esc(image)+'" alt="'+esc(item.title)+' preview" onerror="this.style.display=\\'none\\';this.nextElementSibling.hidden=false"><div class="fallback" hidden>↗</div>':'<div class="fallback">↗</div>';
+ return '<article class="site-card"><div class="site-preview"><span class="preview-label">WEBSITE PREVIEW</span>'+preview+'<span class="domain">'+esc(domain)+'</span></div><div class="site-card-body">'+(item.organization?'<div class="org">'+esc(item.organization)+'</div>':'')+'<h3>'+esc(item.title)+'</h3><p>'+esc(item.description||'Explore this website for useful information and opportunities.')+'</p><div class="resource-meta"><span>Official website</span><span>External resource</span></div><div class="card-actions"><button type="button" class="preview-btn" data-preview="'+esc(item.id)+'">Quick preview <span>↗</span></button><a class="visit-btn" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Visit website <span>↗</span></a></div></div></article>'
+ }).join('');
+ grid.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>{const item=items.find(x=>x.id===button.dataset.preview);if(item)preview(item.url,item.title)}));
+
  }
  document.getElementById('year').textContent=new Date().getFullYear();load();
 })();
