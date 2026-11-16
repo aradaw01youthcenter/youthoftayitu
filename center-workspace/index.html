@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="am"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Posts Admin | Youth of Tayitu</title><meta name="robots" content="noindex,nofollow"><link rel="icon" type="image/png" href="data:image/png;base64,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"><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#172033;font:15px/1.5 Arial,sans-serif}.wrap{max-width:940px;margin:35px auto;padding:0 18px}.panel{background:#fff;border-radius:14px;padding:24px;margin:18px 0;box-shadow:0 5px 22px #14213d0c}h1{margin:0 0 6px}h2{margin-top:0}label{display:block;font-weight:700;margin:14px 0 6px}input,textarea,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}textarea{min-height:190px;resize:vertical}button{border:0;border-radius:8px;padding:11px 17px;background:#0758a5;color:#fff;font-weight:700;cursor:pointer;margin:12px 8px 0 0}button.secondary{background:#526176}button.danger{background:#b42318}.muted{color:#667085}.post{padding:15px 0;border-top:1px solid #e6eaf0}.post strong{display:block}.status{font-size:13px;color:#667085}.hidden{display:none}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}#message{margin:12px 0;color:#0758a5;white-space:pre-wrap}.gallery{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.thumb{width:110px;height:90px;object-fit:cover;border-radius:8px;border:1px solid #ddd}.thumbwrap{position:relative}.thumbwrap button{position:absolute;top:0;right:0;margin:2px;padding:4px 8px;background:#b42318}
+ .site-field{padding:12px 0;border-top:1px solid #e6eaf0}.site-field label{margin:8px 0 5px}.site-field input,.site-field textarea{margin-bottom:4px} 
+:root{--navy:#13243b;--navy2:#1d3553;--gold:#f4c64e;--orange:#ed6b45;--paper:#f4f6fa;--ink:#18283e;--muted:#728096;--line:#e6ebf2;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.wrap{max-width:none;margin:0;padding:0}
+#message{position:fixed;z-index:50;bottom:22px;right:24px;max-width:min(460px,calc(100vw - 32px));padding:13px 18px;background:var(--navy);color:#fff;border-radius:13px;box-shadow:0 12px 34px #0e203b35;font-weight:650}
+#login{max-width:480px;margin:9vh auto 40px;padding:38px!important;border-radius:24px!important;box-shadow:0 24px 70px #172b4517!important;border:1px solid #e9edf4}
+#login:before{content:"YOUTH OF TAYITU";display:inline-flex;align-items:center;margin-bottom:24px;padding:8px 13px;border-radius:30px;background:#fff5d8;color:#8a6511;font-size:11px;font-weight:850;letter-spacing:1.5px}
+#login h2{font-size:28px;letter-spacing:-.8px;color:var(--navy)}#login .muted{font-size:13px}
+#login button{width:100%;padding:14px;margin-top:18px}
+#app{min-height:100vh}
+.dash-topbar{height:76px;background:var(--navy);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,52px);box-shadow:0 5px 20px #13243b18}
+.dash-brand{display:flex;align-items:center;gap:12px;font-weight:850;letter-spacing:.2px}.dash-logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,var(--gold),#f18b47);display:grid;place-items:center;color:#17263c;font-size:19px;font-weight:950;box-shadow:0 5px 16px #0002}.dash-brand small{display:block;color:#b9c7d8;font-size:10px;font-weight:600;letter-spacing:1.5px}
+.dash-top-right{display:flex;align-items:center;gap:12px}.online-dot{width:8px;height:8px;background:#54d69b;border-radius:50%;display:inline-block;margin-right:7px;box-shadow:0 0 0 4px #54d69b20}
+.dashboard-layout{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1600px;margin:auto;min-height:calc(100vh - 76px)}
+.dash-sidebar{background:var(--navy);color:#dce5ef;padding:27px 17px;display:flex;flex-direction:column;gap:8px}
+.dash-side-label{padding:10px 13px 5px;color:#879ab2;font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
+.dash-nav{display:flex;align-items:center;gap:12px;padding:12px 14px;color:#dce5ef;text-decoration:none;border-radius:12px;font-weight:650;font-size:13px;transition:.2s}
+.dash-nav:hover,.dash-nav.active{background:#ffffff16;color:#fff}.dash-nav.active{box-shadow:inset 3px 0 var(--gold)}.dash-nav .nav-icon{width:22px;text-align:center;font-size:17px}
+.dash-side-note{margin-top:auto;padding:16px 14px;background:#ffffff0c;border:1px solid #ffffff13;border-radius:15px;color:#b7c6d8;font-size:12px}
+.dashboard-main{padding:clamp(18px,3vw,38px);min-width:0;max-width:1250px;width:100%;margin:0 auto}
+.dash-welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin:0 0 25px}.dash-welcome h1{font-size:clamp(25px,3vw,34px);letter-spacing:-1px;margin:0;color:var(--navy)}.dash-welcome p{margin:5px 0 0;color:var(--muted)}
+.dash-date{font-size:12px;color:#6d7c91;background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:30px}
+.dash-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:25px}
+.dash-stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px 20px;box-shadow:0 5px 18px #1a2d4508;position:relative;overflow:hidden}.dash-stat:after{content:"";position:absolute;width:75px;height:75px;border-radius:50%;right:-20px;top:-24px;background:#f7e9b7;opacity:.45}.dash-stat:nth-child(2):after{background:#dcecff}.dash-stat:nth-child(3):after{background:#d9f3e8}
+.dash-stat span{font-size:12px;color:var(--muted);font-weight:650}.dash-stat strong{display:block;font-size:28px;color:var(--navy);line-height:1.3;margin-top:7px}.dash-stat small{font-size:11px;color:#8491a3}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:clamp(18px,2.3vw,28px);margin:0 0 20px;box-shadow:0 6px 24px #1b30480a;scroll-margin-top:22px}
+.panel h2{font-size:19px;color:var(--navy);letter-spacing:-.3px;margin:0 0 7px}.panel h3{color:var(--navy);font-size:15px;margin-top:25px}
+.panel>p.muted{font-size:13px;margin:0 0 18px}
+label{display:block;font-weight:700;margin:15px 0 7px;color:#34445b;font-size:13px}
+input,textarea,select{width:100%;padding:12px 14px;border:1px solid #dce3ed;border-radius:10px;background:#fbfcfe;color:#24344a;font:inherit;outline:none;transition:border .18s,box-shadow .18s}
+input:focus,textarea:focus,select:focus{border-color:#d4a72e;box-shadow:0 0 0 3px #f4c64e2b;background:#fff}
+textarea{min-height:190px;resize:vertical}button{border:0;border-radius:10px;padding:11px 17px;background:var(--navy2);color:#fff;font-weight:750;cursor:pointer;margin:12px 8px 0 0;transition:transform .18s,filter .18s,box-shadow .18s}button:hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 6px 15px #142b4520}button.secondary{background:#eaf0f7;color:#30435b}button.danger{background:#fff0ef;color:#b42318}
+.muted{color:var(--muted)}.post{padding:17px 0;border-top:1px solid var(--line)}.post strong{display:block;color:var(--navy);font-size:15px}.status{font-size:12px;color:#78879b}.hidden{display:none}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.gallery{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.thumb{width:118px;height:94px;object-fit:cover;border-radius:11px;border:1px solid var(--line)}.thumbwrap{position:relative}.thumbwrap button{position:absolute;top:0;right:0;margin:3px;padding:3px 8px;background:#b42318;border-radius:50%}
+.site-field{padding:15px 0;border-top:1px solid var(--line)}.site-field label{margin:8px 0 5px}.site-field input,.site-field textarea{margin-bottom:4px}
+#saveSiteContent,#saveVisualManager,#postForm button[type=submit]{background:linear-gradient(120deg,#193a5e,#28547a);padding:13px 21px}
+#visualManager input[type=file],#postForm input[type=file]{background:#f8fafc;border:1px dashed #c6d2e1;padding:13px}
+#list .post:first-child{border-top:0}
+.dash-footer{font-size:11px;color:#93a4b9;margin-top:15px;padding:10px 13px}
+@media(max-width:850px){.dashboard-layout{display:block;min-height:calc(100vh - 76px)}.dash-menu-toggle{display:inline-flex!important;align-items:center;justify-content:center;width:42px;height:42px;padding:0;margin:0 10px 0 0;background:#ffffff18;color:#fff;font-size:23px;border:1px solid #ffffff26}.dash-topbar{justify-content:flex-start;position:relative;z-index:32}.dash-brand{flex:1}.dash-sidebar{position:fixed;z-index:34;top:84px;bottom:auto;left:15px;width:min(340px,calc(100vw - 30px));max-height:calc(100vh - 105px);padding:18px 15px;display:none;flex-direction:column;gap:7px;overflow-y:auto;overflow-x:hidden;transform:none;transition:none;border:1px solid #ffffff20;border-radius:16px;box-shadow:0 18px 45px #07182b35}.nav-open .dash-sidebar{display:flex}.dash-side-label,.dash-side-note{display:block}.dash-nav{white-space:normal;padding:12px 14px}.dash-nav .nav-icon{display:inline-block}.mobile-nav-backdrop{display:none;position:fixed;z-index:33;inset:76px 0 0;background:transparent}.nav-open .mobile-nav-backdrop{display:block}.dashboard-main{padding:20px 15px}}
+@media(max-width:560px){.dash-sidebar{top:74px;max-height:calc(100vh - 88px)}.mobile-nav-backdrop{inset:66px 0 0}.dash-topbar{height:66px;padding:0 15px}.dash-brand{font-size:13px}.dash-logo{width:36px;height:36px}.dash-top-right #logout{padding:9px 11px;font-size:12px}.dash-top-right #signedIn{display:none}.dash-stats{grid-template-columns:1fr 1fr}.dash-stat:last-child{grid-column:span 2}.dash-welcome{align-items:flex-start;flex-direction:column}.dash-date{display:none}.panel{border-radius:15px}.wrap{padding:0}}
+
+/* Dashboard workspace pages */
+.page-view[hidden]{display:none!important}.dashboard-main{max-width:1380px}
+.dash-nav{cursor:pointer;background:transparent;border:0;text-align:left;width:100%;margin:0}
+.page-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:0 0 20px}.page-heading h1{font-size:27px;color:var(--navy);margin:0}.page-heading p{color:var(--muted);margin:5px 0 0;font-size:13px}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap}
+#postGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.post-card{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 6px 22px #1b30480a;display:flex;flex-direction:column;min-width:0}
+.post-card-cover{height:175px;background:linear-gradient(135deg,#e9eef5,#dce5ef);position:relative;overflow:hidden}
+.post-card-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.post-card-cover .no-photo{height:100%;display:grid;place-items:center;color:#8090a4;font-size:38px}
+.post-card-body{padding:16px;display:flex;flex-direction:column;flex:1}
+.post-card-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-bottom:9px}
+.post-chip{display:inline-flex;padding:4px 9px;border-radius:20px;background:#fdf4d8;color:#795c17;font-weight:750}
+.post-card h3{font-size:16px;line-height:1.4;margin:0 0 8px;color:var(--navy)}
+.post-card p{font-size:13px;line-height:1.55;color:#66758a;margin:0 0 15px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.post-card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}
+.post-card-actions button,.post-card-actions a{font-size:12px;padding:8px 11px;border-radius:8px;text-decoration:none;margin:0}
+.post-card-actions a{background:#edf3fa;color:#284768;font-weight:750}
+.post-card-actions .read-more{background:#142f4d;color:#fff}
+.post-tools{display:grid;grid-template-columns:minmax(180px,1fr) 220px 180px;gap:10px;margin:0 0 17px}
+.post-tools input,.post-tools select{margin:0}
+.empty-state{padding:42px 20px;text-align:center;color:var(--muted);background:#fff;border:1px dashed #d4dce7;border-radius:15px;grid-column:1/-1}
+.content-group{border:1px solid var(--line);border-radius:15px;padding:17px;margin:15px 0;background:#fbfcfe}
+.content-group-head{display:flex;align-items:center;gap:11px;margin-bottom:8px}
+.content-group-icon{width:38px;height:38px;border-radius:12px;background:#fff2d1;color:#8c6712;display:grid;place-items:center;font-size:18px}
+.content-group-head h3{margin:0;font-size:16px}.content-group-head p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.content-group .site-field:first-of-type{border-top:0}
+.site-field{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.site-field label{grid-column:span 2}.site-field input,.site-field textarea{grid-column:span 2}
+#siteContentFields .content-group .site-field{display:block}
+#siteContentFields .content-group .site-field label{display:block}
+#siteContentFields .content-group .site-field input,#siteContentFields .content-group .site-field textarea{display:block}
+.chart-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-bottom:20px}
+.chart-panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:20px;min-width:0}
+.chart-panel h3{margin:0 0 5px;color:var(--navy);font-size:15px}.chart-sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+.month-chart{height:190px;display:flex;align-items:flex-end;gap:clamp(7px,2vw,18px);padding:12px 4px 0;border-bottom:1px solid var(--line)}
+.month-column{height:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;min-width:0}
+.month-bar-track{height:145px;width:min(34px,70%);display:flex;align-items:flex-end;background:#f0f3f7;border-radius:8px 8px 3px 3px;overflow:hidden}
+.month-bar{width:100%;background:linear-gradient(180deg,#f4c64e,#e97848);border-radius:8px 8px 0 0;min-height:3px}
+.month-column strong{font-size:11px;color:#526176}.month-column small{font-size:10px;color:var(--muted)}
+.category-chart{display:flex;flex-direction:column;gap:12px}
+.category-row{display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:6px;align-items:center;font-size:12px;color:#526176}
+.category-row strong{text-align:right;color:var(--navy)}
+.category-track{grid-column:1/-1;height:7px;background:#eff2f6;border-radius:20px;overflow:hidden}
+.category-fill{height:100%;background:linear-gradient(90deg,#1e4569,#f0bc42);border-radius:20px}
+.overview-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.quick-action{background:linear-gradient(135deg,#172d49,#294e70);color:#fff;border-radius:17px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;min-height:150px}
+.quick-action p{color:#c7d6e5;font-size:13px;margin:6px 0 12px}.quick-action button{align-self:flex-start;background:var(--gold);color:#172b45}
+#serviceImageFields{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+@media(max-width:950px){#postGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.chart-grid{grid-template-columns:1fr}}
+@media(max-width:620px){#postGrid{grid-template-columns:1fr}.post-tools{grid-template-columns:1fr}.overview-bottom{grid-template-columns:1fr}.page-heading{align-items:flex-start;flex-direction:column}#serviceImageFields{grid-template-columns:1fr}.site-field{display:block}}
+
+.dash-stat{cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.dash-stat:hover{transform:translateY(-3px);border-color:#e4c15c;box-shadow:0 10px 24px #1b304817}.dash-stat:focus{outline:3px solid #f4c64e;outline-offset:3px}
+
+/* Responsive dashboard sizing: keep the workspace full-width and readable on
+   wide desktop-site viewports as well as phones and tablets. */
+html,body{width:100%;min-width:0}
+#app,.dashboard-layout{width:100%;max-width:none}
+.dashboard-layout{grid-template-columns:clamp(230px,16vw,280px) minmax(0,1fr)}
+.dash-topbar{height:clamp(66px,5vw,80px);min-height:66px}
+.dashboard-main{width:100%;max-width:none;min-width:0}
+.dash-brand{font-size:clamp(14px,1vw,17px)}
+.dash-nav{font-size:clamp(13px,.9vw,15px)}
+.dash-side-label,.dash-side-note{font-size:clamp(11px,.78vw,13px)}
+.dash-welcome h1{font-size:clamp(25px,2vw,34px)}
+.panel,.chart-panel,.dash-stat{min-width:0}
+@media(max-width:850px){
+  .dashboard-layout{display:block;width:100%;max-width:none}
+  .dashboard-main{width:100%;max-width:none}
+  .dash-topbar{height:66px}
+}
+
+/* Hard reset the signed-in admin shell to the full browser viewport.
+   The login wrapper must not constrain the dashboard after authentication. */
+html,body{margin:0!important;padding:0!important;width:100%!important;max-width:none!important;min-height:100%!important}
+body>.wrap{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+body>.wrap>h1,body>.wrap>p.muted{display:none!important}
+#app{display:block;width:100%!important;max-width:none!important;min-height:100vh}
+#app.hidden{display:none!important}
+#app>.dash-topbar{width:100%!important;max-width:none!important}
+#app>.dashboard-layout{
+  display:grid!important;
+  grid-template-columns:250px minmax(0,1fr)!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:calc(100vh - 76px);
+  margin:0!important;
+}
+#app .dash-sidebar{width:auto;min-width:0}
+#app .dashboard-main{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:clamp(20px,3vw,42px)!important;
+}
+#app .page-view{width:100%;max-width:none}
+#app .chart-grid,#app .overview-bottom{width:100%}
+@media(max-width:850px){
+  #app>.dashboard-layout{display:block!important;width:100%!important;max-width:none!important}
+  #app .dashboard-main{padding:20px 16px!important}
+}
+
+/* Final viewport breakpoint correction: preserve the desktop two-column
+   workspace for compact CSS viewports and desktop-site mode. */
+@media(min-width:601px){
+ #app>.dashboard-layout{display:grid!important;grid-template-columns:250px minmax(0,1fr)!important;align-items:stretch!important;width:100vw!important;max-width:none!important;margin:0!important}
+ #app>.dashboard-layout>.dash-sidebar{position:relative!important;inset:auto!important;display:flex!important;width:250px!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:visible!important;border:0!important;border-radius:0!important;box-shadow:none!important;transform:none!important}
+ #app>.dashboard-layout>.dashboard-main{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:clamp(20px,3vw,42px)!important}
+}
+@media(max-width:600px){
+ #app>.dashboard-layout{display:block!important;width:100%!important}
+ #app>.dashboard-layout>.dash-sidebar{position:fixed!important}
+ #app>.dashboard-layout>.dashboard-main{width:100%!important;padding:20px 16px!important}
+}
+
+/* Fix: the mobile navigation backdrop is a button between the sidebar and
+   main content. It must never participate in the desktop grid layout. */
+.mobile-nav-backdrop{
+  display:none!important;
+  position:fixed!important;
+  inset:76px 0 0!important;
+  z-index:33!important;
+  width:100vw!important;
+  height:calc(100vh - 76px)!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+@media(max-width:850px){
+  .mobile-nav-backdrop{
+    display:none!important;
+    position:fixed!important;
+    inset:76px 0 0!important;
+    width:100vw!important;
+    height:calc(100vh - 76px)!important;
+    background:transparent!important;
+  }
+  .nav-open .mobile-nav-backdrop{display:block!important}
+}
+@media(max-width:560px){
+  .mobile-nav-backdrop{inset:66px 0 0!important;height:calc(100vh - 66px)!important}
+}
+ .owner-only[hidden]{display:none!important}
+
+/* Professional responsive workspace */
+:root{--navy:#10243b;--navy2:#1b3b5d;--gold:#efbf45;--paper:#f5f7fb;--ink:#1a2b41;--muted:#718096;--line:#e4eaf2}
+body{background:var(--paper)}
+#app>.dashboard-layout{grid-template-columns:260px minmax(0,1fr)!important}
+#app .dashboard-main{padding:clamp(22px,3vw,48px)!important;max-width:1680px;margin:0 auto}
+.dash-topbar{padding-inline:clamp(16px,3vw,44px)}
+.dash-stats{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.dash-stat{text-align:left;min-height:126px}
+.chart-panel,.panel,.quick-action,.post-card{box-shadow:0 8px 28px rgba(20,40,65,.055)}
+.page-heading h1{font-size:clamp(24px,2.1vw,32px);letter-spacing:-.7px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #efbf4580;outline-offset:2px}
+#postGrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))}
+.post-tools{grid-template-columns:minmax(220px,1fr) minmax(150px,200px) minmax(150px,200px)}
+.admin-toolbar,.activity-filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 16px}
+.admin-toolbar input,.activity-filters input,.activity-filters select{flex:1;min-width:180px}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.media-item{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;min-width:0}
+.media-item img{width:100%;height:130px;object-fit:cover;display:block;background:#edf1f6}
+.media-meta{padding:10px;font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.media-item button{margin:0 10px 10px;padding:7px 10px;font-size:11px}
+#revisionModal,#previewModal{position:fixed;inset:0;z-index:80;background:#0c1b2dbb;display:none;align-items:center;justify-content:center;padding:18px}
+#revisionModal.open,#previewModal.open{display:flex}
+.modal-card{width:min(760px,100%);max-height:min(86vh,900px);overflow:auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 25px 80px #07182b55}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:-22px;background:#fff;padding:4px 0 14px;border-bottom:1px solid var(--line);z-index:1}
+.preview-copy{white-space:pre-wrap;line-height:1.8;color:#34445b}
+.analytics-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
+.analytics-kpi{padding:14px;border-radius:13px;background:#f5f8fc;border:1px solid var(--line)}
+.analytics-kpi strong{display:block;font-size:24px;color:var(--navy)}
+.analytics-kpi span{font-size:11px;color:var(--muted)}
+.status-scheduled{color:#8a6413;background:#fff5d9}
+@media(max-width:850px){#app>.dashboard-layout{display:block!important}#app>.dashboard-layout>.dash-sidebar{top:74px;left:12px;width:min(320px,calc(100vw - 24px));max-height:calc(100vh - 90px)}#app>.dashboard-layout>.dashboard-main{padding:20px 16px!important}.dash-menu-toggle{display:inline-flex!important}}
+@media(max-width:620px){#app .dashboard-main{padding:18px 13px!important}.dash-stats{grid-template-columns:1fr 1fr}.post-tools{grid-template-columns:1fr}.activity-filters>*{width:100%;min-width:0}.modal-card{padding:16px}}
+/* Ensure the hamburger layout really collapses the sidebar at tablet widths,
+   overriding the legacy desktop-site breakpoint rules above. */
+@media(max-width:850px){
+ #app>.dashboard-layout{display:block!important}
+ #app>.dashboard-layout>.dash-sidebar{position:fixed!important;inset:74px auto auto 12px!important;display:none!important;width:min(320px,calc(100vw - 24px))!important;max-width:none!important;max-height:calc(100vh - 90px)!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;z-index:34!important;border:1px solid #ffffff20!important;border-radius:16px!important;box-shadow:0 18px 45px #07182b35!important}
+ body.nav-open #app>.dashboard-layout>.dash-sidebar{display:flex!important}
+ #app>.dashboard-layout>.dashboard-main{width:100%!important;max-width:none!important;margin:0!important}
+ .mobile-nav-backdrop{display:none!important}
+ body.nav-open .mobile-nav-backdrop{display:block!important}
+}
+@media(max-width:560px){
+ #app>.dashboard-layout>.dash-sidebar{top:74px!important;max-height:calc(100vh - 88px)!important}
+}
+
+#facebookFeedGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:18px}.facebook-feed-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 5px 18px #13243b0a;min-width:0}.facebook-feed-images{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;background:#eef2f7}.facebook-feed-images img{display:block;width:100%;height:150px;object-fit:cover}.facebook-feed-images img:only-child{grid-column:1/-1;height:210px}.facebook-feed-body{padding:16px}.facebook-feed-date{font-size:12px;color:var(--muted);margin-bottom:9px}.facebook-feed-message{white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;min-height:2em}.facebook-feed-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px}.facebook-feed-actions a{color:#1769c2;font-weight:750;text-decoration:none}.facebook-feed-actions button{margin:0}.facebook-imported{color:#16804a;font-weight:750;font-size:13px}.facebook-feed-empty{padding:24px;border:1px dashed #cbd5e1;border-radius:14px;color:var(--muted);text-align:center}
+@media(max-width:600px){#facebookFeedGrid{grid-template-columns:1fr}.facebook-feed-images img{height:145px}.facebook-feed-images img:only-child{height:210px}}
+
+#youthLinksList .post{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.profile-layout{display:grid;grid-template-columns:180px minmax(0,1fr);gap:24px;align-items:start}
+.profile-avatar{width:144px;height:144px;border-radius:28px;object-fit:cover;background:#eaf0f7;border:1px solid var(--line)}
+.health-status{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--line)}
+.health-dot{width:10px;height:10px;border-radius:50%;background:#94a3b8;flex:none}
+.health-dot.good{background:#16a34a}.health-dot.warn{background:#d97706}.health-dot.bad{background:#dc2626}
+@media(max-width:620px){.profile-layout{grid-template-columns:1fr}.profile-avatar{width:112px;height:112px}}
+.youth-live-preview{margin-top:26px;padding-top:22px;border-top:1px solid #e5ebf3}.preview-caption{font-size:11px;font-weight:900;letter-spacing:.12em;color:#6b7f97;margin-bottom:12px}.youth-preview-card{max-width:520px;border:1px solid #e2eaf3;border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 10px 28px #142a4512}.youth-preview-image{height:150px;display:grid;place-items:center;background:radial-gradient(circle at 80% 20%,#ffffff38,transparent 30%),linear-gradient(135deg,#102b49,#1769bd 62%,#55a6c5);color:#fff;font-size:46px;font-weight:900;background-size:cover;background-position:center}.youth-preview-body{padding:17px}.youth-preview-org{font-size:13px;font-weight:850;color:#1769bd;overflow-wrap:anywhere}.youth-preview-category{display:inline-flex;margin:9px 0;padding:5px 10px;border-radius:9px;background:#f0f5fb;color:#48617d;font-size:11px;font-weight:800}.youth-preview-body p{margin:4px 0 8px;color:#66768b;line-height:1.65}.youth-link-admin-card{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px;border:1px solid #e5ebf3;border-radius:16px;background:#fff;margin:12px 0}.youth-link-admin-thumb{height:100px;border-radius:11px;background:linear-gradient(135deg,#102b49,#1769bd);background-size:cover;background-position:center;display:grid;place-items:center;color:white;font-size:28px;font-weight:900}.youth-link-admin-info{min-width:0}.youth-link-admin-info strong{display:block;color:#172b45}.youth-link-admin-info .muted{overflow-wrap:anywhere}.youth-link-admin-actions{display:flex;gap:8px;flex-wrap:wrap}@media(max-width:680px){.youth-link-admin-card{grid-template-columns:90px minmax(0,1fr)}.youth-link-admin-thumb{height:80px}.youth-link-admin-actions{grid-column:1/-1}}\n</style></head><body><div class="wrap">
+<h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
+<div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="8" required><button type="submit">Sign in</button></form><button type="button" id="forgotPassword" class="secondary">Forgot password?</button><p class="muted">Sign in securely using your administrator email and password.</p></div><div id="resetPasswordPanel" class="panel hidden"><h2>Set a new password</h2><p class="muted">Choose a new password for your administrator account.</p><form id="resetPasswordForm"><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required><button type="submit">Save new password</button></form><button type="button" id="backToLogin" class="secondary">Back to sign in</button></div>
+<div id="app" class="hidden">
+<header class="dash-topbar"><button type="button" id="mobileMenuToggle" class="dash-menu-toggle" aria-label="Open navigation menu" aria-expanded="false" style="display:none">☰</button><div class="dash-brand"><div class="dash-logo">YT</div><div>YOUTH OF TAYITU<small>WEBSITE CONTROL CENTER</small></div></div><div class="dash-top-right"><img id="signedInAvatar" alt="" hidden style="width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #ffffff55"><span id="signedIn" class="muted" style="color:#d7e2ef;font-size:12px"></span><button id="logout" class="secondary" style="margin:0;background:#ffffff18;color:#fff">Sign out ↗</button></div></header>
+<div class="dashboard-layout">
+<aside class="dash-sidebar"><div class="dash-side-label">Workspace</div>
+<button class="dash-nav active" type="button" data-page="overview"><span class="nav-icon">⌂</span> Overview</button>
+<button class="dash-nav" type="button" data-page="create"><span class="nav-icon">✎</span> Create a post</button>
+<button class="dash-nav" type="button" data-page="posts"><span class="nav-icon">▤</span> Existing posts</button>
+<button class="dash-nav" type="button" data-page="profile"><span class="nav-icon">♙</span> My profile</button>
+<div class="dash-side-label">Website management</div>
+<button class="dash-nav" type="button" data-page="content"><span class="nav-icon">☷</span> Homepage content</button>
+<button class="dash-nav" type="button" data-page="photos"><span class="nav-icon">▧</span> Photos & gallery</button>
+<button class="dash-nav" type="button" data-page="youth-links"><span class="nav-icon">↗</span> ለወጣቱ / For the Youth</button><button class="dash-nav" type="button" data-page="media"><span class="nav-icon">▣</span> Media library</button><button class="dash-nav owner-only" type="button" data-page="backups" hidden><span class="nav-icon">⬇</span> Backups & restore</button>
+<button class="dash-nav" type="button" data-page="admins"><span class="nav-icon">♙</span> Admin access</button>
+<button class="dash-nav owner-only" type="button" data-page="activity" hidden><span class="nav-icon">◷</span> Activity log</button>
+<button class="dash-nav owner-only" type="button" data-page="facebook" hidden><span class="nav-icon">f</span> Facebook connection</button>
+<a class="dash-nav" href="https://youthoftayitu.vercel.app/" target="_blank" rel="noopener"><span class="nav-icon">↗</span> View live website</a>
+<div class="dash-side-note">Your workspace for publishing stories, managing programs and keeping the community informed.</div>
+</aside><button type="button" class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-label="Close navigation menu" tabindex="-1"></button>
+<main class="dashboard-main">
+<section class="page-view" id="page-overview">
+<div class="dash-welcome"><div><h1>Good to see you 👋</h1><p>Here's what's happening on your website today.</p></div><div class="dash-date">✦ &nbsp; Youth of Tayitu dashboard</div></div>
+<div class="dash-stats"><button type="button" class="dash-stat" data-stat="all" aria-label="View all posts"><span>Total posts</span><strong id="statTotal">—</strong><small>Click to view all posts ↗</small></button><button type="button" class="dash-stat" data-stat="published" aria-label="View published posts"><span>Published</span><strong id="statPublished">—</strong><small>Click to view published posts ↗</small></button><button type="button" class="dash-stat" data-stat="draft" aria-label="View draft posts"><span>Drafts</span><strong id="statDrafts">—</strong><small>Click to view drafts ↗</small></button></div>
+<div class="chart-grid"><div class="chart-panel"><h3>Publishing activity</h3><div class="chart-sub">Posts created over the last six months</div><div id="monthlyChart" class="month-chart"></div></div><div class="chart-panel"><h3>Posts by category</h3><div class="chart-sub">How your stories are distributed</div><div id="categoryChart" class="category-chart"></div></div></div>
+<div class="chart-grid"><div class="chart-panel owner-only" hidden><h3>Website visitors</h3><div class="chart-sub">Anonymous page views recorded over the last 30 days</div><div id="visitorAnalytics" class="analytics-kpis"><div class="analytics-kpi"><strong>—</strong><span>Last 30 days</span></div></div><div id="topPages" class="category-chart"></div><div class="chart-sub" style="margin-top:18px">Traffic sources · referrer host</div><div id="topReferrers" class="category-chart"></div></div><div class="chart-panel"><h3>Publishing health</h3><div class="chart-sub">Current content workflow</div><div id="publishingHealth" class="analytics-kpis"></div></div></div><div class="chart-grid"><div class="chart-panel"><h3>Website health</h3><div class="chart-sub">Live checks for the public website and its content database.</div><div id="websiteHealth"><div class="muted">Health checks have not run yet.</div></div><button type="button" class="secondary" id="refreshWebsiteHealth">Refresh health checks</button></div><div class="chart-panel"><h3>Vercel platform status</h3><div class="chart-sub">Checks whether Vercel hosting services are reporting an incident. This is not your account billing or plan status.</div><div id="vercelPlatformStatus" class="muted">Waiting for platform status check…</div><div id="vercelDeploymentStatus" class="muted" style="margin-top:14px">Checking latest project deployment…</div><p class="muted" style="font-size:12px">For billing, plan and account settings, open your <a href="https://vercel.com/dashboard" target="_blank" rel="noopener">Vercel dashboard ↗</a>.</p></div></div><div class="overview-bottom"><div class="quick-action"><div><strong>Manage your stories</strong><p>Review published posts and drafts, search by category, edit stories or remove outdated content.</p></div><button type="button" data-page="posts">Manage posts ↗</button></div><div class="quick-action"><div><strong>Update your homepage</strong><p>Refresh your About, Services, Sports and Contact information.</p></div><button type="button" data-page="content">Edit homepage ↗</button></div></div>
+</section>
+<section class="page-view" id="page-create" hidden><div class="page-heading"><div><h1 id="formTitle">Create a post</h1><p>Write a story, choose its category and upload multiple photos.</p></div><button type="button" class="secondary" data-page="posts">← Back to existing posts</button></div>
+<div class="panel" id="post-editor"><h2 id="formTitle">Create a post</h2><form id="postForm"><input id="postId" type="hidden">
+<label for="title">Post title</label><input id="title" maxlength="180" required>
+<label for="category">Post category</label><select id="category" required><option value="Uncategorized">Uncategorized</option><option value="ሳይንስና ፈጠራ">ሳይንስና ፈጠራ</option><option value="በጎ ፈቃድ">በጎ ፈቃድ</option><option value="የጤናና የምክር ድጋፍ">የጤናና የምክር ድጋፍ</option><option value="የህይወት ክህሎት">የህይወት ክህሎት</option><option value="አመራርነት">አመራርነት</option><option value="ስራ ፈጠራና የቢዝነስ">ስራ ፈጠራና የቢዝነስ</option><option value="ስፖርትና መዝናኛ">ስፖርትና መዝናኛ</option></select>
+<label for="excerpt">Short summary</label><textarea id="excerpt" style="min-height:80px" maxlength="400"></textarea>
+<label for="content">Post content</label><textarea id="content" required></textarea>
+<label for="socialPlatform">Social media platform (optional)</label><select id="socialPlatform"><option value="">No social media source</option><option value="facebook">Facebook</option><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="youtube">YouTube</option><option value="x">X (Twitter)</option><option value="other">Other platform</option></select><label for="socialUrl">Link to your original social-media post</label><input id="socialUrl" type="url" placeholder="https://…"><p class="muted">Add a public post URL. Supported platforms can be embedded in the published article; other links appear as a source link.</p>
+<label for="image">Photos (you can select multiple)</label><input id="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><p class="muted">Maximum 10 MB per photo. The first photo is used as the cover image.</p>
+<div id="currentGallery" class="gallery"></div>
+<label for="status">Publication status</label><select id="status"><option value="draft">Save as draft</option><option value="published">Publish now</option><option value="scheduled">Schedule for later</option></select><div id="scheduleField" class="hidden"><label for="scheduledAt">Publication date and time</label><input id="scheduledAt" type="datetime-local"><p class="muted">Scheduled posts stay private until publication. The scheduler checks every minute.</p></div>
+<div class="row"><button type="submit">Save post</button><button type="button" id="reset" class="secondary">Clear form</button></div></form></div>
+</section><section class="page-view" id="page-content" hidden><div class="page-heading"><div><h1>Homepage content</h1><p>Manage each part of your homepage in clearly grouped sections.</p></div></div><div class="panel" id="siteContentPanel">
+<h2>Homepage content manager</h2>
+<p class="muted">Edit the homepage wording in Amharic and English. Leave a field blank only if you want the existing website text to remain unchanged.</p>
+<div id="siteContentFields"></div>
+<button type="button" id="saveSiteContent">Save homepage changes</button>
+<span id="siteContentStatus" class="muted" aria-live="polite"></span>
+</div>
+</section><section class="page-view" id="page-photos" hidden><div class="page-heading"><div><h1>Homepage photos & gallery</h1><p>Manage the hero banner, eight service images and your photo gallery.</p></div></div><div class="panel" id="visualManager">
+<h2>Homepage photos & gallery</h2>
+<p class="muted">Upload images for the main banner, service cards and public photo gallery. Images are stored securely in the website's Supabase image bucket.</p>
+<section class="content-group"><div class="content-group-head"><div class="content-group-icon">▣</div><div><h3>Homepage banner</h3><p>The large feature image visitors see first on your homepage.</p></div></div><label for="bannerUpload">Choose banner image</label><input id="bannerUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><div id="bannerPreview" class="gallery"></div></section>
+<section class="content-group"><div class="content-group-head"><div class="content-group-icon">▦</div><div><h3>Service card photos</h3><p>Upload a unique image for each of the eight services.</p></div></div><div id="serviceImageFields"></div></section>
+<section class="content-group"><div class="content-group-head"><div class="content-group-icon">▧</div><div><h3>Homepage photo gallery</h3><p>Select multiple photos to build a gallery on the public homepage.</p></div></div><label for="galleryUpload">Choose multiple photos</label><input id="galleryUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="homepageGalleryPreview" class="gallery"></div></section>
+<button type="button" id="saveVisualManager">Save homepage photos</button><span id="visualStatus" class="muted" aria-live="polite"></span>
+</div></section>
+<section class="page-view" id="page-media" hidden><div class="page-heading"><div><h1>Media library</h1><p>Browse and reuse images stored in the website bucket. Images used by posts or homepage content are protected from deletion.</p></div></div><div class="panel"><div class="admin-toolbar"><input id="mediaSearch" type="search" placeholder="Search image filenames…"><label style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:#eaf0f7;cursor:pointer;margin:0">＋ Upload images<input id="mediaUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden></label><button type="button" class="secondary" id="refreshMedia">Refresh library</button></div><div id="mediaStatus" class="muted">Loading media library…</div><div id="mediaGrid" class="media-grid"></div></div></section>
+<section class="page-view owner-only" id="page-backups" hidden><div class="page-heading"><div><h1>Backups & recovery</h1><p>Export posts, homepage settings and stored images, or restore a previous backup. Only the super admin can access this page.</p></div></div><div class="panel"><h2>Download a backup</h2><p class="muted">The ZIP backup includes posts, homepage wording and the actual image files from Supabase Storage.</p><button type="button" id="downloadBackup">Download website backup</button><span id="backupStatus" class="muted" aria-live="polite"></span></div><div class="panel"><h2>Restore from backup</h2><p class="muted">Restore merges rows by ID/key. It does not delete newer content.</p><label for="backupFile">Choose backup JSON file</label><input id="backupFile" type="file" accept="application/zip,.zip,application/json,.json"><button type="button" class="danger" id="restoreBackup">Restore backup data</button></div></section>
+<section class="page-view" id="page-posts" hidden><div class="page-heading"><div><h1>Existing posts</h1><p>Search, filter, preview, edit and remove your published stories and drafts.</p></div><button type="button" data-page="create">＋ Create a post</button></div><div class="panel"><div class="post-tools"><input id="postSearch" type="search" placeholder="Search posts by title or text…"><select id="postStatusFilter"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option><option value="scheduled">Scheduled</option></select><select id="postCategoryFilter"><option value="all">All categories</option></select></div><div id="postGrid"><div class="empty-state">Loading posts…</div></div></div></section>
+<section class="page-view" id="page-profile" hidden>
+<div class="page-heading"><div><h1>My administrator profile</h1><p>Customize the name, photo and contact information shown in your workspace.</p></div></div>
+<div class="panel"><form id="adminProfileForm"><div class="profile-layout"><div><img id="profileAvatarPreview" class="profile-avatar" alt="Profile photo"><label for="profileAvatarFile">Profile photo</label><input id="profileAvatarFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p class="muted">Use a clear square photo. Maximum 10 MB.</p></div><div><label for="profileDisplayName">Display name</label><input id="profileDisplayName" maxlength="80" placeholder="Your name"><label for="profilePosition">Role / position</label><input id="profilePosition" maxlength="100" placeholder="e.g. Youth Program Coordinator"><label for="profilePhone">Phone (optional)</label><input id="profilePhone" type="tel" maxlength="40"><label for="profileBio">Short introduction (optional)</label><textarea id="profileBio" maxlength="500" style="min-height:110px" placeholder="A short introduction about your role…"></textarea><button type="submit" id="saveAdminProfile">Save my profile</button><span id="profileStatus" class="muted" role="status"></span></div></div></form></div>
+</section>
+<section class="page-view" id="page-youth-links" hidden>
+<div class="page-heading"><div><h1>ለወጣቱ / For the Youth</h1><p>Add trusted websites that will appear as attractive resource cards on the public For the Youth page.</p></div></div>
+<div class="panel"><h2>Add a website resource</h2><p class="muted">Enter the website address, a short description and an optional preview image. Visitors can preview the website inside the page when the external site permits embedding, or open it directly.</p>
+<form id="youthLinkForm"><input id="youthLinkId" type="hidden"><label for="youthLinkTitle">Internal label (optional — not shown on public cards)</label><input id="youthLinkTitle" maxlength="120" placeholder="Optional note for administrators"><label for="youthLinkOrganization">Organization (optional)</label><input id="youthLinkOrganization" maxlength="120" placeholder="Organization name"><label for="youthLinkCategory">Portal category</label><select id="youthLinkCategory" required><option value="jobs">Job portal</option><option value="advocacy">Advocacy & civic support</option><option value="sport">Sports</option><option value="education">Education</option><option value="training">Training & digital skills</option><option value="business">Business & entrepreneurship</option><option value="health">Health</option><option value="volunteering">Volunteering</option><option value="other" selected>Other</option></select><label for="youthLinkUrl">Website URL</label><input id="youthLinkUrl" type="url" required placeholder="https://example.org"><label for="youthLinkDescription">Short description</label><textarea id="youthLinkDescription" maxlength="500" style="min-height:90px" placeholder="What can young people find on this website?"></textarea><label for="youthLinkImage">Preview image URL (optional)</label><input id="youthLinkImage" type="url" placeholder="https://example.org/preview.jpg"><label for="youthLinkOrder">Display order</label><input id="youthLinkOrder" type="number" value="0" min="0" step="1"><div class="row"><button type="submit" id="saveYouthLink">Add website link</button><button type="button" class="secondary" id="cancelYouthLinkEdit">Clear form</button></div><span id="youthLinkFormStatus" class="muted" role="status"></span></form><div class="youth-live-preview"><div class="preview-caption">LIVE PUBLIC CARD PREVIEW</div><div id="youthLivePreviewCard" class="youth-preview-card"><div id="youthLivePreviewImage" class="youth-preview-image">↗</div><div class="youth-preview-body"><div id="youthLivePreviewOrg" class="youth-preview-org">Organization name</div><span id="youthLivePreviewCategory" class="youth-preview-category">Other</span><p id="youthLivePreviewDescription">A short description will appear here.</p><span id="youthLivePreviewDomain" class="muted">example.org</span></div></div></div></div>
+<div class="panel"><h2>Saved website links</h2><p class="muted">These links are shown on the public page when active. You can edit or delete any entry.</p><div id="youthLinksStatus" class="muted">Loading website links…</div><div id="youthLinksList"></div></div>
+</section>
+<section class="page-view" id="page-admins" hidden>
+<div class="page-heading"><div><h1>Administrator access</h1></div></div>
+<div class="panel owner-only" hidden><h2>Add an administrator</h2><p class="muted">Create an account using the administrator’s email and a password you assign. The account is activated immediately; share the login details privately and ask them to change the password after signing in.</p>
+<form id="inviteAdminForm">
+<label for="inviteEmail">Administrator email address</label><input id="inviteEmail" type="email" placeholder="name@example.com" autocomplete="off" required>
+<label for="invitePassword">Assign a temporary password</label><input id="invitePassword" type="password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters" required>
+<label for="invitePasswordConfirm">Confirm password</label><input id="invitePasswordConfirm" type="password" minlength="8" autocomplete="new-password" placeholder="Enter the same password again" required>
+<button type="submit">Create administrator account ↗</button><span id="inviteStatus" class="muted" aria-live="polite"></span>
+</form></div>
+<div class="panel"><h2>Current administrators</h2><p class="muted">Remove access to permanently delete an administrator’s Auth account and administrator role. The website owner account is protected.</p><div id="adminList">Loading administrator list…</div></div>
+</section>
+<section class="page-view owner-only" id="page-facebook" hidden>
+<div class="page-heading"><div><h1>Facebook connection</h1><p>Connect the official Youth of Tayitu Facebook Page to this dashboard.</p></div></div>
+<div class="panel">
+<h2>Connect your Facebook Page</h2>
+<p class="muted">Sign in to Facebook, review the requested Page permissions, then choose the Youth of Tayitu Page you manage. Your Page access token is stored encrypted on the server and is not displayed in this dashboard.</p>
+<div class="row"><button type="button" id="connectFacebook">Connect Facebook ↗</button><span id="facebookConnectionStatus" class="muted" role="status" aria-live="polite">Not connected from this dashboard yet.</span></div>
+<p class="muted" style="font-size:12px;margin-top:16px">Only the website owner can use this connection. If Facebook does not list your Page, confirm that the Facebook account you sign in with has access to manage it.</p>
+</div>
+<div class="panel" id="facebookFeedPanel">
+ <div class="page-heading" style="margin-bottom:10px"><div><h2>Recent Facebook posts</h2><p class="muted">Import Facebook updates into your website as drafts. You can edit and publish them later.</p></div><div class="row"><button type="button" class="secondary" id="syncFacebookPosts">↻ Sync imported posts</button><button type="button" class="secondary" id="refreshFacebookFeed">Refresh feed</button></div></div>
+ <div class="row" style="align-items:center;margin:12px 0 16px"><label for="facebookImportCategory" style="margin:0">Category for new imports</label><select id="facebookImportCategory" style="max-width:340px"><option value="Uncategorized">Uncategorized</option><option value="ሳይንስና ፈጠራ">ሳይንስና ፈጠራ</option><option value="በጎ ፈቃድ">በጎ ፈቃድ</option><option value="የጤናና የምክር ድጋፍ">የጤናና የምክር ድጋፍ</option><option value="የህይወት ክህሎት">የህይወት ክህሎት</option><option value="አመራርነት">አመራርነት</option><option value="ስራ ፈጠራና የቢዝነስ">ስራ ፈጠራና የቢዝነስ</option><option value="ስፖርትና መዝናኛ">ስፖርትና መዝናኛ</option></select></div>
+ <div id="facebookFeedStatus" class="muted" role="status" aria-live="polite">Open this section to load the latest posts.</div>
+ <div id="facebookFeedGrid"></div>
+</div>
+
+</section>
+<section class="page-view owner-only" id="page-activity" hidden>
+<div class="page-heading"><div><h1>Admin activity log</h1><p>Private record of administrator actions. Only the website owner can view this page.</p></div><div><button type="button" class="secondary" id="exportActivity">Export CSV</button><button type="button" class="secondary" id="refreshActivity">Refresh log</button></div></div><div class="panel"><div class="activity-filters"><input id="activitySearch" type="search" placeholder="Filter by admin, action or item…"><select id="activityActionFilter"><option value="all">All actions</option></select></div><div id="activityStatus" class="muted">Loading recent activity…</div><div id="activityList"></div></div>
+</section><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="revisionModal" role="dialog" aria-modal="true" aria-labelledby="revisionTitle"><div class="modal-card"><div class="modal-head"><div><h2 id="revisionTitle">Post revision history</h2><p class="muted">Review earlier versions and restore one.</p></div><button type="button" class="secondary" id="closeRevision">Close</button></div><div id="revisionList"></div></div></div><div id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="modal-card"><div class="modal-head"><h2 id="previewTitle">Post preview</h2><button type="button" class="secondary" id="closePreview">Close</button></div><div id="previewContent"></div></div></div><div id="message" role="status"></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
+const $=id=>document.getElementById(id),message=t=>$('message').textContent=t;
+let currentUser=null,currentImages=[];
+const isSuperAdmin=()=>currentUser?.email?.toLowerCase()==='aradaw01youthcenter@gmail.com';
+async function logActivity(action,targetType='website',targetLabel='',details={}){
+ if(!currentUser)return;
+ const {error}=await client.from('admin_activity_logs').insert({actor_user_id:currentUser.id,actor_email:currentUser.email||'',action,target_type:targetType,target_label:targetLabel,details});
+ if(error)console.warn('Could not record admin activity:',error.message);
+}
+
+async function loadAdminProfile(){
+ if(!currentUser)return;const status=$('profileStatus');if(status)status.textContent='Loading profile…';
+ const {data,error}=await client.from('admin_profiles').select('*').eq('user_id',currentUser.id).maybeSingle();
+ if(error){if(status)status.textContent='Could not load profile: '+error.message;return}
+ const p=data||{};$('profileDisplayName').value=p.display_name||'';$('profilePosition').value=p.position||'';$('profilePhone').value=p.phone||'';$('profileBio').value=p.bio||'';
+ const avatar=p.avatar_url||'';$('profileAvatarPreview').src=avatar||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22144%22 height=%22144%22 viewBox=%220 0 144 144%22%3E%3Crect width=%22144%22 height=%22144%22 rx=%2228%22 fill=%22%23eaf0f7%22/%3E%3Ccircle cx=%2272%22 cy=%2254%22 r=%2225%22 fill=%22%2394a3b8%22/%3E%3Cpath d=%22M25 133c4-27 22-41 47-41s43 14 47 41%22 fill=%22%2394a3b8%22/%3E%3C/svg%3E';
+ const signed=$('signedInAvatar');if(avatar){signed.src=avatar;signed.hidden=false}else signed.hidden=true;
+ $('signedIn').textContent=(p.display_name||currentUser.email||'Administrator')+' · '+(currentUser.email||'');if(status)status.textContent='';
+}
+$('profileAvatarFile')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){if(f.size>10*1024*1024){e.target.value='';$('profileStatus').textContent='Choose an image no larger than 10 MB.';return}$('profileAvatarPreview').src=URL.createObjectURL(f)}});
+$('adminProfileForm')?.addEventListener('submit',async e=>{
+ e.preventDefault();if(!currentUser)return;const status=$('profileStatus'),button=$('saveAdminProfile');button.disabled=true;status.textContent='Saving profile…';
+ try{
+  let avatarUrl=null;const file=$('profileAvatarFile').files?.[0];
+  const {data:existing}=await client.from('admin_profiles').select('avatar_url').eq('user_id',currentUser.id).maybeSingle();avatarUrl=existing?.avatar_url||null;
+  if(file){const optimized=await optimizeImageFile(file,700,0.84),ext=optimized.type==='image/webp'?'webp':(optimized.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg',path='admin-profiles/'+currentUser.id+'/'+Date.now()+'.'+ext;const up=await client.storage.from('post-images').upload(path,optimized,{upsert:false,contentType:optimized.type,cacheControl:'31536000'});if(up.error)throw up.error;avatarUrl=client.storage.from('post-images').getPublicUrl(path).data.publicUrl}
+  const payload={user_id:currentUser.id,display_name:$('profileDisplayName').value.trim()||null,position:$('profilePosition').value.trim()||null,phone:$('profilePhone').value.trim()||null,bio:$('profileBio').value.trim()||null,avatar_url:avatarUrl,updated_at:new Date().toISOString()};
+  const {error}=await client.from('admin_profiles').upsert(payload,{onConflict:'user_id'});if(error)throw error;
+  $('profileAvatarFile').value='';await logActivity('Updated administrator profile','profile',payload.display_name||currentUser.email);status.textContent='Profile saved.';await loadAdminProfile();
+ }catch(err){status.textContent='Could not save profile: '+(err.message||String(err))}
+ finally{button.disabled=false}
+});
+let youthLinksCache=[];
+function clearYouthLinkForm(){$('youthLinkForm').reset();$('youthLinkId').value='';$('youthLinkOrder').value='0';$('youthLinkCategory').value='other';$('saveYouthLink').textContent='Add website link';$('youthLinkFormStatus').textContent='';updateYouthLivePreview()}
+$('cancelYouthLinkEdit')?.addEventListener('click',clearYouthLinkForm);
+async function loadYouthLinks(){
+ const status=$('youthLinksStatus'),list=$('youthLinksList');if(!status||!list)return;status.textContent='Loading website links…';
+ const {data,error}=await client.from('youth_links').select('*').order('sort_order').order('created_at',{ascending:false});
+ if(error){status.textContent='Could not load links: '+error.message;list.innerHTML='';return}
+ youthLinksCache=data||[];status.textContent=youthLinksCache.length+' saved website link(s).';
+ list.innerHTML=youthLinksCache.map(x=>'<div class="youth-link-admin-card"><div class="youth-link-admin-thumb" '+(x.preview_image?'style="background-image:url(\''+escapeHtml(x.preview_image)+'\')"':'')+'>'+(x.preview_image?'':'↗')+'</div><div class="youth-link-admin-info"><strong>'+escapeHtml(x.organization||x.url)+'</strong><span class="status">'+escapeHtml(x.category||'other')+' · '+(x.is_active?'Active':'Hidden')+'</span><div class="muted">'+escapeHtml(x.url)+'</div>'+(x.description?'<p class="muted">'+escapeHtml(x.description)+'</p>':'')+'</div><div class="youth-link-admin-actions"><button type="button" class="secondary" data-edit-youth-link="'+x.id+'">Edit</button><button type="button" class="danger" data-delete-youth-link="'+x.id+'">Delete</button></div></div>').join('')||'<p class="muted">No website links have been added yet.</p>';
+ list.querySelectorAll('[data-edit-youth-link]').forEach(b=>b.addEventListener('click',()=>{const x=youthLinksCache.find(v=>v.id===b.dataset.editYouthLink);if(!x)return;$('youthLinkId').value=x.id;$('youthLinkTitle').value=x.title||'';$('youthLinkOrganization').value=x.organization||'';$('youthLinkCategory').value=x.category||'other';$('youthLinkUrl').value=x.url||'';$('youthLinkDescription').value=x.description||'';$('youthLinkImage').value=x.preview_image||'';$('youthLinkOrder').value=x.sort_order||0;$('saveYouthLink').textContent='Save changes';updateYouthLivePreview();$('youthLinkFormStatus').textContent='Editing '+x.title;showPage('youth-links');$('youthLinkTitle').focus()}));
+ list.querySelectorAll('[data-delete-youth-link]').forEach(b=>b.addEventListener('click',async()=>{const x=youthLinksCache.find(v=>v.id===b.dataset.deleteYouthLink);if(!x||!confirm('Delete the website link "'+x.title+'"?'))return;b.disabled=true;b.textContent='Deleting…';const {error}=await client.from('youth_links').delete().eq('id',x.id);if(error){message('Could not delete link: '+error.message);b.disabled=false;b.textContent='Delete';return}await logActivity('Deleted For the Youth website link','youth-link',x.title);await loadYouthLinks()}));
+}
+function updateYouthLivePreview(){const org=$('youthLinkOrganization')?.value.trim()||'Organization name',desc=$('youthLinkDescription')?.value.trim()||'A short description will appear here.',url=$('youthLinkUrl')?.value.trim()||'https://example.org',img=$('youthLinkImage')?.value.trim(),cat=$('youthLinkCategory')?.selectedOptions?.[0]?.textContent||'Other';$('youthLivePreviewOrg').textContent=org;$('youthLivePreviewDescription').textContent=desc;$('youthLivePreviewCategory').textContent=cat;let domain='example.org';try{domain=new URL(url).hostname.replace(/^www\\./,'')}catch{}$('youthLivePreviewDomain').textContent=domain;$('youthLivePreviewImage').style.backgroundImage=img&&/^https?:\\/\\//i.test(img)?'url("'+img.replace(/["\\\\]/g,'')+'")':'';$('youthLivePreviewImage').textContent=img?'':'↗'}
+['youthLinkOrganization','youthLinkUrl','youthLinkDescription','youthLinkImage','youthLinkCategory'].forEach(id=>$(id)?.addEventListener('input',updateYouthLivePreview));
+$('youthLinkForm')?.addEventListener('submit',async e=>{
+ e.preventDefault();const id=$('youthLinkId').value,url=$('youthLinkUrl').value.trim(),preview=$('youthLinkImage').value.trim();let title=$('youthLinkTitle').value.trim();if(!title){try{title=new URL(url).hostname.replace(/^www\\./,'')}catch{title='Website resource'}}
+ if(!/^https?:\/\//i.test(url)||(preview&&!/^https?:\/\//i.test(preview))){$('youthLinkFormStatus').textContent='Use a valid http:// or https:// website and preview-image URL.';return}
+ const button=$('saveYouthLink');button.disabled=true;$('youthLinkFormStatus').textContent='Saving…';
+ const payload={title,organization:$('youthLinkOrganization').value.trim()||null,category:$('youthLinkCategory').value||'other',url,description:$('youthLinkDescription').value.trim()||null,preview_image:preview||null,sort_order:Math.max(0,Number($('youthLinkOrder').value)||0),updated_at:new Date().toISOString(),...(id?{}:{created_by:currentUser.id})};
+ const result=id?await client.from('youth_links').update(payload).eq('id',id):await client.from('youth_links').insert(payload);
+ button.disabled=false;if(result.error){$('youthLinkFormStatus').textContent='Save failed: '+result.error.message;return}
+ await logActivity(id?'Updated For the Youth website link':'Added For the Youth website link','youth-link',title);clearYouthLinkForm();$('youthLinkFormStatus').textContent='Website link saved.';await loadYouthLinks();
+});
+async function loadWebsiteHealth(){
+ const box=$('websiteHealth'),vercel=$('vercelPlatformStatus'),deployment=$('vercelDeploymentStatus');if(!box||!vercel)return;box.innerHTML='<div class="muted">Running website checks…</div>';
+ const check=(label,ok,detail)=>'<div class="health-status"><span class="health-dot '+(ok?'good':'bad')+'"></span><div><strong>'+escapeHtml(label)+'</strong><div class="muted">'+escapeHtml(detail)+'</div></div></div>';
+ let siteOk=false,siteDetail='Not checked',dbOk=false,dbDetail='Not checked';
+ try{const response=await fetch(location.origin+'/?health='+Date.now(),{method:'HEAD',cache:'no-store'});siteOk=response.ok;siteDetail='HTTP '+response.status+' · '+(response.ok?'The public site responded.':'The public site returned an error.')}catch(err){siteDetail='The public website could not be reached from this browser.'}
+ try{const {count,error}=await client.from('posts').select('id',{count:'exact',head:true});dbOk=!error;dbDetail=error?'Database request failed: '+error.message:'Supabase content database responded · '+(count??'')+' posts counted.'}catch(err){dbDetail='Database check failed.'}
+ box.innerHTML=check('Public website',siteOk,siteDetail)+check('Supabase database',dbOk,dbDetail)+'<p class="muted" style="font-size:11px">Checked '+new Date().toLocaleString()+'</p>';
+ try{const response=await fetch('https://www.vercel-status.com/api/v2/status.json',{cache:'no-store'});if(!response.ok)throw new Error('Status service returned HTTP '+response.status);const data=await response.json(),description=data.status?.description||'Status information unavailable',good=data.status?.indicator==='none';vercel.innerHTML='<div class="health-status"><span class="health-dot '+(good?'good':'warn')+'"></span><div><strong>'+escapeHtml(description)+'</strong><div class="muted">Vercel hosting platform · '+new Date().toLocaleTimeString()+'</div></div></div>'}catch(err){vercel.textContent='Could not retrieve Vercel public service status. Open the Vercel dashboard to inspect your project.'}
+ try{const response=await fetch('https://api.github.com/repos/aradaw01youthcenter/youthoftayitu/commits/main/status',{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});if(!response.ok)throw new Error('GitHub status request failed');const data=await response.json(),v=(data.statuses||[]).find(x=>x.context==='Vercel');if(!v){deployment.textContent='No Vercel deployment status has been reported for the latest commit yet.'}else{const good=v.state==='success',bad=v.state==='failure'||v.state==='error';deployment.innerHTML='<div class="health-status"><span class="health-dot '+(good?'good':bad?'bad':'warn')+'"></span><div><strong>Latest Vercel deployment: '+escapeHtml(v.state)+'</strong><div class="muted">GitHub reports the latest main-branch deployment status.</div>'+(v.target_url?'<a href="'+escapeHtml(v.target_url)+'" target="_blank" rel="noopener">Open deployment details ↗</a>':'')+'</div></div>'}}catch(err){if(deployment)deployment.textContent='Could not read the latest deployment status from GitHub.'}
+}
+$('refreshWebsiteHealth')?.addEventListener('click',loadWebsiteHealth);
+
+async function loadActivityLogs(){
+ if(!isSuperAdmin())return;
+ $('activityStatus').textContent='Loading recent activity…';
+ const {data,error}=await client.from('admin_activity_logs').select('actor_email,action,target_type,target_label,details,created_at').order('created_at',{ascending:false}).limit(100);
+ if(error){$('activityStatus').textContent='Could not load activity: '+error.message;$('activityList').innerHTML='';return}
+ $('activityStatus').textContent=(data||[]).length?'Showing the latest '+data.length+' recorded actions.':'No activity has been recorded yet.';
+ $('activityList').innerHTML=(data||[]).map(item=>'<div class="post"><strong>'+escapeHtml(item.action)+'</strong><span class="status">'+escapeHtml(item.actor_email)+' · '+new Date(item.created_at).toLocaleString()+'</span>'+(item.target_label?'<div class="muted">'+escapeHtml(item.target_type||'')+': '+escapeHtml(item.target_label)+'</div>':'')+'</div>').join('');
+}
+$('refreshActivity')?.addEventListener('click',loadActivityLogs);
+const categories=["Uncategorized","ሳይንስና ፈጠራ","በጎ ፈቃድ","የጤናና የምክር ድጋፍ","የህይወት ክህሎት","አመራርነት","ስራ ፈጠራና የቢዝነስ","ስፖርትና መዝናኛ"];
+function showApp(user){currentUser=user;$('resetPasswordPanel').classList.add('hidden');$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);document.querySelectorAll('.owner-only').forEach(el=>{el.hidden=!isSuperAdmin()||(el.classList.contains('page-view')&&el.id!=='page-overview')});if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia();loadAdminUsers();loadFacebookConnectionStatus();loadAdminProfile();loadYouthLinks();loadWebsiteHealth()}else{$('signedInAvatar').hidden=true;$('signedIn').textContent=''}}
+async function loadFacebookConnectionStatus(){
+ const status=$('facebookConnectionStatus');
+ if(!isSuperAdmin()||!status)return;
+ status.textContent='Checking saved Facebook connection…';
+ try{
+  const {data,error}=await client.auth.getSession();
+  if(error||!data.session?.access_token)throw new Error('Please sign in again to check the Facebook connection.');
+  const response=await fetch('https://vroxuvzbnzfelyndchyl.supabase.co/functions/v1/facebook-oauth',{
+   method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+data.session.access_token,'apikey':'sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH'},
+   body:JSON.stringify({action:'status'})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||'Could not check Facebook connection.');
+  if(result.connected){
+   status.textContent='Connected: '+result.page_name+' · Page ID '+result.page_id;
+   $('connectFacebook').textContent='Reconnect Facebook ↗';
+  }else{
+   status.textContent='Not connected yet.';
+   $('connectFacebook').textContent='Connect Facebook ↗';
+  }
+ }catch(error){status.textContent=error.message||'Could not check Facebook connection.'}
+}
+async function facebookAdminAction(action,extra={}){
+ const {data,error}=await client.auth.getSession();
+ if(error||!data.session?.access_token)throw new Error('Please sign in again to use Facebook tools.');
+ const response=await fetch('https://vroxuvzbnzfelyndchyl.supabase.co/functions/v1/facebook-oauth',{
+  method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+data.session.access_token,'apikey':'sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH'},
+  body:JSON.stringify({action,...extra})
+ });
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(result.error||'The Facebook request could not be completed.');
+ return result;
+}
+async function loadFacebookFeed(){
+ const status=$('facebookFeedStatus'),grid=$('facebookFeedGrid');
+ if(!isSuperAdmin()||!status||!grid)return;
+ status.textContent='Loading recent Facebook posts…';grid.innerHTML='';
+ try{
+  const result=await facebookAdminAction('feed');
+  if(!result.posts?.length){status.textContent='Your Page is connected, but Facebook has not returned any recent posts.';grid.innerHTML='<div class="facebook-feed-empty">No recent posts were returned by Facebook.</div>';return}
+  status.textContent='Showing '+result.posts.length+' recent posts from '+result.page_name+'. Choose a category above, then import a post as a draft.';
+  grid.innerHTML=result.posts.map(post=>{
+   const images=Array.isArray(post.image_urls)?post.image_urls:[];
+   const imageHtml=images.length?'<div class="facebook-feed-images">'+images.slice(0,4).map(url=>'<img src="'+escapeHtml(url)+'" alt="Facebook post photo" loading="lazy" decoding="async" fetchpriority="low">').join('')+'</div>':'';
+   const messageText=escapeHtml(post.message||'Facebook post');
+   const date=post.created_time?new Date(post.created_time).toLocaleString():'';
+   const link=typeof post.permalink_url==='string'&&/^https:\/\//i.test(post.permalink_url)?'<a href="'+escapeHtml(post.permalink_url)+'" target="_blank" rel="noopener noreferrer">View original ↗</a>':'';
+   const importControl=post.imported?'<span class="facebook-imported">Imported ✓</span>':'<button type="button" data-fb-import="'+escapeHtml(post.id)+'">Import to website as draft</button>';
+   return '<article class="facebook-feed-card">'+imageHtml+'<div class="facebook-feed-body"><div class="facebook-feed-date">'+escapeHtml(date)+(images.length>1?' · '+images.length+' photos':'')+'</div><div class="facebook-feed-message">'+messageText+'</div><div class="facebook-feed-actions">'+link+importControl+'</div></div></article>';
+  }).join('');
+  grid.querySelectorAll('[data-fb-import]').forEach(button=>button.addEventListener('click',async()=>{
+   const postId=button.dataset.fbImport,category=$('facebookImportCategory').value;
+   button.disabled=true;button.textContent='Importing…';status.textContent='Copying the Facebook post and its photos into your website…';
+   try{
+    const imported=await facebookAdminAction('import',{post_id:postId,category});
+    if(imported.already_imported){button.outerHTML='<span class="facebook-imported">Imported ✓</span>';status.textContent='This Facebook post was already imported.';return}
+    button.outerHTML='<span class="facebook-imported">Imported ✓</span>';
+    await loadPosts();
+    await logActivity('Imported Facebook post','post',imported.post?.title||postId,{facebook_post_id:postId,category});
+    const warningText=imported.warnings?.length?' Some photos could not be copied: '+imported.warnings.join('; '):'';
+    status.textContent='Imported as a website draft with '+(imported.image_count||0)+' photo(s). Open Existing posts to review and publish it.'+warningText;
+   }catch(error){button.disabled=false;button.textContent='Try import again';status.textContent=error.message||'Could not import this Facebook post.'}
+  }));
+ }catch(error){status.textContent=error.message||'Could not load Facebook feed.';grid.innerHTML='<div class="facebook-feed-empty">The feed could not be loaded. Check the message above.</div>'}
+}
+$('refreshFacebookFeed')?.addEventListener('click',loadFacebookFeed);
+$('syncFacebookPosts')?.addEventListener('click',async()=>{
+ const button=$('syncFacebookPosts'),status=$('facebookFeedStatus');
+ button.disabled=true;button.textContent='Synchronizing…';status.textContent='Checking imported posts against Facebook…';
+ try{
+  const result=await facebookAdminAction('sync');
+  await loadPosts();
+  await loadFacebookFeed();
+  const summary='Synchronization complete: '+result.synced+' updated, '+result.unchanged+' already current, '+result.failed+' failed.';
+  status.textContent=summary+(result.failures?.length?' '+result.failures.slice(0,3).join(' · '):'');
+ }catch(error){status.textContent=error.message||'Could not synchronize imported posts.'}
+ finally{button.disabled=false;button.textContent='↻ Sync imported posts'}
+});
+$('connectFacebook')?.addEventListener('click',async()=>{
+ if(!isSuperAdmin()){message('Only the website owner can connect Facebook.');return}
+ const button=$('connectFacebook'),status=$('facebookConnectionStatus');
+ button.disabled=true;button.textContent='Preparing secure connection…';status.textContent='Checking your admin session…';
+ try{
+  const {data,error:refreshError}=await client.auth.refreshSession();
+  if(refreshError||!data?.session?.access_token)throw new Error('Your admin session could not be refreshed. Sign out and sign in again.');
+  status.textContent='Opening Facebook…';
+  const response=await fetch('https://vroxuvzbnzfelyndchyl.supabase.co/functions/v1/facebook-oauth',{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Authorization':'Bearer '+data.session.access_token,'apikey':'sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH'},
+   body:JSON.stringify({action:'start'})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||!result.url)throw new Error(result.error||'Facebook connection could not be started. Please try again.');
+  await logActivity('Started Facebook Page connection','social','Facebook');
+  window.location.assign(result.url);
+ }catch(error){
+  status.textContent=error.message||'Could not start Facebook connection.';
+  message(status.textContent);
+  button.disabled=false;button.textContent='Connect Facebook ↗';
+ }
+});
+function showPasswordReset(){currentUser=null;$('login').classList.add('hidden');$('app').classList.add('hidden');$('resetPasswordPanel').classList.remove('hidden');message('Password recovery verified. Set your new password below.')}
+async function refresh(){const {data}=await client.auth.getSession();if(new URLSearchParams(location.search).get('mode')==='reset'&&location.hash.includes('type=recovery')){showPasswordReset();return}showApp(data.session?.user||null)}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('Signing in…');const email=$('email').value.trim().toLowerCase(),password=$('password').value;const {data,error}=await client.auth.signInWithPassword({email,password});if(error){message(error.message==='Invalid login credentials'?'Email or password is incorrect. If this is your first password login, set a password for this user in Supabase Dashboard → Authentication → Users, then try again.':error.message);return}showApp(data.user);await logActivity('Signed in','session',data.user.email||'');message('Signed in successfully.')});
+$('forgotPassword').addEventListener('click',async()=>{const email=$('email').value.trim().toLowerCase();if(!email){message('Enter your administrator email first.');$('email').focus();return}message('Sending password recovery email…');const redirectTo=window.location.origin+'/center-workspace/?mode=reset';const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo});message(error?'Could not send recovery email: '+error.message:'Password recovery email sent. Open its link to set a new password.')});
+$('resetPasswordForm').addEventListener('submit',async e=>{e.preventDefault();const password=$('newPassword').value,confirm=$('confirmPassword').value;if(password.length<8){message('Password must be at least 8 characters.');return}if(password!==confirm){message('The passwords do not match.');return}message('Saving your new password…');const {error}=await client.auth.updateUser({password});if(error){message('Could not update password: '+error.message);return}await client.auth.signOut();$('resetPasswordPanel').classList.add('hidden');$('login').classList.remove('hidden');$('email').value='aradaw01youthcenter@gmail.com';$('password').value='';history.replaceState(null,'','/center-workspace/');message('Password updated successfully. Sign in with your new password.')});
+$('backToLogin').addEventListener('click',()=>{ $('resetPasswordPanel').classList.add('hidden');$('login').classList.remove('hidden');history.replaceState(null,'','/admin/');message('')});
+client.auth.onAuthStateChange((event,s)=>{if(event==='PASSWORD_RECOVERY'){showPasswordReset();return}if(!$('resetPasswordPanel').classList.contains('hidden'))return;showApp(s?.user||null)});
+$('logout').onclick=async()=>{await logActivity('Signed out','session',currentUser?.email||'');await client.auth.signOut();showApp(null);message('Signed out.')};
+
+let allPosts=[];
+function showPage(page){
+ document.querySelectorAll('.page-view').forEach(el=>el.hidden=el.id!=='page-'+page);
+ document.querySelectorAll('.dash-nav[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
+ window.scrollTo({top:0,behavior:'smooth'});
+ if(page==='posts')renderPosts();
+ if(page==='activity'&&isSuperAdmin())loadActivityLogs();
+  if(page==='profile')loadAdminProfile();
+  if(page==='youth-links')loadYouthLinks();
+}
+document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>{showPage(el.dataset.page);if(el.dataset.page==='facebook'){loadFacebookConnectionStatus();loadFacebookFeed()}}));
+const menuToggle=$('mobileMenuToggle'),navBackdrop=$('mobileNavBackdrop');
+function closeMobileNav(){document.body.classList.remove('nav-open');menuToggle?.setAttribute('aria-expanded','false');menuToggle?.setAttribute('aria-label','Open navigation menu');if(menuToggle)menuToggle.textContent='☰'}
+menuToggle?.addEventListener('click',()=>{const open=!document.body.classList.contains('nav-open');document.body.classList.toggle('nav-open',open);menuToggle.setAttribute('aria-expanded',String(open));menuToggle.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');menuToggle.textContent=open?'×':'☰'});
+navBackdrop?.addEventListener('click',closeMobileNav);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobileNav()});
+document.querySelectorAll('.dash-nav[data-page]').forEach(el=>el.addEventListener('click',closeMobileNav));
+showPage('overview');
+document.querySelectorAll('[data-stat]').forEach(card=>card.addEventListener('click',()=>{const status=card.dataset.stat;$('postStatusFilter').value=status;showPage('posts');renderPosts()}));
+async function invokeAdminFunction(body){
+ // Refresh the access token before privileged admin actions. getSession() can
+ // return a locally cached JWT whose server-side Auth session has been revoked.
+ const {data,error:refreshError}=await client.auth.refreshSession();
+ if(refreshError||!data?.session?.access_token){
+  await client.auth.signOut({scope:'local'}).catch(()=>{});
+  return {data:null,error:new Error('Your admin sign-in session is no longer valid. You have been signed out locally. Sign in again, then retry this action.')};
+ }
+ return client.functions.invoke('invite-admin',{body,headers:{Authorization:'Bearer '+data.session.access_token}});
+}
+async function loadAdminUsers(){
+ const {data,error}=await client.from('admin_users').select('email,role,created_at').order('created_at');
+ if(error){$('adminList').textContent=error.message;return}
+ const isOwner=currentUser?.email?.toLowerCase()==='aradaw01youthcenter@gmail.com';
+ $('adminList').innerHTML=(data||[]).map(a=>'<div class="post"><strong>'+escapeHtml(a.email)+'</strong><span class="status">'+escapeHtml(a.role==='owner'?'Website owner':'Administrator')+' · Added '+new Date(a.created_at).toLocaleDateString()+'</span>'+(isOwner&&a.role!=='owner'?'<div><button type="button" class="danger" data-remove-admin="'+escapeHtml(a.email)+'">Remove access</button></div>':'')+'</div>').join('')||'No administrators found.';
+ $('inviteAdminForm').classList.toggle('hidden',!isOwner);
+ $('adminList').querySelectorAll('[data-remove-admin]').forEach(button=>button.addEventListener('click',async()=>{
+  const email=button.dataset.removeAdmin;
+  if(!confirm('Cancel this invitation or remove dashboard access for '+email+'? This cannot be undone.'))return;
+  button.disabled=true;button.textContent='Removing…';
+  const {data,error}=await invokeAdminFunction({action:'remove',email});
+  if(error||data?.error){
+   let detail=data?.error||'';
+   if(error?.context&&typeof error.context.clone==='function'){
+    const responseBody=await error.context.clone().json().catch(()=>null);
+    if(responseBody?.error)detail=responseBody.error;
+    else if(responseBody?.message)detail=responseBody.message;
+   }
+   if(!detail)detail=error?.message||'The server could not remove this administrator.';
+   alert('Could not remove '+email+': '+detail);
+   button.disabled=false;button.textContent='Remove access';return
+  }
+  message(data?.message||'Administrator account and access removed.');await logActivity('Removed administrator access','admin',email);await loadAdminUsers();
+ }));
+
+}
+$('inviteAdminForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const email=$('inviteEmail').value.trim().toLowerCase();
+ const password=$('invitePassword').value;
+ const confirmPassword=$('invitePasswordConfirm').value;
+ if(password.length<8){$('inviteStatus').textContent='Use a password with at least 8 characters.';return}
+ if(password!==confirmPassword){$('inviteStatus').textContent='The passwords do not match.';return}
+ $('inviteStatus').textContent='Creating administrator account…';
+ const {data,error}=await invokeAdminFunction({action:'create',email,password});
+ if(error){$('inviteStatus').textContent=error.message;return}
+ if(data?.error){$('inviteStatus').textContent=data.error;return}
+ $('inviteStatus').textContent=data?.message||'Administrator account created.';await logActivity('Created administrator account','admin',email);
+ $('inviteEmail').value='';$('invitePassword').value='';$('invitePasswordConfirm').value='';
+ await loadAdminUsers();
+});
+
+function slugify(s){const base=s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70);return (base||'post')+'-'+Date.now().toString(36)}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderGallery(){const el=$('currentGallery');el.innerHTML=currentImages.map((url,i)=>'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(url)+'" alt="Post photo '+(i+1)+'"><button type="button" data-remove="'+i+'" aria-label="Remove photo">×</button></div>').join('');el.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{currentImages.splice(Number(b.dataset.remove),1);renderGallery()})}
+function clearForm(){$('postForm').reset();$('postId').value='';$('category').value=categories[0];currentImages=[];renderGallery();$('formTitle').textContent='Create a post'}
+$('reset').onclick=clearForm;
+const siteFields=[
+{key:'aboutTitle',label:'About section — heading',selector:'#about h2'},
+{key:'aboutText',label:'About section — description',selector:'#about p.sub',multi:true},
+{key:'servicesTitle',label:'Services section — heading',selector:'#services h2'},
+{key:'servicesText',label:'Services section — description',selector:'#services p.sub',multi:true},
+{key:'sportsTitle',label:'Sports section — heading',selector:'#sports h2'},
+{key:'sportsText',label:'Sports section — description',selector:'#sports p.sub',multi:true},
+{key:'joinTitle',label:'Join section — heading',selector:'#join h2'},
+{key:'joinText',label:'Join section — description',selector:'#join p.sub',multi:true},
+{key:'contactTitle',label:'Contact section — heading',selector:'#contact h2'},
+{key:'contactText',label:'Contact section — description',selector:'#contact p.sub',multi:true},
+{key:'announcementTitle',label:'Homepage announcement — heading',selector:'#homepage-announcement h2'},
+{key:'announcementText',label:'Homepage announcement — message',selector:'#homepage-announcement p',multi:true},
+
+{key:'contactAddress',label:'Contact address',selector:'#contactAddress'},
+{key:'contactPhone',label:'Contact phone',selector:'#contactPhone'},
+{key:'contactEmail',label:'Contact email',selector:'#contactEmail'},
+{key:'facebookUrl',label:'Facebook Page link',selector:'#contactFacebook',property:'href'},
+{key:'instagramUrl',label:'Instagram link',selector:'#contactInstagram',property:'href'},
+{key:'tiktokUrl',label:'TikTok link',selector:'#contactTiktok',property:'href'},
+{key:'service1Title',label:'Service 1 — Education & training heading',selector:'#services .grid .card:nth-child(1) h3'},
+{key:'service1Text',label:'Service 1 — description',selector:'#services .grid .card:nth-child(1) p',multi:true},
+{key:'service2Title',label:'Service 2 — Health & counseling heading',selector:'#services .grid .card:nth-child(2) h3'},
+{key:'service2Text',label:'Service 2 — description',selector:'#services .grid .card:nth-child(2) p',multi:true},
+{key:'service3Title',label:'Service 3 — ICT & library heading',selector:'#services .grid .card:nth-child(3) h3'},
+{key:'service3Text',label:'Service 3 — description',selector:'#services .grid .card:nth-child(3) p',multi:true},
+{key:'service4Title',label:'Service 4 — Science & innovation heading',selector:'#services .grid .card:nth-child(4) h3'},
+{key:'service4Text',label:'Service 4 — description',selector:'#services .grid .card:nth-child(4) p',multi:true},
+{key:'service5Title',label:'Service 5 — Clubs & volunteering heading',selector:'#services .grid .card:nth-child(5) h3'},
+{key:'service5Text',label:'Service 5 — description',selector:'#services .grid .card:nth-child(5) p',multi:true},
+{key:'service6Title',label:'Service 6 — Awareness & advocacy heading',selector:'#services .grid .card:nth-child(6) h3'},
+{key:'service6Text',label:'Service 6 — description',selector:'#services .grid .card:nth-child(6) p',multi:true},
+{key:'service7Title',label:'Service 7 — Sports & recreation heading',selector:'#services .grid .card:nth-child(7) h3'},
+{key:'service7Text',label:'Service 7 — description',selector:'#services .grid .card:nth-child(7) p',multi:true},
+{key:'service8Title',label:'Service 8 — Information service heading',selector:'#services .grid .card:nth-child(8) h3'},
+{key:'service8Text',label:'Service 8 — description',selector:'#services .grid .card:nth-child(8) p',multi:true}
+];
+const siteGroups=[
+{title:'About the youth center',icon:'✦',hint:'Your identity, mission and introduction',keys:['aboutTitle','aboutText']},
+{title:'Services & programs',icon:'▦',hint:'The eight service cards shown on the homepage',keys:['servicesTitle','servicesText','service1Title','service1Text','service2Title','service2Text','service3Title','service3Text','service4Title','service4Text','service5Title','service5Text','service6Title','service6Text','service7Title','service7Text','service8Title','service8Text']},
+{title:'Sports & recreation',icon:'⚽',hint:'Sports activities and recreation information',keys:['sportsTitle','sportsText']},
+{title:'Join the center',icon:'＋',hint:'Invitation and participation information',keys:['joinTitle','joinText']},
+{title:'Announcements',icon:'▤',hint:'Important messages displayed on the homepage',keys:['announcementTitle','announcementText']},
+{title:'Contact information',icon:'⌖',hint:'Address, phone number and email',keys:['contactTitle','contactText','contactAddress','contactPhone','contactEmail']},
+{title:'Social media links',icon:'◎',hint:'Links to your official social accounts',keys:['facebookUrl','instagramUrl','tiktokUrl']}
+];
+function renderSiteContentFields(values={}){
+ const fieldsByKey=Object.fromEntries(siteFields.map(f=>[f.key,f]));
+ $('siteContentFields').innerHTML=siteGroups.map((group,index)=>'<section class="content-group"><div class="content-group-head"><div class="content-group-icon">'+group.icon+'</div><div><h3>'+group.title+'</h3><p>'+group.hint+'</p></div></div>'+group.keys.map(key=>{const f=fieldsByKey[key];if(!f)return '';const v=values[key]||{};return '<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="url" data-cms-am="'+f.key+'" placeholder="https://">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>'}).join('')+'</section>').join('');
+ siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''});
+}
+async function loadSiteContent(){const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();if(error){$('siteContentStatus').textContent='Could not load homepage settings: '+error.message;return}renderSiteContentFields(data?.content||{})}
+$('saveSiteContent').onclick=async()=>{const content={};siteFields.forEach(f=>{const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');content[f.key]={am:am?am.value.trim():'',en:en?en.value.trim():'',selector:f.selector,...(f.property?{property:f.property}:{})}});$('siteContentStatus').textContent='Saving…';const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});if(!error)await logActivity('Updated homepage content','website','Homepage content');$('siteContentStatus').textContent=error?'Save failed: '+error.message:'Homepage content saved. Refresh the public website to see changes.'};
+let homepageMedia={bannerUrl:'',serviceImages:Array(8).fill(''),gallery:[]};
+function renderHomepageMedia(){
+ $('bannerPreview').innerHTML=homepageMedia.bannerUrl?'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(homepageMedia.bannerUrl)+'" alt="Homepage banner preview"><button type="button" id="removeBanner">×</button></div>':'<span class="muted">No custom banner uploaded yet.</span>';
+ if($('removeBanner'))$('removeBanner').onclick=()=>{homepageMedia.bannerUrl='';renderHomepageMedia()};
+ $('serviceImageFields').innerHTML=Array.from({length:8},(_,i)=>'<div class="site-field"><label>Service '+(i+1)+' image</label><input type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-service-image="'+i+'"><div class="gallery">'+(homepageMedia.serviceImages[i]?'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(homepageMedia.serviceImages[i])+'" alt="Service '+(i+1)+' preview"><button type="button" data-remove-service="'+i+'">×</button></div>':'<span class="muted">No image selected</span>')+'</div></div>').join('');
+ $('serviceImageFields').querySelectorAll('[data-remove-service]').forEach(b=>b.onclick=()=>{homepageMedia.serviceImages[Number(b.dataset.removeService)]='';renderHomepageMedia()});
+ $('homepageGalleryPreview').innerHTML=homepageMedia.gallery.map((url,i)=>'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(url)+'" alt="Gallery photo '+(i+1)+'"><button type="button" data-remove-gallery="'+i+'">×</button></div>').join('');
+ $('homepageGalleryPreview').querySelectorAll('[data-remove-gallery]').forEach(b=>b.onclick=()=>{homepageMedia.gallery.splice(Number(b.dataset.removeGallery),1);renderHomepageMedia()});
+}
+async function optimizeImageFile(file,maxDimension=1920,quality=0.82){
+ if(!file||file.type==='image/gif'||!['image/jpeg','image/png','image/webp'].includes(file.type)||typeof createImageBitmap!=='function')return file;
+ let bitmap;
+ try{
+  bitmap=await createImageBitmap(file);
+  const scale=Math.min(1,maxDimension/Math.max(bitmap.width,bitmap.height));
+  const width=Math.max(1,Math.round(bitmap.width*scale)),height=Math.max(1,Math.round(bitmap.height*scale));
+  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+  const context=canvas.getContext('2d');if(!context)return file;
+  context.drawImage(bitmap,0,0,width,height);
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',quality));
+  if(!blob||blob.type!=='image/webp'||blob.size>=file.size)return file;
+  const base=file.name.replace(/\.[^.]+$/,'')||'image';
+  return new File([blob],base+'.webp',{type:'image/webp',lastModified:Date.now()});
+ }catch(error){console.warn('Image optimization skipped; original file will be uploaded.',error);return file}
+ finally{if(bitmap&&typeof bitmap.close==='function')bitmap.close()}
+}
+async function uploadHomepageImage(file,folder){
+ if(!file)return null;
+ if(!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)){throw new Error('Use a JPG, PNG, WebP or GIF image.')}
+ if(file.size>10*1024*1024)throw new Error('Each image must be 10 MB or smaller.');
+ const optimized=await optimizeImageFile(file,folder==='banner'?2200:1800,0.82);
+ const ext=optimized.type==='image/webp'?'webp':(optimized.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+ const path='homepage/'+folder+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,9)+'.'+ext;
+ const {error}=await client.storage.from('post-images').upload(path,optimized,{upsert:false,contentType:optimized.type,cacheControl:'31536000'});
+ if(error)throw error;
+ return client.storage.from('post-images').getPublicUrl(path).data.publicUrl;
+}
+async function loadHomepageMedia(){
+ const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();
+ if(error){$('visualStatus').textContent='Could not load saved photos: '+error.message;return}
+ const c=data?.content||{};
+ homepageMedia={bannerUrl:c.homepageBannerUrl||'',serviceImages:Array.from({length:8},(_,i)=>c['serviceImage'+(i+1)]||''),gallery:Array.isArray(c.homepageGallery)?c.homepageGallery:[]};
+ renderHomepageMedia();
+}
+$('bannerUpload').addEventListener('change',async e=>{try{if(e.target.files[0]){ $('visualStatus').textContent='Uploading banner…';homepageMedia.bannerUrl=await uploadHomepageImage(e.target.files[0],'banner');renderHomepageMedia();$('visualStatus').textContent='Banner uploaded. Save homepage photos to publish it.'}}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
+$('serviceImageFields').addEventListener('change',async e=>{const input=e.target.closest('[data-service-image]');if(!input||!input.files[0])return;const i=Number(input.dataset.serviceImage);try{$('visualStatus').textContent='Uploading service image…';homepageMedia.serviceImages[i]=await uploadHomepageImage(input.files[0],'services');renderHomepageMedia();$('visualStatus').textContent='Service image uploaded. Save homepage photos to publish it.'}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
+$('galleryUpload').addEventListener('change',async e=>{const files=Array.from(e.target.files||[]);try{for(const file of files){$('visualStatus').textContent='Uploading gallery photos…';homepageMedia.gallery.push(await uploadHomepageImage(file,'gallery'))}renderHomepageMedia();$('visualStatus').textContent=files.length+' gallery photo(s) uploaded. Save homepage photos to publish them.';e.target.value=''}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
+$('saveVisualManager').onclick=async()=>{
+ const {data:existing,error:readError}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();
+ if(readError){$('visualStatus').textContent='Could not read homepage settings: '+readError.message;return}
+ const content=existing?.content||{};
+ content.homepageBannerUrl=homepageMedia.bannerUrl;
+ homepageMedia.serviceImages.forEach((url,i)=>content['serviceImage'+(i+1)]=url);
+ content.homepageGallery=homepageMedia.gallery;
+ $('visualStatus').textContent='Saving homepage photos…';
+ const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});
+ if(!error)await logActivity('Updated homepage photos and gallery','website','Homepage media');$('visualStatus').textContent=error?'Save failed: '+error.message:'Homepage photos saved. Refresh the public homepage to see them.';
+};
+async function loadPosts(){
+ const {data,error}=await client.from('posts').select('*').order('created_at',{ascending:false});
+ if(error){$('postGrid').innerHTML='<div class="empty-state">'+escapeHtml(error.message)+'</div>';return}
+ allPosts=data||[];
+ $('statTotal').textContent=allPosts.length;
+ $('statPublished').textContent=allPosts.filter(p=>p.status==='published').length;
+ $('statDrafts').textContent=allPosts.filter(p=>p.status==='draft').length;
+ const categorySelect=$('postCategoryFilter');
+ if(categorySelect)categorySelect.innerHTML='<option value="all">All categories</option>'+categories.map(c=>'<option value="'+escapeHtml(c)+'">'+escapeHtml(c)+'</option>').join('');
+ renderPosts();renderDashboardCharts();
+}
+function renderPosts(){
+ const q=($('postSearch')?.value||'').trim().toLowerCase(),status=$('postStatusFilter')?.value||'all',cat=$('postCategoryFilter')?.value||'all';
+ const data=allPosts.filter(p=>(status==='all'||p.status===status)&&(cat==='all'||p.category===cat)&&(!q||[p.title,p.excerpt,p.content,p.category].some(v=>String(v||'').toLowerCase().includes(q))));
+ if(!data.length){$('postGrid').innerHTML='<div class="empty-state"><div style="font-size:32px;margin-bottom:8px">▤</div><strong>No matching posts</strong><p>Try another search or create a new post.</p><button type="button" data-page="create">＋ Create a post</button></div>';$('postGrid').querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>showPage('create'));return}
+ $('postGrid').innerHTML=data.map(p=>{const images=Array.isArray(p.images)?p.images:[];const cover=p.cover_image||images[0]||'';const excerpt=p.excerpt||String(p.content||'').replace(/<[^>]*>/g,' ').slice(0,180);return '<article class="post-card"><div class="post-card-cover">'+(cover?'<img src="'+escapeHtml(cover)+'" alt="'+escapeHtml(p.title)+'" loading="lazy" decoding="async" fetchpriority="low">':'<div class="no-photo">▧</div>')+'</div><div class="post-card-body"><div class="post-card-meta"><span class="post-chip">'+escapeHtml(p.category||'Uncategorized')+'</span><span>'+escapeHtml(p.status)+'</span></div><h3>'+escapeHtml(p.title)+'</h3><p>'+escapeHtml(excerpt)+'</p><div class="post-card-meta"><span>'+new Date(p.published_at||p.created_at).toLocaleDateString()+'</span><span>'+images.length+' photo(s)</span></div><div class="post-card-actions">'+(p.status==='published'?'<a class="read-more" href="/posts/'+encodeURIComponent(p.slug)+'" target="_blank" rel="noopener">Read more ↗</a>':'<a href="#" data-preview="'+p.id+'">Preview</a>')+'<button type="button" class="secondary" data-edit="'+p.id+'">Edit</button><button type="button" class="danger" data-delete="'+p.id+'">Delete</button></div></div></article>'}).join('');
+ $('postGrid').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editPost(allPosts.find(p=>p.id===b.dataset.edit)));
+ $('postGrid').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deletePost(b.dataset.delete));
+ $('postGrid').querySelectorAll('[data-preview]').forEach(b=>b.onclick=e=>{e.preventDefault();const p=allPosts.find(x=>x.id===b.dataset.preview);alert(p.title+'\n\n'+(p.content||''))});
+}
+function renderDashboardCharts(){
+ const now=new Date(),months=[];
+ for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({key:d.getFullYear()+'-'+d.getMonth(),label:d.toLocaleDateString(undefined,{month:'short'}),count:allPosts.filter(p=>{const x=new Date(p.created_at);return x.getFullYear()===d.getFullYear()&&x.getMonth()===d.getMonth()}).length})}
+ const max=Math.max(1,...months.map(m=>m.count));
+ $('monthlyChart').innerHTML=months.map(m=>'<div class="month-column"><strong>'+m.count+'</strong><div class="month-bar-track"><div class="month-bar" style="height:'+Math.max(3,m.count/max*100)+'%"></div></div><small>'+m.label+'</small></div>').join('');
+ const counts=categories.map(c=>({name:c,count:allPosts.filter(p=>p.category===c).length})),top=Math.max(1,...counts.map(x=>x.count));
+ $('categoryChart').innerHTML=counts.map(x=>'<div class="category-row"><span>'+escapeHtml(x.name)+'</span><strong>'+x.count+'</strong><div class="category-track"><div class="category-fill" style="width:'+(x.count/top*100)+'%"></div></div></div>').join('');
+}
+$('postSearch').addEventListener('input',renderPosts);
+$('postStatusFilter').addEventListener('change',renderPosts);
+$('postCategoryFilter').addEventListener('change',renderPosts);
+function editPost(p){$('postId').value=p.id;$('title').value=p.title;$('category').value=p.category||categories[0];$('excerpt').value=p.excerpt||'';$('content').value=p.content;$('socialPlatform').value=p.social_platform||'';$('socialUrl').value=p.social_url||'';$('status').value=p.status;currentImages=Array.isArray(p.images)?p.images.slice():[];if(!currentImages.length&&p.cover_image)currentImages=[p.cover_image];renderGallery();$('formTitle').textContent='Edit post';showPage('create')}
+$('postForm').addEventListener('submit',async e=>{e.preventDefault();message('Saving post…');const id=$('postId').value,title=$('title').value.trim(),status=$('status').value,files=Array.from($('image').files||[]);if(files.some(f=>!['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)||f.size>10*1024*1024)){message('Please choose JPEG, PNG, WebP or GIF photos, each no larger than 10 MB.');return}
+const uploaded=[];for(const file of files){const optimized=await optimizeImageFile(file,1800,0.82);const safe=optimized.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safe;const up=await client.storage.from('post-images').upload(path,optimized,{upsert:false,contentType:optimized.type,cacheControl:'31536000'});if(up.error){message('Photo upload failed: '+up.error.message);return}uploaded.push(client.storage.from('post-images').getPublicUrl(path).data.publicUrl)}
+const images=currentImages.concat(uploaded),payload={title,slug:id?undefined:slugify(title),category:$('category').value,excerpt:$('excerpt').value.trim(),content:$('content').value,social_platform:$('socialPlatform').value||null,social_url:$('socialUrl').value.trim()||null,images,cover_image:images[0]||null,status,updated_at:new Date().toISOString(),...(status==='published'?{published_at:new Date().toISOString()}:{})};if(id)delete payload.slug;
+if(status==='scheduled'){const v=$('scheduledAt').value;if(!v||new Date(v)<=new Date()){message('Choose a future date and time for the scheduled post.');return}payload.published_at=new Date(v).toISOString()}else if(status==='draft'){payload.published_at=null}else{payload.published_at=new Date().toISOString()}if(status==='scheduled'){const v=$('scheduledAt').value;if(!v||new Date(v)<=new Date()){message('Choose a future date and time for the scheduled post.');return}payload.published_at=new Date(v).toISOString()}else if(status==='draft'){payload.published_at=null}else{payload.published_at=new Date().toISOString()}const result=id?await client.from('posts').update(payload).eq('id',id):await client.from('posts').insert(payload);if(result.error){message(result.error.message);return}await logActivity(id?'Updated post':'Created post','post',title,{status,category:$('category').value});message('Post saved successfully.');clearForm();await loadPosts();showPage('posts')});
+async function deletePost(id){if(!confirm('Delete this post? This cannot be undone.'))return;const {error}=await client.from('posts').delete().eq('id',id);if(!error){const deleted=allPosts.find(p=>p.id===id);await logActivity('Deleted post','post',deleted?.title||String(id))}message(error?error.message:'Post deleted.');await loadPosts()}
+refresh();
+</script><script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script><script src="/admin/enhancements.js" defer></script></body></html>
