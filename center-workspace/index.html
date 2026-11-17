@@ -343,11 +343,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <button type="button" id="saveSiteContent">Save homepage changes</button>
 <span id="siteContentStatus" class="muted" aria-live="polite"></span>
 </div>
-</section><section class="page-view" id="page-photos" hidden><div class="page-heading"><div><h1>Homepage photos & gallery</h1><p>Manage the hero banner, eight service images and your photo gallery.</p></div></div><div class="panel" id="visualManager">
+</section><section class="page-view" id="page-photos" hidden><div class="page-heading"><div><h1>Homepage photos & section imagery</h1><p>Manage the banner, section photos, service images and homepage gallery.</p></div></div><div class="panel" id="visualManager">
 <h2>Homepage photos & gallery</h2>
 <p class="muted">Upload images for the main banner, service cards and public photo gallery. Images are stored securely in the website's Supabase image bucket.</p>
 <section class="content-group"><div class="content-group-head"><div class="content-group-icon">▣</div><div><h3>Homepage banner</h3><p>The large feature image visitors see first on your homepage.</p></div></div><label for="bannerUpload">Choose banner image</label><input id="bannerUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><div id="bannerPreview" class="gallery"></div></section>
 <section class="content-group"><div class="content-group-head"><div class="content-group-icon">▦</div><div><h3>Service card photos</h3><p>Upload a unique image for each of the eight services.</p></div></div><div id="serviceImageFields"></div></section>
+<section class="content-group"><div class="content-group-head"><div class="content-group-icon">▣</div><div><h3>Section photos</h3><p>Add a large supporting photo to About, Sports & Recreation, Join Us and Contact.</p></div></div><div id="sectionImageFields"></div></section>
 <section class="content-group"><div class="content-group-head"><div class="content-group-icon">▧</div><div><h3>Homepage photo gallery</h3><p>Select multiple photos to build a gallery on the public homepage.</p></div></div><label for="galleryUpload">Choose multiple photos</label><input id="galleryUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="homepageGalleryPreview" class="gallery"></div></section>
 <button type="button" id="saveVisualManager">Save homepage photos</button><span id="visualStatus" class="muted" aria-live="polite"></span>
 </div></section>
@@ -863,12 +864,14 @@ function renderSiteContentFields(values={}){
 }
 async function loadSiteContent(){const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();if(error){$('siteContentStatus').textContent='Could not load homepage settings: '+error.message;return}renderSiteContentFields(data?.content||{})}
 $('saveSiteContent').onclick=async()=>{const content={};siteFields.forEach(f=>{const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');content[f.key]={am:am?am.value.trim():'',en:en?en.value.trim():'',selector:f.selector,...(f.property?{property:f.property}:{})}});$('siteContentStatus').textContent='Saving…';const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});if(!error)await logActivity('Updated homepage content','website','Homepage content');$('siteContentStatus').textContent=error?'Save failed: '+error.message:'Homepage content saved. Refresh the public website to see changes.'};
-let homepageMedia={bannerUrl:'',serviceImages:Array(8).fill(''),gallery:[]};
+let homepageMedia={bannerUrl:'',serviceImages:Array(8).fill(''),sectionImages:{about:'',sports:'',join:'',contact:''},gallery:[]};
 function renderHomepageMedia(){
  $('bannerPreview').innerHTML=homepageMedia.bannerUrl?'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(homepageMedia.bannerUrl)+'" alt="Homepage banner preview"><button type="button" id="removeBanner">×</button></div>':'<span class="muted">No custom banner uploaded yet.</span>';
  if($('removeBanner'))$('removeBanner').onclick=()=>{homepageMedia.bannerUrl='';renderHomepageMedia()};
  $('serviceImageFields').innerHTML=Array.from({length:8},(_,i)=>'<div class="site-field"><label>Service '+(i+1)+' image</label><input type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-service-image="'+i+'"><div class="gallery">'+(homepageMedia.serviceImages[i]?'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(homepageMedia.serviceImages[i])+'" alt="Service '+(i+1)+' preview"><button type="button" data-remove-service="'+i+'">×</button></div>':'<span class="muted">No image selected</span>')+'</div></div>').join('');
  $('serviceImageFields').querySelectorAll('[data-remove-service]').forEach(b=>b.onclick=()=>{homepageMedia.serviceImages[Number(b.dataset.removeService)]='';renderHomepageMedia()});
+ $('sectionImageFields').innerHTML=[['about','About the Center'],['sports','Sports & Recreation'],['join','Join Us'],['contact','Contact Us']].map(([key,label])=>'<div class="site-field"><label>'+label+' image</label><input type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-section-image="'+key+'"><div class="gallery">'+(homepageMedia.sectionImages[key]?'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(homepageMedia.sectionImages[key])+'" alt="'+label+' preview"><button type="button" data-remove-section="'+key+'">×</button></div>':'<span class="muted">No image selected</span>')+'</div></div>').join('');
+ $('sectionImageFields').querySelectorAll('[data-remove-section]').forEach(b=>b.onclick=()=>{homepageMedia.sectionImages[b.dataset.removeSection]='';renderHomepageMedia()});
  $('homepageGalleryPreview').innerHTML=homepageMedia.gallery.map((url,i)=>'<div class="thumbwrap"><img class="thumb" src="'+escapeHtml(url)+'" alt="Gallery photo '+(i+1)+'"><button type="button" data-remove-gallery="'+i+'">×</button></div>').join('');
  $('homepageGalleryPreview').querySelectorAll('[data-remove-gallery]').forEach(b=>b.onclick=()=>{homepageMedia.gallery.splice(Number(b.dataset.removeGallery),1);renderHomepageMedia()});
 }
@@ -904,11 +907,12 @@ async function loadHomepageMedia(){
  const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();
  if(error){$('visualStatus').textContent='Could not load saved photos: '+error.message;return}
  const c=data?.content||{};
- homepageMedia={bannerUrl:c.homepageBannerUrl||'',serviceImages:Array.from({length:8},(_,i)=>c['serviceImage'+(i+1)]||''),gallery:Array.isArray(c.homepageGallery)?c.homepageGallery:[]};
+ homepageMedia={bannerUrl:c.homepageBannerUrl||'',serviceImages:Array.from({length:8},(_,i)=>c['serviceImage'+(i+1)]||''),sectionImages:{about:c.aboutImageUrl||'',sports:c.sportsImageUrl||'',join:c.joinImageUrl||'',contact:c.contactImageUrl||''},gallery:Array.isArray(c.homepageGallery)?c.homepageGallery:[]};
  renderHomepageMedia();
 }
 $('bannerUpload').addEventListener('change',async e=>{try{if(e.target.files[0]){ $('visualStatus').textContent='Uploading banner…';homepageMedia.bannerUrl=await uploadHomepageImage(e.target.files[0],'banner');renderHomepageMedia();$('visualStatus').textContent='Banner uploaded. Save homepage photos to publish it.'}}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
 $('serviceImageFields').addEventListener('change',async e=>{const input=e.target.closest('[data-service-image]');if(!input||!input.files[0])return;const i=Number(input.dataset.serviceImage);try{$('visualStatus').textContent='Uploading service image…';homepageMedia.serviceImages[i]=await uploadHomepageImage(input.files[0],'services');renderHomepageMedia();$('visualStatus').textContent='Service image uploaded. Save homepage photos to publish it.'}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
+$('sectionImageFields').addEventListener('change',async e=>{const input=e.target.closest('[data-section-image]');if(!input||!input.files[0])return;const key=input.dataset.sectionImage;try{$('visualStatus').textContent='Uploading section image…';homepageMedia.sectionImages[key]=await uploadHomepageImage(input.files[0],'sections');renderHomepageMedia();$('visualStatus').textContent='Section image uploaded. Save homepage photos to publish it.'}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
 $('galleryUpload').addEventListener('change',async e=>{const files=Array.from(e.target.files||[]);try{for(const file of files){$('visualStatus').textContent='Uploading gallery photos…';homepageMedia.gallery.push(await uploadHomepageImage(file,'gallery'))}renderHomepageMedia();$('visualStatus').textContent=files.length+' gallery photo(s) uploaded. Save homepage photos to publish them.';e.target.value=''}catch(err){$('visualStatus').textContent='Upload failed: '+err.message}});
 $('saveVisualManager').onclick=async()=>{
  const {data:existing,error:readError}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();
@@ -916,6 +920,7 @@ $('saveVisualManager').onclick=async()=>{
  const content=existing?.content||{};
  content.homepageBannerUrl=homepageMedia.bannerUrl;
  homepageMedia.serviceImages.forEach((url,i)=>content['serviceImage'+(i+1)]=url);
+ content.aboutImageUrl=homepageMedia.sectionImages.about;content.sportsImageUrl=homepageMedia.sectionImages.sports;content.joinImageUrl=homepageMedia.sectionImages.join;content.contactImageUrl=homepageMedia.sectionImages.contact;
  content.homepageGallery=homepageMedia.gallery;
  $('visualStatus').textContent='Saving homepage photos…';
  const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});
