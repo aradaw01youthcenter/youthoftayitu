@@ -115,9 +115,11 @@ The three Phase 1 migrations are committed with their exact applied SQL. The liv
 
 ## Production release
 
-- GitHub remediation PR #16 merged as commit 36e2a74e5967e8faba53537f5dad4dce14737cd8.
-- Vercel production deployment dpl_68MGRRrLjhmNxQceywvVRSX4sw3s is READY and aliases youthoftayitu.vercel.app.
+- GitHub PR #16 merged as commit 36e2a74e5967e8faba53537f5dad4dce14737cd8.
+- GitHub PR #17 merged as commit 99b6c33ea3fb395560231e778b7726b56143acda.
+- Latest Vercel production deployment dpl_5GhB1EjCmi64BSR1Lu9cjhy1XVrK is READY and aliases youthoftayitu.vercel.app.
 - Supabase portal-tools Edge Function is ACTIVE at version 3; invite-admin remains version 12 and facebook-oauth remains version 16.
+- Three Phase 1 database migrations are recorded in Supabase and their exact SQL sources are committed in the repository.
 
 ## Advisor results after database remediation
 
