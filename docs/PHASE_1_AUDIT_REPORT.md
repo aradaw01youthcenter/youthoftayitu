@@ -1,0 +1,149 @@
+# Youth of Tayitu — Phase 1 Technical Audit & Remediation Report
+
+**Project:** Youth of Tayitu  
+**Production URL:** https://youthoftayitu.vercel.app  
+**Admin portal:** https://youthoftayitu.vercel.app/center-workspace/  
+**Supabase project:** vroxuvzbnzfelyndchyl  
+**Audit date:** 17 November 2026  
+**Scope:** Read-only inspection followed by targeted security, permission, performance, source-control, and SEO remediation.
+
+## Executive summary
+
+The production deployment and Supabase database were active during the audit. Static JavaScript checks passed for the public homepage, admin dashboard, posts page, and For the Youth page. The audit found important permission and recovery gaps. Two database remediation migrations were applied and verified. The source repository now includes the three deployed Edge Function sources, the exact SQL for the two new remediation migrations, and a migration-recovery inventory.
+
+No production content or user records were deleted or rewritten as part of this work.
+
+## Baseline observations
+
+- Production Vercel deployment state: READY.
+- Supabase project health: ACTIVE_HEALTHY.
+- Database health advisor: no health lints at audit time.
+- Published posts: 6.
+- Youth links: 15.
+- Portal suggestions: 6.
+- Admin activity rows: 75.
+- Portal event rows at initial inspection: 6 (4 admin clicks, 2 public clicks).
+- Scheduled publishing cron: active; recent runs succeeded.
+- Original Supabase migration inventory: 14 migrations before remediation.
+- Original repository contained only one migration SQL file and one of the three deployed Edge Function source folders.
+
+## Findings and remediation
+
+### 1. Portal analytics event spoofing — REMEDIATED
+
+**Finding:** The original insert policy let anonymous and authenticated visitors submit both public and admin event sources. This meant a public client could forge admin preview clicks.
+
+**Change:** Public visitors can now submit only source=public events of type click or impression for active links. Authenticated administrators can submit admin preview clicks only after the private admin-role check. The table grants were narrowed to insert for visitors and select for authenticated users. Existing event values were retained.
+
+**Verification:** RLS policies were inspected after deployment. The advisor no longer reports the original policy issue. The dashboard's public/admin event distinction is now enforced by Postgres, not merely by browser code.
+
+### 2. Owner-only homepage editing — REMEDIATED
+
+**Finding:** Website Customization and Photos & Gallery were visible in the normal-admin navigation even though the database already restricted homepage content writes to the owner.
+
+**Change:** Both navigation entries and page views are now owner-only in the dashboard. Direct page switching is guarded in the client. Database policies use private.is_site_owner() for homepage content. Storage writes under homepage/ are owner-only, while normal administrators retain the ability to manage post images.
+
+**Verification:** Database policies and storage policies were inspected after migration. Normal admins continue to use post and youth-resource workflows. Interactive login testing with a normal-admin account remains part of the browser QA checklist.
+
+### 3. Exposed SECURITY DEFINER helper — REMEDIATED
+
+**Finding:** public.is_site_admin() was callable through the public Data API by anonymous and authenticated roles.
+
+**Change:** Role-check helpers were moved to the non-exposed private schema as private.is_site_admin() and private.is_site_owner(). Existing policies were repointed, anonymous execution was revoked, and the old public helper was dropped. Both functions pin an empty search path and schema-qualify referenced objects.
+
+**Verification:** Catalog checks confirm there is no public helper. Anonymous users cannot execute either private function; authenticated users can call the helper only for policy evaluation. Security Advisor no longer reports the public SECURITY DEFINER function.
+
+### 4. RLS policy performance — REMEDIATED
+
+**Finding:** Seven policies repeatedly evaluated auth.uid() / auth.jwt() per row. youth_links had duplicate permissive SELECT policies for authenticated users.
+
+**Change:** Auth lookups were converted to init-plan-friendly SELECT auth.uid() / SELECT auth.jwt() expressions or private role helpers. Youth-link SELECT access now uses one policy for anonymous visitors and one for authenticated visitors/admins.
+
+**Verification:** Performance Advisor no longer reports the original auth_rls_initplan or youth-link multiple-permissive-policy findings.
+
+### 5. Missing foreign-key indexes — REMEDIATED
+
+**Finding:** The advisor identified missing indexes for youth_links.created_by, private.facebook_connections.connected_by, and private.facebook_oauth_states.user_id.
+
+**Change:** Added covering indexes for all three columns, plus an analytics index on (source, event_type, clicked_at DESC).
+
+**Verification:** The missing-foreign-key-index advisor finding cleared. New indexes are expected to appear as unused until the related workloads execute; they should not be removed solely on that basis.
+
+### 6. Unused indexes — REVIEWED / RETAINED
+
+The advisor reports indexes that have not yet been used. These are retained because the dataset and query history are small and some indexes support intended category, publishing, and analytics queries. Removing them now would be premature. Reassess after collecting production workload statistics.
+
+### 7. Private Facebook tables with RLS but no policies — INTENTIONAL
+
+private.facebook_connections and private.facebook_oauth_states remain RLS-enabled with no client policies. These tables are designed for privileged Edge Function access only. The informational advisor finding is retained as an intentional defense-in-depth configuration, not cleared by exposing these tables.
+
+### 8. Leaked-password protection — OWNER ACTION REQUIRED
+
+Supabase Auth currently reports leaked-password protection disabled. The available project tools do not expose this Auth dashboard setting, so it cannot be safely changed through this deployment.
+
+**Required owner action:** In Supabase Dashboard → Authentication → Settings (Password / Security settings), enable leaked password protection / compromised-password checks, save, and rerun the Security Advisor. This setting should be enabled before Phase 1 is declared fully closed.
+
+### 9. Edge Function source recovery — SOURCE-CONTROL REMEDIATION
+
+The live project has three active Edge Functions: invite-admin (JWT verification disabled because it validates the bearer token and owner role inside the function), portal-tools (JWT verification enabled), and facebook-oauth (JWT verification disabled because it performs explicit user/owner validation for its OAuth callback and JSON actions).
+
+The live source for all three functions is committed under supabase/functions/, with the deployment verification settings recorded in supabase/config.toml. The portal-tools function was redeployed as version 3 with DNS checks enabled for each target and redirect. No service-role secret is included in source control; the functions read it from Supabase environment variables.
+
+The portal preview function also receives a DNS-resolution check for each destination and redirect to reject private/reserved IP ranges. DNS validation reduces SSRF exposure; strict DNS-rebinding prevention still requires a controlled outbound proxy or egress layer.
+
+### 10. Migration-history recovery — PARTIALLY REMEDIATED
+
+The live database initially reported 14 migrations, while the repository contained one SQL migration. The database records migration names and versions, but not the original SQL text, so missing historical migration files cannot be reconstructed verbatim from migration metadata alone.
+
+The two Phase 1 migrations are committed with their exact applied SQL. The live migration inventory is documented. A complete historical baseline/schema snapshot remains a recovery task and must be generated from a proper database schema dump before any fresh-project rebuild is attempted.
+
+### 11. SEO and dependency maintenance — REMEDIATED
+
+- Added a dynamic /sitemap.xml endpoint that includes the homepage, posts listing, For the Youth page, and currently published individual posts.
+- Updated the Vercel rewrite and retained the existing robots.txt sitemap declaration.
+- Added canonical and Open Graph metadata to the For the Youth page.
+- Pinned the browser Supabase JS SDK to 2.119.0 rather than following the floating @2 CDN tag.
+
+
+### 12. Published post route syntax — REMEDIATED
+
+**Finding:** The serverless post-detail route contained over-escaped regular-expression patterns. A syntax check failed with an unexpected-token error, which could prevent individual post pages from being served.
+
+**Change:** Corrected the escaped regular expressions used for social URL parsing and newline formatting.
+
+**Verification:** The route now passes a JavaScript syntax check. End-to-end rendering of a real published post remains in the browser acceptance checklist.
+
+## Advisor results after database remediation
+
+- **Security:** The exposed SECURITY DEFINER function warning cleared. The remaining findings are leaked-password protection (owner action) and the two private RLS-enabled/no-policy informational notices.
+- **Performance:** The missing foreign-key index, RLS init-plan, and duplicate youth-link SELECT policy findings cleared. Unused-index notices remain intentionally under observation.
+- **Health:** No health advisor findings were returned at audit time.
+
+## Validation performed
+
+- Confirmed production Vercel deployment state before remediation.
+- Ran static JavaScript syntax checks on inline scripts in the homepage, dashboard, posts page, and For the Youth page after the UI changes; all passed.
+- Verified syntax for the dynamic sitemap endpoint and corrected post-detail API route; both passed.
+- Inspected live RLS policies, grants, function privileges, storage policies, migration history, Edge Function inventory, scheduled jobs, and database logs.
+- Re-ran Supabase Security and Performance Advisors after migrations.
+- Confirmed anonymous execution is revoked for private role helpers.
+- Confirmed event insert policies distinguish public events from authenticated admin preview events.
+
+## Remaining acceptance tests
+
+These require a real browser session and should be completed before closing Phase 1:
+
+1. Sign in as website owner and confirm homepage text, Vision/Mission/Values, banner, service imagery, and gallery can be saved.
+2. Sign in as a normal administrator and confirm Website Customization and Photos & Gallery are absent and direct navigation is blocked.
+3. Confirm normal administrators can still create/edit/publish posts, upload post images, and manage youth links.
+4. Confirm anonymous visitors can create public portal clicks and impressions, but cannot insert admin-source events.
+5. Confirm an authenticated non-admin cannot insert admin-source events.
+6. Confirm admin preview clicks appear only in the admin series and public clicks/impressions remain public.
+7. Confirm the dynamic sitemap returns the three static routes plus all currently published post URLs.
+8. Test portal preview against a normal public site, a redirect to a private IP, a localhost address, and an IP-literal URL.
+9. Enable leaked-password protection in Supabase Auth and rerun the Security Advisor.
+10. Verify the new production deployment is READY and smoke-test all affected pages on desktop and mobile.
+
+## Release decision
+
+Phase 1 is **partially remediated, not yet formally closed**. Database policy hardening and source/SEO changes are implemented, but final closure depends on the owner enabling leaked-password protection and the listed browser acceptance tests. The migration history gap also requires a proper schema snapshot for disaster recovery.

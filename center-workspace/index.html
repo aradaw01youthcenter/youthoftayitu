@@ -389,8 +389,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <button class="dash-nav" type="button" data-page="create"><span class="nav-icon">✎</span> Create a post</button>
 <button class="dash-nav" type="button" data-page="posts"><span class="nav-icon">▤</span> Existing posts</button>
 <div class="dash-side-label">Website content</div>
-<button class="dash-nav" type="button" data-page="content"><span class="nav-icon">☷</span> Website customization</button>
-<button class="dash-nav" type="button" data-page="photos"><span class="nav-icon">▧</span> Photos & gallery</button>
+<button class="dash-nav owner-only" type="button" data-page="content" hidden><span class="nav-icon">☷</span> Website customization</button>
+<button class="dash-nav owner-only" type="button" data-page="photos" hidden><span class="nav-icon">▧</span> Photos & gallery</button>
 <button class="dash-nav" type="button" data-page="media"><span class="nav-icon">▣</span> Media library</button>
 <div class="dash-side-label">Youth resources</div>
 <button class="dash-nav" type="button" data-page="youth-links"><span class="nav-icon">↗</span> For the Youth</button>
@@ -423,7 +423,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div id="currentGallery" class="gallery"></div>
 <label for="status">Publication status</label><select id="status"><option value="draft">Save as draft</option><option value="published">Publish now</option><option value="scheduled">Schedule for later</option></select><div id="scheduleField" class="hidden"><label for="scheduledAt">Publication date and time</label><input id="scheduledAt" type="datetime-local"><p class="muted">Scheduled posts stay private until publication. The scheduler checks every minute.</p></div>
 <div class="row"><button type="submit">Save post</button><button type="button" id="reset" class="secondary">Clear form</button></div></form></div>
-</section><section class="page-view" id="page-content" hidden>
+</section><section class="page-view owner-only" id="page-content" hidden>
 <div class="page-heading"><div><h1>Website Customization</h1><p>Update homepage wording and social links without editing website code.</p></div></div>
 <div class="panel cms-manager" id="siteContentPanel">
 <div class="cms-toolbar"><div><h2>Homepage content</h2><p class="muted">Choose a section to edit. Changes are saved together and appear on the public website.</p></div><button type="button" class="secondary" id="saveSiteContentTop">Save changes</button></div>
@@ -431,7 +431,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div id="siteContentFields"></div>
 <div class="cms-save-row"><span id="siteContentStatus" class="muted" aria-live="polite">Your edits are not saved until you select Save changes.</span><button type="button" id="saveSiteContent">Save all changes</button></div>
 </div>
-</section><section class="page-view" id="page-photos" hidden><div class="page-heading"><div><h1>Homepage photos & section imagery</h1><p>Manage the banner, section photos, service images and homepage gallery.</p></div></div><div class="panel" id="visualManager">
+</section><section class="page-view owner-only" id="page-photos" hidden><div class="page-heading"><div><h1>Homepage photos & section imagery</h1><p>Manage the banner, section photos, service images and homepage gallery.</p></div></div><div class="panel" id="visualManager">
 <h2>Homepage photos & gallery</h2>
 <p class="muted">Upload images for the main banner, service cards and public photo gallery. Images are stored securely in the website's Supabase image bucket.</p>
 <section class="content-group"><div class="content-group-head"><div class="content-group-icon">▣</div><div><h3>Homepage banner</h3><p>The large feature image visitors see first on your homepage.</p></div></div><label for="bannerUpload">Choose banner image</label><input id="bannerUpload" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><div id="bannerPreview" class="gallery"></div></section>
@@ -489,7 +489,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <section class="page-view owner-only" id="page-activity" hidden>
 <div class="page-heading"><div><h1>Admin activity log</h1><p>Private record of administrator actions. Only the website owner can view this page.</p></div><div><button type="button" class="secondary" id="exportActivity">Export CSV</button><button type="button" class="secondary" id="refreshActivity">Refresh log</button></div></div><div class="panel"><div class="activity-filters"><input id="activitySearch" type="search" placeholder="Filter by admin, action or item…"><select id="activityActionFilter"><option value="all">All actions</option></select></div><div id="activityStatus" class="muted">Loading recent activity…</div><div id="activityList"></div></div>
 </section><div class="dash-footer">Youth of Tayitu · Secure website administration</div></main></div></div><div id="revisionModal" role="dialog" aria-modal="true" aria-labelledby="revisionTitle"><div class="modal-card"><div class="modal-head"><div><h2 id="revisionTitle">Post revision history</h2><p class="muted">Review earlier versions and restore one.</p></div><button type="button" class="secondary" id="closeRevision">Close</button></div><div id="revisionList"></div></div></div><div id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="modal-card"><div class="modal-head"><h2 id="previewTitle">Post preview</h2><button type="button" class="secondary" id="closePreview">Close</button></div><div id="previewContent"></div></div></div><div id="message" role="status"></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script><script>
 const client=supabase.createClient("https://vroxuvzbnzfelyndchyl.supabase.co","sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH");
 const $=id=>document.getElementById(id),message=t=>$('message').textContent=t;
 let currentUser=null,currentImages=[];
@@ -818,6 +818,7 @@ $('logout').onclick=async()=>{await logActivity('Signed out','session',currentUs
 
 let allPosts=[];
 function showPage(page){
+ if(['content','photos','activity','facebook'].includes(page)&&!isSuperAdmin())page='overview';
  document.querySelectorAll('.page-view').forEach(el=>el.hidden=el.id!=='page-'+page);
  document.querySelectorAll('.dash-nav[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
  window.scrollTo({top:0,behavior:'smooth'});

@@ -1,0 +1,10 @@
+project_id = "vroxuvzbnzfelyndchyl"
+
+[functions.invite-admin]
+verify_jwt = false
+
+[functions.portal-tools]
+verify_jwt = true
+
+[functions.facebook-oauth]
+verify_jwt = false
