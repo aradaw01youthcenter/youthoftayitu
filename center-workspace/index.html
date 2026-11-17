@@ -302,7 +302,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <button class="dash-nav" type="button" data-page="create"><span class="nav-icon">✎</span> Create a post</button>
 <button class="dash-nav" type="button" data-page="posts"><span class="nav-icon">▤</span> Existing posts</button>
 <div class="dash-side-label">Website content</div>
-<button class="dash-nav" type="button" data-page="content"><span class="nav-icon">☷</span> Homepage content</button>
+<button class="dash-nav" type="button" data-page="content"><span class="nav-icon">☷</span> Website customization</button>
 <button class="dash-nav" type="button" data-page="photos"><span class="nav-icon">▧</span> Photos & gallery</button>
 <button class="dash-nav" type="button" data-page="media"><span class="nav-icon">▣</span> Media library</button>
 <div class="dash-side-label">Youth resources</div>
@@ -336,8 +336,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div id="currentGallery" class="gallery"></div>
 <label for="status">Publication status</label><select id="status"><option value="draft">Save as draft</option><option value="published">Publish now</option><option value="scheduled">Schedule for later</option></select><div id="scheduleField" class="hidden"><label for="scheduledAt">Publication date and time</label><input id="scheduledAt" type="datetime-local"><p class="muted">Scheduled posts stay private until publication. The scheduler checks every minute.</p></div>
 <div class="row"><button type="submit">Save post</button><button type="button" id="reset" class="secondary">Clear form</button></div></form></div>
-</section><section class="page-view" id="page-content" hidden><div class="page-heading"><div><h1>Homepage content</h1><p>Manage each part of your homepage in clearly grouped sections.</p></div></div><div class="panel" id="siteContentPanel">
-<h2>Homepage content manager</h2>
+</section><section class="page-view" id="page-content" hidden><div class="page-heading"><div><h1>Website Customization Center</h1><p>Customize About, Services, Sports, Join Us, Contact and your social media links.</p></div></div><div class="panel" id="siteContentPanel">
+<h2>Website content & identity manager</h2>
 <p class="muted">Edit the homepage wording in Amharic and English. Leave a field blank only if you want the existing website text to remain unchanged.</p>
 <div id="siteContentFields"></div>
 <button type="button" id="saveSiteContent">Save homepage changes</button>
@@ -390,8 +390,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <p class="muted" style="font-size:12px;margin-top:16px">Only the website owner can use this connection. If Facebook does not list your Page, confirm that the Facebook account you sign in with has access to manage it.</p>
 </div>
 <div class="panel" id="facebookFeedPanel">
- <div class="page-heading" style="margin-bottom:10px"><div><h2>Recent Facebook posts</h2><p class="muted">Import Facebook updates into your website as drafts. You can edit and publish them later.</p></div><div class="row"><button type="button" class="secondary" id="syncFacebookPosts">↻ Sync imported posts</button><button type="button" class="secondary" id="refreshFacebookFeed">Refresh feed</button></div></div>
- <div class="row" style="align-items:center;margin:12px 0 16px"><label for="facebookImportCategory" style="margin:0">Category for new imports</label><select id="facebookImportCategory" style="max-width:340px"><option value="Uncategorized">Uncategorized</option><option value="ሳይንስና ፈጠራ">ሳይንስና ፈጠራ</option><option value="በጎ ፈቃድ">በጎ ፈቃድ</option><option value="የጤናና የምክር ድጋፍ">የጤናና የምክር ድጋፍ</option><option value="የህይወት ክህሎት">የህይወት ክህሎት</option><option value="አመራርነት">አመራርነት</option><option value="ስራ ፈጠራና የቢዝነስ">ስራ ፈጠራና የቢዝነስ</option><option value="ስፖርትና መዝናኛ">ስፖርትና መዝናኛ</option></select></div>
+ <div class="page-heading" style="margin-bottom:10px"><div><h2>Recent Facebook posts</h2><p class="muted">Publish Facebook updates directly to your website blog under Social Media Content. Imported posts are published automatically and duplicate imports are blocked.</p></div><div class="row"><button type="button" class="secondary" id="syncFacebookPosts">↻ Sync imported posts</button><button type="button" class="secondary" id="refreshFacebookFeed">Refresh feed</button></div></div>
+ 
  <div id="facebookFeedStatus" class="muted" role="status" aria-live="polite">Open this section to load the latest posts.</div>
  <div id="facebookFeedGrid"></div>
 </div>
@@ -645,27 +645,27 @@ async function loadFacebookFeed(){
  try{
   const result=await facebookAdminAction('feed');
   if(!result.posts?.length){status.textContent='Your Page is connected, but Facebook has not returned any recent posts.';grid.innerHTML='<div class="facebook-feed-empty">No recent posts were returned by Facebook.</div>';return}
-  status.textContent='Showing '+result.posts.length+' recent posts from '+result.page_name+'. Choose a category above, then import a post as a draft.';
+  status.textContent='Showing '+result.posts.length+' recent posts from '+result.page_name+'. Choose a post to publish it directly to the website blog.';
   grid.innerHTML=result.posts.map(post=>{
    const images=Array.isArray(post.image_urls)?post.image_urls:[];
    const imageHtml=images.length?'<div class="facebook-feed-images">'+images.slice(0,4).map(url=>'<img src="'+escapeHtml(url)+'" alt="Facebook post photo" loading="lazy" decoding="async" fetchpriority="low">').join('')+'</div>':'';
    const messageText=escapeHtml(post.message||'Facebook post');
    const date=post.created_time?new Date(post.created_time).toLocaleString():'';
    const link=typeof post.permalink_url==='string'&&/^https:\/\//i.test(post.permalink_url)?'<a href="'+escapeHtml(post.permalink_url)+'" target="_blank" rel="noopener noreferrer">View original ↗</a>':'';
-   const importControl=post.imported?'<span class="facebook-imported">Imported ✓</span>':'<button type="button" data-fb-import="'+escapeHtml(post.id)+'">Import to website as draft</button>';
+   const importControl=post.imported?'<span class="facebook-imported">Imported ✓</span>':'<button type="button" data-fb-import="'+escapeHtml(post.id)+'">Publish to website blog</button>';
    return '<article class="facebook-feed-card">'+imageHtml+'<div class="facebook-feed-body"><div class="facebook-feed-date">'+escapeHtml(date)+(images.length>1?' · '+images.length+' photos':'')+'</div><div class="facebook-feed-message">'+messageText+'</div><div class="facebook-feed-actions">'+link+importControl+'</div></div></article>';
   }).join('');
   grid.querySelectorAll('[data-fb-import]').forEach(button=>button.addEventListener('click',async()=>{
-   const postId=button.dataset.fbImport,category=$('facebookImportCategory').value;
+   const postId=button.dataset.fbImport;
    button.disabled=true;button.textContent='Importing…';status.textContent='Copying the Facebook post and its photos into your website…';
    try{
-    const imported=await facebookAdminAction('import',{post_id:postId,category});
+    const imported=await facebookAdminAction('import',{post_id:postId});
     if(imported.already_imported){button.outerHTML='<span class="facebook-imported">Imported ✓</span>';status.textContent='This Facebook post was already imported.';return}
     button.outerHTML='<span class="facebook-imported">Imported ✓</span>';
     await loadPosts();
-    await logActivity('Imported Facebook post','post',imported.post?.title||postId,{facebook_post_id:postId,category});
+    await logActivity('Imported Facebook post','post',imported.post?.title||postId,{facebook_post_id:postId,category:'Social Media Content'});
     const warningText=imported.warnings?.length?' Some photos could not be copied: '+imported.warnings.join('; '):'';
-    status.textContent='Imported as a website draft with '+(imported.image_count||0)+' photo(s). Open Existing posts to review and publish it.'+warningText;
+    status.textContent='Published to the website blog under Social Media Content with '+(imported.image_count||0)+' photo(s). It is now visible in the public blog.'+warningText;
    }catch(error){button.disabled=false;button.textContent='Try import again';status.textContent=error.message||'Could not import this Facebook post.'}
   }));
  }catch(error){status.textContent=error.message||'Could not load Facebook feed.';grid.innerHTML='<div class="facebook-feed-empty">The feed could not be loaded. Check the message above.</div>'}
@@ -812,6 +812,12 @@ const siteFields=[
 {key:'facebookUrl',label:'Facebook Page link',selector:'#contactFacebook',property:'href'},
 {key:'instagramUrl',label:'Instagram link',selector:'#contactInstagram',property:'href'},
 {key:'tiktokUrl',label:'TikTok link',selector:'#contactTiktok',property:'href'},
+{key:'facebookText',label:'Facebook display text',selector:'#contactFacebook',property:'label'},
+{key:'facebookIconImage',label:'Facebook icon image URL',selector:'#contactFacebook',property:'image'},
+{key:'instagramText',label:'Instagram display text',selector:'#contactInstagram',property:'label'},
+{key:'instagramIconImage',label:'Instagram icon image URL',selector:'#contactInstagram',property:'image'},
+{key:'tiktokText',label:'TikTok display text',selector:'#contactTiktok',property:'label'},
+{key:'tiktokIconImage',label:'TikTok icon image URL',selector:'#contactTiktok',property:'image'},
 {key:'service1Title',label:'Service 1 — Education & training heading',selector:'#services .grid .card:nth-child(1) h3'},
 {key:'service1Text',label:'Service 1 — description',selector:'#services .grid .card:nth-child(1) p',multi:true},
 {key:'service2Title',label:'Service 2 — Health & counseling heading',selector:'#services .grid .card:nth-child(2) h3'},
@@ -836,11 +842,11 @@ const siteGroups=[
 {title:'Join the center',icon:'＋',hint:'Invitation and participation information',keys:['joinTitle','joinText']},
 {title:'Announcements',icon:'▤',hint:'Important messages displayed on the homepage',keys:['announcementTitle','announcementText']},
 {title:'Contact information',icon:'⌖',hint:'Address, phone number and email',keys:['contactTitle','contactText','contactAddress','contactPhone','contactEmail']},
-{title:'Social media links',icon:'◎',hint:'Links to your official social accounts',keys:['facebookUrl','instagramUrl','tiktokUrl']}
+{title:'Social media links',icon:'◎',hint:'Links to your official social accounts',keys:['facebookUrl','facebookText','facebookIconImage','instagramUrl','instagramText','instagramIconImage','tiktokUrl','tiktokText','tiktokIconImage']}
 ];
 function renderSiteContentFields(values={}){
  const fieldsByKey=Object.fromEntries(siteFields.map(f=>[f.key,f]));
- $('siteContentFields').innerHTML=siteGroups.map((group,index)=>'<section class="content-group"><div class="content-group-head"><div class="content-group-icon">'+group.icon+'</div><div><h3>'+group.title+'</h3><p>'+group.hint+'</p></div></div>'+group.keys.map(key=>{const f=fieldsByKey[key];if(!f)return '';const v=values[key]||{};return '<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="url" data-cms-am="'+f.key+'" placeholder="https://">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>'}).join('')+'</section>').join('');
+ $('siteContentFields').innerHTML=siteGroups.map((group,index)=>'<section class="content-group"><div class="content-group-head"><div class="content-group-icon">'+group.icon+'</div><div><h3>'+group.title+'</h3><p>'+group.hint+'</p></div></div>'+group.keys.map(key=>{const f=fieldsByKey[key];if(!f)return '';const v=values[key]||{};return '<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="'+(f.property==='label'?'text':'url')+'" data-cms-am="'+f.key+'" placeholder="'+(f.property==='label'?'Facebook':'https://example.com/icon.png')+'">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>'}).join('')+'</section>').join('');
  siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''});
 }
 async function loadSiteContent(){const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();if(error){$('siteContentStatus').textContent='Could not load homepage settings: '+error.message;return}renderSiteContentFields(data?.content||{})}
