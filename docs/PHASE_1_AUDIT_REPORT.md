@@ -9,7 +9,7 @@
 
 ## Executive summary
 
-The production deployment and Supabase database were active during the audit. Static JavaScript checks passed for the public homepage, admin dashboard, posts page, and For the Youth page. The audit found important permission and recovery gaps. Two database remediation migrations were applied and verified. The source repository is being brought into line with the live project, including the deployed Edge Function source and the new migration files.
+The production deployment and Supabase database were active during the audit. Static JavaScript checks passed for the public homepage, admin dashboard, posts page, and For the Youth page. The audit found important permission and recovery gaps. Two database remediation migrations were applied and verified. The source repository now includes the three deployed Edge Function sources, the exact SQL for the two new remediation migrations, and a migration-recovery inventory.
 
 No production content or user records were deleted or rewritten as part of this work.
 
@@ -87,7 +87,7 @@ Supabase Auth currently reports leaked-password protection disabled. The availab
 
 The live project has three active Edge Functions: invite-admin (JWT verification disabled because it validates the bearer token and owner role inside the function), portal-tools (JWT verification enabled), and facebook-oauth (JWT verification disabled because it performs explicit user/owner validation for its OAuth callback and JSON actions).
 
-The live source for all three functions is being committed under supabase/functions/, with the deployment verification settings recorded in supabase/config.toml. No service-role secret is included in source control; the functions read it from Supabase environment variables.
+The live source for all three functions is committed under supabase/functions/, with the deployment verification settings recorded in supabase/config.toml. The portal-tools function was redeployed as version 3 with DNS checks enabled for each target and redirect. No service-role secret is included in source control; the functions read it from Supabase environment variables.
 
 The portal preview function also receives a DNS-resolution check for each destination and redirect to reject private/reserved IP ranges. DNS validation reduces SSRF exposure; strict DNS-rebinding prevention still requires a controlled outbound proxy or egress layer.
 
@@ -104,6 +104,15 @@ The two Phase 1 migrations are committed with their exact applied SQL. The live 
 - Added canonical and Open Graph metadata to the For the Youth page.
 - Pinned the browser Supabase JS SDK to 2.119.0 rather than following the floating @2 CDN tag.
 
+
+### 12. Published post route syntax — REMEDIATED
+
+**Finding:** The serverless post-detail route contained over-escaped regular-expression patterns. A syntax check failed with an unexpected-token error, which could prevent individual post pages from being served.
+
+**Change:** Corrected the escaped regular expressions used for social URL parsing and newline formatting.
+
+**Verification:** The route now passes a JavaScript syntax check. End-to-end rendering of a real published post remains in the browser acceptance checklist.
+
 ## Advisor results after database remediation
 
 - **Security:** The exposed SECURITY DEFINER function warning cleared. The remaining findings are leaked-password protection (owner action) and the two private RLS-enabled/no-policy informational notices.
@@ -113,7 +122,8 @@ The two Phase 1 migrations are committed with their exact applied SQL. The live 
 ## Validation performed
 
 - Confirmed production Vercel deployment state before remediation.
-- Ran static JavaScript syntax checks on inline scripts in the homepage, dashboard, posts page, and For the Youth page before changes.
+- Ran static JavaScript syntax checks on inline scripts in the homepage, dashboard, posts page, and For the Youth page after the UI changes; all passed.
+- Verified syntax for the dynamic sitemap endpoint and corrected post-detail API route; both passed.
 - Inspected live RLS policies, grants, function privileges, storage policies, migration history, Edge Function inventory, scheduled jobs, and database logs.
 - Re-ran Supabase Security and Performance Advisors after migrations.
 - Confirmed anonymous execution is revoked for private role helpers.
