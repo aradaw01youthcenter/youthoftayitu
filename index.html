@@ -178,10 +178,10 @@ h2::after{content:"";display:block;width:70px;height:6px;border-radius:6px;margi
 
 
 /* Floating back-to-top control */
-#backToTop{position:fixed;right:max(22px,env(safe-area-inset-right));bottom:max(22px,env(safe-area-inset-bottom));z-index:900;width:50px;height:50px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--green,#137a45);color:#fff;box-shadow:0 5px 18px rgba(0,0,0,.22);cursor:pointer;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .22s ease,transform .22s ease,visibility .22s ease,background .2s ease}
+#backToTop{position:fixed;right:max(22px,env(safe-area-inset-right));bottom:max(22px,env(safe-area-inset-bottom));z-index:900;width:50px;height:50px;border:0;border-radius:50%;display:grid;place-items:center;background:#123f2b;color:#fff;box-shadow:0 5px 18px rgba(0,0,0,.24);cursor:pointer;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .22s ease,transform .22s ease,visibility .22s ease,background .2s ease}
 #backToTop.visible{opacity:1;visibility:visible;transform:translateY(0)}
-#backToTop:hover{background:#0b3d26;transform:translateY(-3px)}
-#backToTop:focus-visible{outline:3px solid #f2b705;outline-offset:4px}
+#backToTop:hover{background:#d4a72c;color:#173d2b;box-shadow:0 7px 22px rgba(0,0,0,.25);transform:translateY(-3px)}
+#backToTop:focus-visible{outline:3px solid #d4a72c;outline-offset:4px}
 #backToTop svg{width:23px;height:23px;stroke:currentColor;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:760px){#backToTop{width:46px;height:46px;right:16px;bottom:max(16px,env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){#backToTop{transition:none}}
