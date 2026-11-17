@@ -21,7 +21,7 @@ function publicHttpUrl(raw: string): URL {
   if (!["http:", "https:"].includes(url.protocol)) throw new Error("Only HTTP and HTTPS websites are supported.");
   if (url.username || url.password) throw new Error("Website URLs must not contain embedded credentials.");
   if (url.port && !["80", "443"].includes(url.port)) throw new Error("Custom ports are not supported.");
-  const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  const host = url.hostname.toLowerCase();
   if (!host || host === "localhost" || host.endsWith(".localhost") || host.endsWith(".local") || host.endsWith(".internal")) {
     throw new Error("Private or local network addresses are not allowed.");
   }
