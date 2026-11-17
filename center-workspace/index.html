@@ -645,7 +645,19 @@ async function loadFacebookFeed(){
  try{
   const result=await facebookAdminAction('feed');
   if(!result.posts?.length){status.textContent='Your Page is connected, but Facebook has not returned any recent posts.';grid.innerHTML='<div class="facebook-feed-empty">No recent posts were returned by Facebook.</div>';return}
-  status.textContent='Showing '+result.posts.length+' recent posts from '+result.page_name+'. Choose a post to publish it directly to the website blog.';
+  let autoPublished=0;const autoFailures=[];
+  for(const post of result.posts.filter(item=>!item.imported)){
+   try{
+    const imported=await facebookAdminAction('import',{post_id:post.id});
+    post.imported=true;
+    if(!imported.already_imported){
+     autoPublished++;
+     await logActivity('Auto-published Facebook post','post',imported.post?.title||post.id,{facebook_post_id:post.id,category:'Social Media Content'});
+    }
+   }catch(error){autoFailures.push((post.message||post.id).slice(0,70)+': '+(error.message||'Import failed'))}
+  }
+  if(autoPublished)await loadPosts();
+  status.textContent='Showing '+result.posts.length+' recent posts from '+result.page_name+'. Automatically published '+autoPublished+' new post(s) to Social Media Content.'+(autoFailures.length?' '+autoFailures.length+' post(s) could not be imported; use the button below to retry.':'');
   grid.innerHTML=result.posts.map(post=>{
    const images=Array.isArray(post.image_urls)?post.image_urls:[];
    const imageHtml=images.length?'<div class="facebook-feed-images">'+images.slice(0,4).map(url=>'<img src="'+escapeHtml(url)+'" alt="Facebook post photo" loading="lazy" decoding="async" fetchpriority="low">').join('')+'</div>':'';
