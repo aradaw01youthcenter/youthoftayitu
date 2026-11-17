@@ -176,6 +176,15 @@ h2::after{content:"";display:block;width:70px;height:6px;border-radius:6px;margi
   input,textarea{background:#ffffff;color:#1c2921;border-color:#d5e2d8}
 }
 
+
+/* Floating back-to-top control */
+#backToTop{position:fixed;right:max(22px,env(safe-area-inset-right));bottom:max(22px,env(safe-area-inset-bottom));z-index:900;width:50px;height:50px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--green,#137a45);color:#fff;box-shadow:0 5px 18px rgba(0,0,0,.22);cursor:pointer;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .22s ease,transform .22s ease,visibility .22s ease,background .2s ease}
+#backToTop.visible{opacity:1;visibility:visible;transform:translateY(0)}
+#backToTop:hover{background:#0b3d26;transform:translateY(-3px)}
+#backToTop:focus-visible{outline:3px solid #f2b705;outline-offset:4px}
+#backToTop svg{width:23px;height:23px;stroke:currentColor;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:760px){#backToTop{width:46px;height:46px;right:16px;bottom:max(16px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){#backToTop{transition:none}}
 </style>
 <style id="home-posts-style">#latest-posts .post-tools{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 24px}#latest-posts .post-tools select{padding:10px 12px;border:1px solid #d6deea;border-radius:9px;background:#fff;font:inherit}#latest-posts .post-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}@media(max-width:640px){#latest-posts .post-grid{grid-template-columns:1fr}}#latest-posts .post-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 5px 22px #14213d12}#latest-posts .post-card img{width:100%;height:180px;object-fit:cover;display:block}#latest-posts .post-card .post-body{padding:17px}#latest-posts .post-card h3{margin:7px 0;font-size:19px}#latest-posts .post-card p{color:#586579;margin:0 0 12px}#latest-posts .post-cat{font-size:12px;background:#eaf2fb;color:#164c80;border-radius:20px;padding:4px 9px}#latest-posts .post-date{font-size:13px;color:#788398}#latest-posts .post-card a{color:#0758a5;font-weight:700;text-decoration:none}#latest-posts .post-empty{background:#fff;border-radius:12px;padding:22px;color:#586579}#latest-posts .post-all{display:inline-block;margin-top:22px}</style><style>
 .managed-section-image{display:block;width:100%;max-height:300px;object-fit:cover;border-radius:20px;margin:22px 0;box-shadow:0 12px 30px #14213d1a}
@@ -298,6 +307,9 @@ h2::after{content:"";display:block;width:70px;height:6px;border-radius:6px;margi
 </main>
 
 <footer><div class="wrap"><div class="soc f"><a href="https://www.facebook.com/share/1EM3CZWXX6/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-8h2.7l.4-3.2h-3.1V7.9c0-.9.3-1.5 1.6-1.5h1.7V3.5c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v2.3H7.7V13h2.7v8z"/></svg></a><a href="https://www.instagram.com/youthoftayitu?psln=enZkZXE4eHpteGgz" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor"/></svg></a><a href="https://vm.tiktok.com/ZS9fHsKhmn1vQ-FWOgp/" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M16.5 3c.3 2.4 1.7 3.9 4 4.1v3c-1.5 0-2.9-.5-4-1.3v6.2a5.5 5.5 0 1 1-5.5-5.5c.3 0 .6 0 .9.1v3.1a2.5 2.5 0 1 0 1.6 2.3V3z"/></svg></a></div>© <span id="y"></span> <span data-en="Arada Sub-city Woreda 1 Youth Personal Development Center">የአራዳ ክፍለ ከተማ ወረዳ 1 የወጣቶች ስብዕና መገንቢያ ማዕከል</span></div></footer>
+<button type="button" id="backToTop" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 14 7-7 7 7"/><path d="M12 7v13"/></svg>
+</button>
 
 <script>
 var menuButton=document.getElementById('menu-toggle'),siteNav=document.getElementById('site-nav');
@@ -348,6 +360,16 @@ const managedSectionImages={about:['#about .wrap','About the Center'],sports:['#
 Object.entries(managedSectionImages).forEach(([key,[selector,label]])=>{const src=content[key+'ImageUrl'],target=document.querySelector(selector);if(!src||!target)return;let img=target.querySelector('img[data-managed-section-image="'+key+'"]');if(!img){img=document.createElement('img');img.dataset.managedSectionImage=key;img.className='managed-section-image';img.alt=label+' photo';img.loading='lazy';target.appendChild(img)}img.src=src});
 if(Array.isArray(content.homepageGallery)&&content.homepageGallery.length){const section=document.getElementById('managed-gallery'),grid=document.getElementById('managedGalleryGrid'),lightbox=document.getElementById('galleryLightbox'),viewerImage=document.getElementById('galleryLightboxImage'),caption=document.getElementById('galleryLightboxCaption');if(section&&grid&&lightbox&&viewerImage&&caption){const photos=content.homepageGallery.filter(url=>typeof url==='string'&&/^https?:\/\//i.test(url));if(photos.length){section.hidden=false;const safeUrl=url=>url.replace(/&/g,'&amp;').replace(/"/g,'&quot;');grid.innerHTML=photos.map((url,i)=>'<button type="button" class="gallery-thumb" data-gallery-open="'+i+'" aria-label="Open photo '+(i+1)+' of '+photos.length+'"><img '+(i<3?'fetchpriority="high"':'loading="lazy"')+' decoding="async" src="'+safeUrl(url)+'" alt="የማዕከሉ ፎቶ '+(i+1)+'"><span>'+String(i+1).padStart(2,'0')+' / '+String(photos.length).padStart(2,'0')+'</span></button>').join('');lightbox.dataset.single=photos.length<2?'true':'false';let current=0;const showPhoto=index=>{current=(index+photos.length)%photos.length;viewerImage.src=photos[current];viewerImage.alt='የማዕከሉ ፎቶ '+(current+1);caption.textContent=String(current+1).padStart(2,'0')+' / '+String(photos.length).padStart(2,'0')};const openPhoto=index=>{showPhoto(index);if(!lightbox.open)lightbox.showModal()};const closePhoto=()=>{if(lightbox.open)lightbox.close()};document.getElementById('galleryLightboxClose').addEventListener('click',closePhoto);document.getElementById('galleryLightboxPrev').addEventListener('click',()=>showPhoto(current-1));document.getElementById('galleryLightboxNext').addEventListener('click',()=>showPhoto(current+1));grid.addEventListener('click',event=>{const thumb=event.target.closest('[data-gallery-open]');if(thumb)openPhoto(Number(thumb.dataset.galleryOpen))});lightbox.addEventListener('click',event=>{if(event.target===lightbox)closePhoto()});lightbox.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'){event.preventDefault();showPhoto(current-1)}else if(event.key==='ArrowRight'){event.preventDefault();showPhoto(current+1)}});let touchStart=0;lightbox.addEventListener('touchstart',event=>{touchStart=event.changedTouches[0].clientX},{passive:true});lightbox.addEventListener('touchend',event=>{const delta=event.changedTouches[0].clientX-touchStart;if(Math.abs(delta)>55)showPhoto(current+(delta<0?1:-1))},{passive:true})}}}
 }).catch(err=>console.warn('Homepage content settings:',err.message));
+})();
+</script>
+<script>
+(function(){
+  const button=document.getElementById('backToTop');
+  if(!button)return;
+  const updateVisibility=()=>button.classList.toggle('visible',window.scrollY>320);
+  window.addEventListener('scroll',updateVisibility,{passive:true});
+  updateVisibility();
+  button.addEventListener('click',()=>window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
 })();
 </script>
 <script src="/track.js" defer></script>
