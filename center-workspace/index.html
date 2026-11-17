@@ -896,6 +896,9 @@ $('reset').onclick=clearForm;
 const siteFields=[
 {key:'aboutTitle',label:'About section — heading',selector:'#about h2'},
 {key:'aboutText',label:'About section — description',selector:'#about p.sub',multi:true},
+{key:'visionText',label:'Vision — content',selector:'#about .grid .card:nth-child(1) p',multi:true},
+{key:'missionText',label:'Mission — content',selector:'#about .grid .card:nth-child(2) p',multi:true},
+{key:'valuesText',label:'Values — one value per line',selector:'#about .grid .card:nth-child(3) .vals',multi:true,property:'values'},
 {key:'servicesTitle',label:'Services section — heading',selector:'#services h2'},
 {key:'servicesText',label:'Services section — description',selector:'#services p.sub',multi:true},
 {key:'sportsTitle',label:'Sports section — heading',selector:'#sports h2'},
@@ -937,7 +940,7 @@ const siteFields=[
 {key:'service8Text',label:'Service 8 — description',selector:'#services .grid .card:nth-child(8) p',multi:true}
 ];
 const siteGroups=[
-{title:'About the youth center',icon:'✦',hint:'Your identity, mission and introduction',keys:['aboutTitle','aboutText']},
+{title:'About the youth center',icon:'✦',hint:'Introduction, vision, mission and values',keys:['aboutTitle','aboutText','visionText','missionText','valuesText']},
 {title:'Services & programs',icon:'▦',hint:'The eight service cards shown on the homepage',keys:['servicesTitle','servicesText','service1Title','service1Text','service2Title','service2Text','service3Title','service3Text','service4Title','service4Text','service5Title','service5Text','service6Title','service6Text','service7Title','service7Text','service8Title','service8Text']},
 {title:'Sports & recreation',icon:'⚽',hint:'Sports activities and recreation information',keys:['sportsTitle','sportsText']},
 {title:'Join the center',icon:'＋',hint:'Invitation and participation information',keys:['joinTitle','joinText']},
@@ -947,7 +950,7 @@ const siteGroups=[
 ];
 function renderSiteContentFields(values={}){
  const fieldsByKey=Object.fromEntries(siteFields.map(f=>[f.key,f]));
- $('siteContentFields').innerHTML=siteGroups.map((group,index)=>'<details class="cms-section" data-cms-section="'+index+'" '+(index===0?'open':'')+'><summary><span class="cms-section-icon">'+group.icon+'</span><span class="cms-section-copy"><strong>'+group.title+'</strong><small>'+group.hint+'</small></span><span class="cms-section-count">'+group.keys.length+' fields</span><span class="cms-chevron">⌄</span></summary><div class="cms-section-body">'+group.keys.map(key=>{const f=fieldsByKey[key];if(!f)return '';return '<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="'+(f.property==='label'?'text':'url')+'" data-cms-am="'+f.key+'" placeholder="'+(f.property==='label'?'Facebook':'https://example.com/icon.png')+'">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>'}).join('')+'</div></details>').join('');
+ $('siteContentFields').innerHTML=siteGroups.map((group,index)=>'<details class="cms-section" data-cms-section="'+index+'" '+(index===0?'open':'')+'><summary><span class="cms-section-icon">'+group.icon+'</span><span class="cms-section-copy"><strong>'+group.title+'</strong><small>'+group.hint+'</small></span><span class="cms-section-count">'+group.keys.length+' fields</span><span class="cms-chevron">⌄</span></summary><div class="cms-section-body">'+group.keys.map(key=>{const f=fieldsByKey[key];if(!f)return '';const bilingual=!f.property||f.property==='values',amLabel=escapeHtml(f.label)+(bilingual?' — አማርኛ':' — URL'),amControl=f.multi?'<textarea data-cms-am="'+f.key+'" rows="'+(f.property==='values'?5:3)+'" '+(f.property==='values'?'placeholder="Enter one value per line"':'')+'></textarea>':(f.property?'<input type="'+(f.property==='label'?'text':'url')+'" data-cms-am="'+f.key+'" placeholder="'+(f.property==='label'?'Facebook':'https://example.com/icon.png')+'">':'<input data-cms-am="'+f.key+'">');return '<div class="site-field"><label>'+amLabel+'</label>'+amControl+(bilingual?('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="'+(f.property==='values'?5:2)+'" '+(f.property==='values'?'placeholder="Enter one value per line"':'')+'></textarea>':'<input data-cms-en="'+f.key+'">')):'')+(f.property==='values'?'<small class="muted">Add each value on a separate line. They will appear as individual value tags on the homepage.</small>':'')+'</div>'}).join('')+'</div></details>').join('');
  siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''});
  const search=$('cmsSectionSearch');
  if(search)search.oninput=()=>{const q=search.value.trim().toLowerCase();document.querySelectorAll('#siteContentFields .cms-section').forEach(section=>{const match=!q||section.textContent.toLowerCase().includes(q);section.hidden=!match;if(q&&match)section.open=true})};
