@@ -1,6 +1,16 @@
 {
   "rewrites": [
-    { "source": "/posts/:slug", "destination": "/api/post?slug=:slug" },
-    { "source": "/posts/:slug/", "destination": "/api/post?slug=:slug" }
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
+      "source": "/posts/:slug",
+      "destination": "/api/post?slug=:slug"
+    },
+    {
+      "source": "/posts/:slug/",
+      "destination": "/api/post?slug=:slug"
+    }
   ]
 }
