@@ -352,6 +352,30 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:1050px){.overview-primary-charts{grid-template-columns:1fr}.radial-category-layout{grid-template-columns:minmax(120px,.65fr) minmax(0,1.35fr)}}
 @media(max-width:620px){.overview-insights{grid-template-columns:1fr}.radial-month-grid{gap:8px}.radial-month-card{padding:10px 4px}.radial-category-layout{grid-template-columns:1fr}.category-donut{width:150px}.category-legend{max-height:220px}.radial-day-grid{gap:9px 3px}.radial-day .radial-gauge{width:40px;height:40px}.portal-analytics-grid .analytics-kpis{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){.radial-month-card{animation:none}.radial-gauge .gauge-value{transition:none}}
+ 
+/* Compact, searchable homepage customization accordion */
+.cms-manager{padding:clamp(16px,2.4vw,26px)}
+.cms-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-bottom:16px;border-bottom:1px solid #e8edf3}
+.cms-toolbar h2{margin:0 0 4px}.cms-toolbar p{margin:0}
+.cms-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0}
+.cms-tools input{max-width:420px;margin:0}.cms-tool-actions{display:flex;gap:8px;flex-wrap:wrap}.cms-tool-actions button,.cms-toolbar button,.cms-save-row button{margin:0}
+#siteContentFields{display:grid;gap:10px}
+.cms-section{border:1px solid #e3eaf2;border-radius:15px;background:#fff;overflow:hidden}
+.cms-section[hidden]{display:none}
+.cms-section summary{list-style:none;display:flex;align-items:center;gap:13px;padding:15px 17px;cursor:pointer;min-height:76px}
+.cms-section summary::-webkit-details-marker{display:none}
+.cms-section summary:hover{background:#f8fafc}
+.cms-section-icon{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border-radius:12px;background:#eef4fb;color:#1b5d91;font-size:19px}
+.cms-section-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+.cms-section-copy strong{font-size:14px;color:#1a2d45}.cms-section-copy small{font-size:12px;color:#718096}
+.cms-section-count{white-space:nowrap;font-size:11px;font-weight:750;color:#64748b;background:#f1f5f9;border-radius:20px;padding:5px 9px}
+.cms-chevron{font-size:20px;color:#718096;transition:transform .2s}.cms-section[open] .cms-chevron{transform:rotate(180deg)}
+.cms-section-body{padding:4px 18px 18px;border-top:1px solid #edf1f5;background:#fbfcfe}
+.cms-section-body .site-field{padding:14px 0;border-bottom:1px solid #edf1f5}
+.cms-section-body .site-field:last-child{border-bottom:0}
+.cms-save-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px;padding:14px 0 0;border-top:1px solid #e8edf3}
+@media(max-width:620px){.cms-toolbar{align-items:flex-start;flex-direction:column}.cms-toolbar button{width:100%}.cms-tools{align-items:stretch;flex-direction:column}.cms-tools input{max-width:none}.cms-tool-actions button{flex:1}.cms-section summary{gap:9px;padding:13px 11px}.cms-section-icon{width:35px;height:35px;flex-basis:35px}.cms-section-copy small{font-size:11px}.cms-section-count{font-size:10px;padding:4px 7px}.cms-section-body{padding:4px 12px 14px}.cms-save-row{align-items:stretch;flex-direction:column}.cms-save-row button{width:100%}}
+
 </style></head><body><div class="wrap">
 <h1>Youth of Tayitu — Posts Admin</h1><p class="muted">Create posts, choose a category and add multiple photos.</p>
 <div id="login" class="panel"><h2>Administrator sign-in</h2><form id="loginForm"><label for="email">Administrator email</label><input id="email" type="email" value="aradaw01youthcenter@gmail.com" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="8" required><button type="submit">Sign in</button></form><button type="button" id="forgotPassword" class="secondary">Forgot password?</button><p class="muted">Sign in securely using your administrator email and password.</p></div><div id="resetPasswordPanel" class="panel hidden"><h2>Set a new password</h2><p class="muted">Choose a new password for your administrator account.</p><form id="resetPasswordForm"><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required><button type="submit">Save new password</button></form><button type="button" id="backToLogin" class="secondary">Back to sign in</button></div>
@@ -399,12 +423,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div id="currentGallery" class="gallery"></div>
 <label for="status">Publication status</label><select id="status"><option value="draft">Save as draft</option><option value="published">Publish now</option><option value="scheduled">Schedule for later</option></select><div id="scheduleField" class="hidden"><label for="scheduledAt">Publication date and time</label><input id="scheduledAt" type="datetime-local"><p class="muted">Scheduled posts stay private until publication. The scheduler checks every minute.</p></div>
 <div class="row"><button type="submit">Save post</button><button type="button" id="reset" class="secondary">Clear form</button></div></form></div>
-</section><section class="page-view" id="page-content" hidden><div class="page-heading"><div><h1>Website Customization Center</h1><p>Customize About, Services, Sports, Join Us, Contact and your social media links.</p></div></div><div class="panel" id="siteContentPanel">
-<h2>Website content & identity manager</h2>
-<p class="muted">Edit the homepage wording in Amharic and English. Leave a field blank only if you want the existing website text to remain unchanged.</p>
+</section><section class="page-view" id="page-content" hidden>
+<div class="page-heading"><div><h1>Website Customization</h1><p>Update homepage wording and social links without editing website code.</p></div></div>
+<div class="panel cms-manager" id="siteContentPanel">
+<div class="cms-toolbar"><div><h2>Homepage content</h2><p class="muted">Choose a section to edit. Changes are saved together and appear on the public website.</p></div><button type="button" class="secondary" id="saveSiteContentTop">Save changes</button></div>
+<div class="cms-tools"><input id="cmsSectionSearch" type="search" placeholder="Find a section or field…"><div class="cms-tool-actions"><button type="button" class="secondary" id="cmsExpandAll">Expand all</button><button type="button" class="secondary" id="cmsCollapseAll">Collapse all</button></div></div>
 <div id="siteContentFields"></div>
-<button type="button" id="saveSiteContent">Save homepage changes</button>
-<span id="siteContentStatus" class="muted" aria-live="polite"></span>
+<div class="cms-save-row"><span id="siteContentStatus" class="muted" aria-live="polite">Your edits are not saved until you select Save changes.</span><button type="button" id="saveSiteContent">Save all changes</button></div>
 </div>
 </section><section class="page-view" id="page-photos" hidden><div class="page-heading"><div><h1>Homepage photos & section imagery</h1><p>Manage the banner, section photos, service images and homepage gallery.</p></div></div><div class="panel" id="visualManager">
 <h2>Homepage photos & gallery</h2>
@@ -922,8 +947,13 @@ const siteGroups=[
 ];
 function renderSiteContentFields(values={}){
  const fieldsByKey=Object.fromEntries(siteFields.map(f=>[f.key,f]));
- $('siteContentFields').innerHTML=siteGroups.map((group,index)=>'<section class="content-group"><div class="content-group-head"><div class="content-group-icon">'+group.icon+'</div><div><h3>'+group.title+'</h3><p>'+group.hint+'</p></div></div>'+group.keys.map(key=>{const f=fieldsByKey[key];if(!f)return '';const v=values[key]||{};return '<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="'+(f.property==='label'?'text':'url')+'" data-cms-am="'+f.key+'" placeholder="'+(f.property==='label'?'Facebook':'https://example.com/icon.png')+'">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>'}).join('')+'</section>').join('');
+ $('siteContentFields').innerHTML=siteGroups.map((group,index)=>'<details class="cms-section" data-cms-section="'+index+'" '+(index===0?'open':'')+'><summary><span class="cms-section-icon">'+group.icon+'</span><span class="cms-section-copy"><strong>'+group.title+'</strong><small>'+group.hint+'</small></span><span class="cms-section-count">'+group.keys.length+' fields</span><span class="cms-chevron">⌄</span></summary><div class="cms-section-body">'+group.keys.map(key=>{const f=fieldsByKey[key];if(!f)return '';return '<div class="site-field"><label>'+escapeHtml(f.label)+(f.property?' — URL':' — አማርኛ')+'</label>'+(f.multi?'<textarea data-cms-am="'+f.key+'" rows="3"></textarea>':(f.property?'<input type="'+(f.property==='label'?'text':'url')+'" data-cms-am="'+f.key+'" placeholder="'+(f.property==='label'?'Facebook':'https://example.com/icon.png')+'">':'<input data-cms-am="'+f.key+'">'))+(f.property?'':('<label>'+escapeHtml(f.label)+' — English</label>'+(f.multi?'<textarea data-cms-en="'+f.key+'" rows="2"></textarea>':'<input data-cms-en="'+f.key+'">')))+'</div>'}).join('')+'</div></details>').join('');
  siteFields.forEach(f=>{const v=values[f.key]||{};const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');if(am)am.value=v.am||'';if(en)en.value=v.en||''});
+ const search=$('cmsSectionSearch');
+ if(search)search.oninput=()=>{const q=search.value.trim().toLowerCase();document.querySelectorAll('#siteContentFields .cms-section').forEach(section=>{const match=!q||section.textContent.toLowerCase().includes(q);section.hidden=!match;if(q&&match)section.open=true})};
+ $('cmsExpandAll').onclick=()=>document.querySelectorAll('#siteContentFields .cms-section').forEach(section=>{if(!section.hidden)section.open=true});
+ $('cmsCollapseAll').onclick=()=>document.querySelectorAll('#siteContentFields .cms-section').forEach(section=>section.open=false);
+ $('saveSiteContentTop').onclick=()=>$('saveSiteContent').click();
 }
 async function loadSiteContent(){const {data,error}=await client.from('site_content').select('content').eq('section_key','homepage').maybeSingle();if(error){$('siteContentStatus').textContent='Could not load homepage settings: '+error.message;return}renderSiteContentFields(data?.content||{})}
 $('saveSiteContent').onclick=async()=>{const content={};siteFields.forEach(f=>{const am=$('[data-cms-am="'+f.key+'"]'),en=$('[data-cms-en="'+f.key+'"]');content[f.key]={am:am?am.value.trim():'',en:en?en.value.trim():'',selector:f.selector,...(f.property?{property:f.property}:{})}});$('siteContentStatus').textContent='Saving…';const {error}=await client.from('site_content').upsert({section_key:'homepage',content,updated_at:new Date().toISOString()},{onConflict:'section_key'});if(!error)await logActivity('Updated homepage content','website','Homepage content');$('siteContentStatus').textContent=error?'Save failed: '+error.message:'Homepage content saved. Refresh the public website to see changes.'};
