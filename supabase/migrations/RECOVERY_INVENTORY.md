@@ -20,6 +20,7 @@ This inventory was captured from the live Supabase project on 17 November 2026. 
 | 20261117083745 | unique_facebook_post_imports | Not recovered |
 | 20261117101917 | phase1_security_analytics_performance_hardening | Committed as matching SQL migration |
 | 20261117101937 | phase1_portal_event_insert_policy_consolidation | Committed as matching SQL migration |
+| 20261117102605 | phase1_portal_event_timestamp_integrity | Committed as matching SQL migration |
 
 The original repository had one differently named SQL migration file (202611130001_admin_enhancements.sql). It is retained as historical project material, but it does not replace the missing original SQL for the migrations listed above.
 
