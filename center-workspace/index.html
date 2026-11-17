@@ -296,6 +296,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .overview-primary-charts{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);align-items:stretch}
 .overview-primary-charts .chart-panel{padding:clamp(18px,2vw,26px);overflow:hidden}
 .radial-month-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+/* Publishing activity: let all six months fit naturally; never trap the chart in the old 190px bar-chart height */
+.overview-primary-charts #monthlyChart.radial-month-grid{height:auto;min-height:0;min-width:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(142px,auto);align-items:stretch;align-content:start;gap:14px;padding:0;margin-top:16px;border:0;overflow:visible}
+.overview-primary-charts .chart-panel:first-child{min-height:350px;overflow:visible}
+.overview-primary-charts #monthlyChart .radial-month-card{width:100%;min-height:142px;justify-content:center}
+@media(max-width:620px){.overview-primary-charts #monthlyChart.radial-month-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(132px,auto);gap:10px}.overview-primary-charts .chart-panel:first-child{min-height:0}}
+
 .radial-month-card{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;padding:12px 8px;border:1px solid #edf1f6;border-radius:16px;background:linear-gradient(160deg,#fff,#f8fafd);animation:radialRise .55s both}
 .radial-month-card:nth-child(2){animation-delay:.05s}.radial-month-card:nth-child(3){animation-delay:.1s}.radial-month-card:nth-child(4){animation-delay:.15s}.radial-month-card:nth-child(5){animation-delay:.2s}.radial-month-card:nth-child(6){animation-delay:.25s}
 .radial-gauge{display:block;width:clamp(76px,8vw,96px);height:clamp(76px,8vw,96px);overflow:visible}
