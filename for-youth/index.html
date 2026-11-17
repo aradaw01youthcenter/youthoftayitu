@@ -54,6 +54,79 @@ footer{padding:24px;text-align:center;background:#10243c;color:#cbd8e8}
 @media(max-width:600px){.directory-tools{align-items:stretch;flex-direction:column}.search-wrap{max-width:none}.site-preview{height:190px;padding:16px}.site-card-body{padding:18px}}
 .portal-preview-link{display:grid;color:inherit;text-decoration:none;cursor:pointer}.portal-preview-link:focus-visible{outline:4px solid #f4c64e;outline-offset:-4px}.portal-preview-link:hover .preview-label{background:#1769bd}
 </style>
+
+<style>
+/* Public resource cards: make the actual website thumbnail the hero of each card. */
+.link-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.site-preview{
+  height:240px;
+  min-height:240px;
+  padding:0;
+  isolation:isolate;
+  background:#102b49;
+  display:block;
+}
+.site-preview img.preview-image{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:none;
+  max-height:none;
+  object-fit:cover;
+  object-position:center;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  z-index:0;
+  transition:transform .45s ease,filter .25s ease;
+}
+.site-card:hover .site-preview img.preview-image{transform:scale(1.035);filter:saturate(1.08)}
+.site-preview:before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:45% 0 0;
+  background:linear-gradient(180deg,transparent 0%,#0716299c 100%);
+  pointer-events:none;
+}
+.site-preview:after{z-index:0;pointer-events:none}
+.site-preview .preview-label{z-index:2;top:14px;left:14px}
+.site-preview .domain{z-index:2;right:14px;bottom:14px;left:14px;width:max-content;max-width:calc(100% - 28px)}
+.site-preview .fallback{
+  position:absolute;
+  z-index:1;
+  inset:0;
+  width:100%;
+  height:100%;
+  max-width:none;
+  border:0;
+  border-radius:0;
+  background:radial-gradient(circle at 80% 15%,#ffffff35,transparent 32%),linear-gradient(135deg,#102b49,#1769bd 62%,#55a6c5);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  padding:24px;
+  color:#fff;
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+.site-preview .fallback[hidden]{display:none}
+.site-preview .fallback strong{font-size:clamp(20px,2vw,28px);line-height:1.2}
+.site-preview .fallback span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+@media(max-width:900px){.link-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+  .link-grid{grid-template-columns:1fr}
+  .site-preview{height:220px;min-height:220px;padding:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .site-preview img.preview-image{transition:none}
+}
+</style>
+
 </head>
 <body>
 <header><div class="bar">
