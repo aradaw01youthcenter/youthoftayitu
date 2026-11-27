@@ -402,6 +402,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <button class="dash-nav owner-only" type="button" data-page="backups" hidden><span class="nav-icon">⬇</span> Backups & restore</button>
 <div class="dash-side-label">Connections</div>
 <button class="dash-nav owner-only" type="button" data-page="facebook" hidden><span class="nav-icon">f</span> Facebook connection</button>
+<button class="dash-nav owner-only" type="button" data-page="canva" hidden><span class="nav-icon">✦</span> Canva connection</button>
 <a class="dash-nav" href="https://youthoftayitu.vercel.app/" target="_blank" rel="noopener"><span class="nav-icon">↗</span> View live website</a>
 <div class="dash-side-note">Your workspace for publishing stories, managing programs and keeping the community informed.</div>
 </aside><button type="button" class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-label="Close navigation menu" tabindex="-1"></button>
@@ -485,6 +486,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
  <div id="facebookFeedGrid"></div>
 </div>
 
+</section>
+<section class="page-view owner-only" id="page-canva" hidden>
+<div class="page-heading"><div><h1>Canva connection</h1><p>Authorize the Youth of Tayitu Canva account for the automated content workflow.</p></div></div>
+<div class="panel">
+<h2>Connect your Canva account</h2>
+<p class="muted">This securely links Canva to the website using OAuth. Canva access and refresh tokens are encrypted before storage. This step does not publish anything to Facebook.</p>
+<div class="row"><button type="button" id="connectCanva">Connect Canva ↗</button><span id="canvaConnectionStatus" class="muted" role="status" aria-live="polite">Not connected yet.</span></div>
+<p class="muted" style="font-size:12px;margin-top:16px">Only the website owner can authorize this connection. You will be redirected to Canva to review and approve the requested design access.</p>
+</div>
 </section>
 <section class="page-view owner-only" id="page-activity" hidden>
 <div class="page-heading"><div><h1>Admin activity log</h1><p>Private record of administrator actions. Only the website owner can view this page.</p></div><div><button type="button" class="secondary" id="exportActivity">Export CSV</button><button type="button" class="secondary" id="refreshActivity">Refresh log</button></div></div><div class="panel"><div class="activity-filters"><input id="activitySearch" type="search" placeholder="Filter by admin, action or item…"><select id="activityActionFilter"><option value="all">All actions</option></select></div><div id="activityStatus" class="muted">Loading recent activity…</div><div id="activityList"></div></div>
@@ -694,6 +704,41 @@ async function loadActivityLogs(){
 $('refreshActivity')?.addEventListener('click',loadActivityLogs);
 const categories=["Uncategorized","ሳይንስና ፈጠራ","በጎ ፈቃድ","የጤናና የምክር ድጋፍ","የህይወት ክህሎት","አመራርነት","ስራ ፈጠራና የቢዝነስ","ስፖርትና መዝናኛ","Social Media Content"];
 function showApp(user){currentUser=user;$('resetPasswordPanel').classList.add('hidden');$('login').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);document.querySelectorAll('.owner-only').forEach(el=>{el.hidden=!isSuperAdmin()||(el.classList.contains('page-view')&&el.id!=='page-overview')});if(user){$('signedIn').textContent='Signed in: '+user.email;loadPosts();loadSiteContent();loadHomepageMedia();loadAdminUsers();loadFacebookConnectionStatus();loadAdminProfile();loadYouthLinks();loadPortalAnalytics();loadWebsiteHealth()}else{$('signedInAvatar').hidden=true;$('signedIn').textContent=''}}
+async function startCanvaConnection(){
+ const button=$('connectCanva'),status=$('canvaConnectionStatus');
+ if(!isSuperAdmin()){status.textContent='Only the website owner can connect Canva.';return}
+ button.disabled=true;button.textContent='Preparing secure connection…';status.textContent='Checking your administrator session…';
+ try{
+  const {data,error}=await client.auth.refreshSession();
+  if(error||!data?.session?.access_token)throw new Error('Your admin session is no longer valid. Sign in again and retry.');
+  status.textContent='Opening Canva authorization…';
+  const response=await fetch('https://vroxuvzbnzfelyndchyl.supabase.co/functions/v1/canva-oauth',{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Authorization':'Bearer '+data.session.access_token,'apikey':'sb_publishable_EAh6WbHkV-FRnSx6SjRUgw_ev0JMnZH'},
+   body:JSON.stringify({action:'start'})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||'Could not start Canva authorization.');
+  if(!result.authorization_url||!result.authorization_url.startsWith('https://www.canva.com/'))throw new Error('The secure server did not return a valid Canva authorization link.');
+  status.textContent='Redirecting to Canva…';
+  window.location.assign(result.authorization_url);
+ }catch(error){
+  status.textContent=error.message||'Could not start Canva authorization.';
+  button.disabled=false;button.textContent='Connect Canva ↗';
+ }
+}
+$('connectCanva')?.addEventListener('click',startCanvaConnection);
+function handleCanvaCallbackResult(){
+ const params=new URLSearchParams(location.search),status=$('canvaConnectionStatus');
+ if(!status)return;
+ if(params.get('canva_connected')==='connected'){
+  status.textContent='Canva authorization completed. Verifying the saved connection is the next step.';
+  message('Canva authorization returned successfully.');
+  logActivity('Authorized Canva connection','integration','Canva');
+ }else if(params.has('canva_error')){
+  status.textContent='Canva connection was not completed: '+params.get('canva_error');
+ }
+}
 async function loadFacebookConnectionStatus(){
  const status=$('facebookConnectionStatus');
  if(!isSuperAdmin()||!status)return;
@@ -818,17 +863,18 @@ $('logout').onclick=async()=>{await logActivity('Signed out','session',currentUs
 
 let allPosts=[];
 function showPage(page){
- if(['content','photos','activity','facebook'].includes(page)&&!isSuperAdmin())page='overview';
+ if(['content','photos','activity','facebook','canva'].includes(page)&&!isSuperAdmin())page='overview';
  document.querySelectorAll('.page-view').forEach(el=>el.hidden=el.id!=='page-'+page);
  document.querySelectorAll('.dash-nav[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
  window.scrollTo({top:0,behavior:'smooth'});
  if(page==='posts')renderPosts();
  if(page==='activity'&&isSuperAdmin())loadActivityLogs();
+ if(page==='canva'&&isSuperAdmin())handleCanvaCallbackResult();
   if(page==='profile')loadAdminProfile();
   if(page==='youth-links')loadYouthLinks();
   if(page==='portal-discovery')loadPortalSuggestions();
 }
-document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>{showPage(el.dataset.page);if(el.dataset.page==='facebook'){loadFacebookConnectionStatus();loadFacebookFeed()}}));
+document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>{showPage(el.dataset.page);if(el.dataset.page==='facebook'){loadFacebookConnectionStatus();loadFacebookFeed()}if(el.dataset.page==='canva'){handleCanvaCallbackResult()}}));
 const menuToggle=$('mobileMenuToggle'),navBackdrop=$('mobileNavBackdrop');
 function closeMobileNav(){document.body.classList.remove('nav-open');menuToggle?.setAttribute('aria-expanded','false');menuToggle?.setAttribute('aria-label','Open navigation menu');if(menuToggle)menuToggle.textContent='☰'}
 menuToggle?.addEventListener('click',()=>{const open=!document.body.classList.contains('nav-open');document.body.classList.toggle('nav-open',open);menuToggle.setAttribute('aria-expanded',String(open));menuToggle.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');menuToggle.textContent=open?'×':'☰'});
